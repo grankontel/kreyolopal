@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node ./app/index.js",
-    "build": "cd frontend && npm run build",
+    "build": "cd frontend && npm install && npm run build",
     "dev:server": "nodemon ./app/index.js",
     "dev": "concurrently 'npm run dev:server' 'cd frontend && npm run start' ",
     "test": "echo \"Error: no test specified\" && exit 1"
