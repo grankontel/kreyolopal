@@ -4,9 +4,7 @@ const port = process.env.PORT || 5000
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
 
-app.get('/', (req, res) => {
-  res.send('This is from express.js')
-})
+app.use('/', express.static("./frontend/build"));
 
 // create a GET route
 app.get('/express_backend', (req, res) => {
