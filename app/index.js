@@ -1,12 +1,26 @@
+const config = require('./config')
 const express = require('express')
-const app = express()
-const port = process.env.PORT || 5000
+const configureApp = require('./app')
+const logger = require('./services/logger')
+const port = config.app.port || 5000
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+async function startServer() {
+  const app = express()
 
-app.use('/', express.static("./frontend/build"));
+  //configure express
+  const server = await configureApp({
+    app,
+    logger /* , routesCallback: allRoutes */,
+  })
 
-// create a GET route
-app.get('/express_backend', (req, res) => {
-  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' })
-})
+  server.listen(port, (err) => {
+    if (err) {
+      logger.error(err)
+      return
+    }
+
+    console.log('Your server is ready on http://localhost:' + port)
+  })
+}
+
+startServer()

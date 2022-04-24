@@ -1,0 +1,43 @@
+const express = require('express')
+const { check, oneOf, validationResult } = require('express-validator')
+const spellchecker = require('../services/spellchecker')
+
+const sp_route = ({ logger }) => {
+  var router = express.Router()
+
+  router.post(
+    '/spellcheck',
+    [check('kreyol').isIn(['GP', 'MQ']), check('request').notEmpty()],
+    async (req, res) => {
+        // Finds the validation errors in this request and wraps them in an object with handy functions
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+
+        var _message = {
+            user: 1, //req.user.id,
+            tool: req.headers['user-agent'],
+            service: 'spellcheck',
+            kreyol: req.body.kreyol,
+            request: req.body.request
+        }
+    
+        // var message = cloneDeep(_message);
+
+        spellchecker.check(_message)
+        .then(response => {
+
+            _message.response = response
+            //console.info('%o',message)
+            res.status(200).json(_message)
+            return _message;
+        })
+
+    })
+
+  logger.info('\tAdding route "spellcheck"...')
+  return router
+}
+
+module.exports = sp_route
