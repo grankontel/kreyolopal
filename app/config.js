@@ -21,6 +21,7 @@ const config = {
  },
  security: {
   salt: process.env.API_SALT,
+  token: process.env.TOKEN_SALT,
   memoryCost: Number(process.env.ARGON_MEMORYCOST || 24),
   hashLength: Number(process.env.ARGON_LENGTH || 24),
   iterations: Number(process.env.ARGON_ITERATIONS || 2),
