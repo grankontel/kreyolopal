@@ -4,10 +4,10 @@ const sequelize = require('./db')
 const user = require('../models/user')
 
 const userService = {
-    /**
-     * Find a user by his email
-     * @param {string} email Email of the user to find
-     */
+  /**
+   * Find a user by his email
+   * @param {string} email Email of the user to find
+   */
   findbyEmail: (email) => {
     return user
       .findOne({ where: { email: email } })
@@ -48,10 +48,13 @@ const userService = {
                 .create(_record)
                 .then(
                   (aUser) => resolve(aUser),
-                  (reason) => reject(reason)
+                  (reason) => {
+                    logger.error('register rejected')
+                    reject(reason.errors[0].message)
+                  }
                 )
                 .catch((error) => {
-                  logger.error(error)
+                  logger.error('register exception')
                   reject(error)
                 })
             })
