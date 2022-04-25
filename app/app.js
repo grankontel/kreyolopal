@@ -1,13 +1,42 @@
 const config = require('./config')
 const express = require('express')
-const {allRoutes} = require('./routes')
+const passport = require('passport')
+const sequelize = require('./services/db')
+const expressSession = require('express-session')
+const SessionStore = require('express-session-sequelize')(expressSession.Store)
+const { allRoutes } = require('./routes')
+const JwtCookieComboStrategy = require('passport-jwt-cookiecombo')
+const userService = require('./services/userService')
 
-async function configureApp({
-  app,
-  logger , routesCallback = allRoutes,
-}) {
+const passportPrepare = (logger) => {
+  passport.serializeUser(function (user, cb) {
+    console.log('serializeUser')
+    process.nextTick(function () {
+      cb(null, { id: user.id, username: user.email })
+    })
+  })
 
-    //configure logger
+  passport.deserializeUser(function (user, cb) {
+    console.log('deserializeUser')
+    process.nextTick(function () {
+      return cb(null, user)
+    })
+  })
+
+  passport.use(
+    new JwtCookieComboStrategy(
+      {
+        secretOrPublicKey: config.security.salt,
+      },
+      (payload, done) => {
+        return done(null, payload.user)
+      }
+    )
+  )
+}
+
+async function configureApp({ app, logger, routesCallback = allRoutes }) {
+  //configure logger
   const expressPino = require('express-pino-logger')({
     logger: logger,
   })
@@ -30,6 +59,21 @@ async function configureApp({
     next()
   })
 
+  app.use(require('cookie-parser')(config.security.salt))
+  app.use(require('body-parser').urlencoded({ extended: true }))
+  app.use(
+    expressSession({
+      secret: config.auth.secret,
+      resave: false,
+      saveUninitialized: false,
+      store: new SessionStore({
+        db: sequelize,
+      }),
+    })
+  )
+  passportPrepare(logger)
+  app.use(passport.initialize())
+
   /*     //jwt
     const jwt = require('./middlewares/jwt');
     jwt({app, logger});
@@ -50,7 +94,7 @@ async function configureApp({
     })
  */
 
-    routesCallback({app, dbcon: null, logger});
+  routesCallback({ app, dbcon: null, logger })
 
   //errors
   app.use(function (err, req, res, next) {

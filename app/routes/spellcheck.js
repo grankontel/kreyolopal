@@ -1,4 +1,5 @@
 const express = require('express')
+const passport = require('passport')
 const { check, oneOf, validationResult } = require('express-validator')
 const spellchecker = require('../services/spellchecker')
 
@@ -8,6 +9,9 @@ const sp_route = ({ logger }) => {
   router.post(
     '/spellcheck',
     [check('kreyol').isIn(['GP', 'MQ']), check('request').notEmpty()],
+    passport.authenticate('jwt-cookiecombo', {
+      session: false,
+    }),
     async (req, res) => {
         // Finds the validation errors in this request and wraps them in an object with handy functions
         const errors = validationResult(req);

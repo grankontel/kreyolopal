@@ -1,29 +1,12 @@
-const { promisify } = require('util')
-const fs            = require('fs')
-const path          = require('path');
+const dicoSource    = require('./lib.s3-dicofile')
 const nspell        = require('nspell')
+const NodeCache     = require( "node-cache" );
+const myCache       = new NodeCache();
 
-const readFile = promisify(fs.readFile)
 
 const puncRegex = new RegExp("^[^A-Za-z0-9_]+$", 'g');
 const withDigits = new RegExp("^([A-Za-z]*)[0-9]+([A-Za-z]*)$", 'g');
 const isSpace = new RegExp("^\s+$", 'g');
-
-/**
- * Read dictionary files for a kreyol
- * @param {string} kreyol Wich kreyol
- */
-async function readDicoFiles(kreyol) {
-    
-    const readAff = readFile(path.resolve(__dirname,'../dico/cpf_GP.aff'), 'utf8')
-    const readDic = readFile(path.resolve(__dirname,'../dico/cpf_GP.dic'), 'utf8')
-    
-
-    const affix       = Buffer.from(await readAff)
-    const dictionary  = Buffer.from(await readDic)
-
-    return {affix: affix, dictionary: dictionary}
-}
 
 /**
  * Verify spelling for a string
@@ -31,9 +14,19 @@ async function readDicoFiles(kreyol) {
  * @param {string} kreyol Wich kreyol
  */
 async function nspell_spellcheck(src, kreyol) {
+    let  affix ='', dictionary =''
 
-    var {affix, dictionary} = await readDicoFiles(kreyol)
-
+    value = myCache.get( "dicofiles" );
+    if (value !== undefined) {
+        affix= value.affix
+        dictionary=value.dictionary
+    } else {
+        value = await dicoSource.readDicoFiles(kreyol)
+        myCache.set('dicofiles', value)
+        affix= value.affix
+        dictionary=value.dictionary
+    }
+  
     var diko     = nspell(affix, dictionary)
 
     //make an array from string

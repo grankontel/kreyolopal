@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node ./app/index.js",
     "build": "cd frontend && npm install && npm run build",
-    "dev:server": "nodemon ./app/index.js",
+    "dev:server": "nodemon ./app/index.js | pino-pretty",
     "dev": "concurrently 'npm run dev:server' 'cd frontend && npm run start' ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,19 +21,31 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.76.0",
+    "argon2": "^0.28.5",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-pino-logger": "^7.0.0",
+    "express-session": "^1.17.2",
+    "express-session-sequelize": "^2.3.0",
     "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "node-cache": "^5.1.2",
     "nspell": "^2.1.5",
+    "passport": "^0.5.2",
+    "passport-jwt-cookiecombo": "^1.0.5",
+    "passport-local": "^1.0.0",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "pino": "^7.10.0",
-    "sequelize": "^6.19.0"
+    "sequelize": "^6.19.0",
+    "sha3": "^2.1.4"
   },
   "devDependencies": {
     "concurrently": "^7.1.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "pino-pretty": "^7.6.1"
   }
 }
