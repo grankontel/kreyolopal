@@ -4,6 +4,28 @@ const sequelize = require('./db')
 const user = require('../models/user')
 
 const userService = {
+    /**
+     * Find a user by his email
+     * @param {string} email Email of the user to find
+     */
+  findbyEmail: (email) => {
+    return user
+      .findOne({ where: { email: email } })
+      .then(
+        (record) => {
+          return record
+        },
+        (reason) => {
+          logger.error(reason)
+          return null
+        }
+      )
+      .catch((error) => {
+        logger.error(error)
+        return null
+      })
+  },
+
   register: (record) => {
     return new Promise((resolve, reject) => {
       sequelize.sync().then(
