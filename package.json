@@ -27,7 +27,10 @@
     "express-pino-logger": "^7.0.0",
     "express-validator": "^6.14.0",
     "nspell": "^2.1.5",
-    "pino": "^7.10.0"
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "pino": "^7.10.0",
+    "sequelize": "^6.19.0"
   },
   "devDependencies": {
     "concurrently": "^7.1.0",
