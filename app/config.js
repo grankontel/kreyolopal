@@ -5,7 +5,11 @@ const config = {
    port: process.env.APP_PORT
  },
  db: {
-  connectionString: process.env.MONGOBD_CONNECTIONSTRING,
+   host: process.env.POSTGRES_HOST,
+   database: process.env.POSTGRES_DB,
+   username: process.env.POSTGRES_USERNAME,
+   password: process.env.POSTGRES_PASSWORD,
+   
  },
  mail: {
   apiKey: process.env.MAILGUN_API_KEY,
