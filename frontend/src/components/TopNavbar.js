@@ -24,7 +24,7 @@ const TopNavbar = () => {
 
   console.log(auth)
   return (
-    <Navbar>
+    <Navbar color="primary" fixed='top'>
       <Navbar.Brand>
         <div className="logo_text">
           <Link to="/">
