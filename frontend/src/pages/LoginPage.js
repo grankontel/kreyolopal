@@ -1,24 +1,41 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import LoginForm from '../components/LoginForm'
 import StandardPage from '../layouts/StandardPage'
-import { useAuth } from '../components/AuthProvider'
-import { Box, Heading } from 'react-bulma-components'
+import { Box, Button, Heading, Notification } from 'react-bulma-components'
+import { useZakari } from '../components/ZakProvider'
+import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
-  const auth = useAuth()
+  const [message, setMessage] = useState('')
+  const auth = useZakari()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (auth.user !== null) {
+      navigate('/')
+    }
+  })
 
   const onSubmit = async ({ email, password, setLoading }) => {
+    console.log({ email, password, setLoading })
     try {
       setLoading(true)
-      const { error } = await auth.signIn({
-        email: email,
-        password: password,
-      })
-
-      if (error) throw error
-      alert('Check your email for the login link!')
+      setMessage('  ')
+      auth.signIn(email, password).then(
+        () => {
+          navigate('/')
+        },
+        (reason) => {
+          const code = reason?.code || 500
+          const msg =
+            code === 500
+              ? 'Erreur inconnue, veuillez essayer ultérieurement'
+              : 'Identifiant inconnu ou mot de passe incorrect'
+          setMessage(msg)
+        }
+      )
     } catch (error) {
-      alert(error.error_description || error.message)
+      console.log(error)
     } finally {
       setLoading(false)
     }
@@ -26,7 +43,18 @@ const LoginPage = () => {
   return (
     <StandardPage>
       <Box className="login_form">
-        <Heading size={2} renderAs='h1'>Log in</Heading>
+        <Heading size={2} renderAs="h1">
+          Log in
+        </Heading>
+        {message.length > 0 ? (
+          <Notification color="danger">
+            {message}
+            <Button remove onClick={() => setMessage('')} />
+          </Notification>
+        ) : (
+          ''
+        )}
+
         <LoginForm buttonLabel="Login" onSubmit={onSubmit} />
       </Box>
     </StandardPage>

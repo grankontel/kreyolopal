@@ -8,13 +8,11 @@ const StandardPage = ({ children }) => {
       <header>
         <TopNavbar />
       </header>
-      <Container max breakpoint="desktop" className='main' renderAs="main">
+      <Container max breakpoint="desktop" className="main" renderAs="main">
         {children}
       </Container>
-      <footer className='footer' renderAs='footer'>
-<Container textAlign='center'>
-  &copy; TiMalo — 2022
-</Container>
+      <footer className="footer">
+        <Container textAlign="center">&copy; TiMalo — 2022</Container>
       </footer>
     </>
   )
