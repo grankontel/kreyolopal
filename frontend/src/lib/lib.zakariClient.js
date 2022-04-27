@@ -63,11 +63,13 @@ const zakariClient = (host) => {
               return resolve(me)
             },
             (reason) => {
-              return reject(reason.response.data)
+              const data = reason.response.data
+              data.code = reason.response.status
+              return reject(data)
             }
           )
           .catch((error) => {
-            return reject({ status: 'error', error })
+            return reject({ code: 500, status: 'error', error })
           })
       })
     },
@@ -99,11 +101,13 @@ const zakariClient = (host) => {
               resolve(rep)
             },
             (reason) => {
-              reject(reason.response.data)
+              const data = reason.response.data
+              data.code = reason.response.status
+              return reject(data)
             }
           )
           .catch((error) => {
-            reject({ status: 'error', error })
+            return reject({ code: 500, status: 'error', error })
           })
       })
     },
@@ -156,11 +160,13 @@ const zakariClient = (host) => {
               resolve(rep)
             },
             (reason) => {
-              reject(reason.response.data)
+              const data = reason.response.data
+              data.code = reason.response.status
+              return reject(data)
             }
           )
           .catch((error) => {
-            reject({ status: 'error', error })
+            return reject({ code: 500, status: 'error', error })
           })
       })
     },
