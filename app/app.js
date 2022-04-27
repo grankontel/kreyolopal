@@ -4,7 +4,7 @@ const passport = require('passport')
 const sequelize = require('./services/db')
 const expressSession = require('express-session')
 const SessionStore = require('express-session-sequelize')(expressSession.Store)
-const { allRoutes } = require('./routes')
+const { apiRoutes, publicRoutes } = require('./routes')
 const JwtCookieComboStrategy = require('passport-jwt-cookiecombo')
 const userService = require('./services/userService')
 
@@ -35,7 +35,11 @@ const passportPrepare = (logger) => {
   )
 }
 
-async function configureApp({ app, logger, routesCallback = allRoutes }) {
+async function configureApp({
+  app,
+  logger,
+  routesCallback = { apiCallback: apiRoutes, publicCallback: publicRoutes },
+}) {
   //configure logger
   const expressPino = require('express-pino-logger')({
     logger: logger,
@@ -94,18 +98,40 @@ async function configureApp({ app, logger, routesCallback = allRoutes }) {
     })
  */
 
-  routesCallback({ app, dbcon: null, logger })
+  const { apiCallback, publicCallback } = routesCallback
+  var apiRouter = express.Router()
+  apiCallback({ app: apiRouter, logger })
+  //prefix
+  app.use('/api', apiRouter)
+
+  var publicRouter = express.Router()
+  publicCallback({ app: publicRouter, logger })
+  //prefix
+  app.use('/', publicRouter)
 
   //errors
   app.use(function (err, req, res, next) {
     // Do logging and user-friendly error message display
     logger.error(err)
+    return res.status(500).json({
+      status: 'error',
+      code: 500,
+      message: 'internal error',
+      error: new Error('internal error'),
+    })
+
     res
       .status(500)
       .send({ status: 500, message: 'internal error', type: 'internal' })
   })
 
   app.use(function (req, res) {
+    return res.status(404).json({
+      status: 'error',
+      code: 404,
+      message: 'Not Found',
+      error: new Error('Not Found'),
+    })
     res
       .status(404)
       .send({ status: 404, message: 'Not found', type: 'internal' })

@@ -13,32 +13,30 @@ const sp_route = ({ logger }) => {
       session: false,
     }),
     async (req, res) => {
-        // Finds the validation errors in this request and wraps them in an object with handy functions
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ status: 'error', errors: errors.array() })
+      }
 
-        var _message = {
-            user: 1, //req.user.id,
-            tool: req.headers['user-agent'],
-            service: 'spellcheck',
-            kreyol: req.body.kreyol,
-            request: req.body.request
-        }
-    
-        // var message = cloneDeep(_message);
+      var _message = {
+        user: req.user.id,
+        tool: req.headers['user-agent'],
+        service: 'spellcheck',
+        kreyol: req.body.kreyol,
+        request: req.body.request,
+      }
 
-        spellchecker.check(_message)
-        .then(response => {
+      // var message = cloneDeep(_message);
 
-            _message.response = response
-            //console.info('%o',message)
-            res.status(200).json(_message)
-            return _message;
-        })
-
-    })
+      spellchecker.check(_message).then((response) => {
+        _message.response = response
+        //console.info('%o',message)
+        res.status(200).json(_message)
+        return _message
+      })
+    }
+  )
 
   logger.info('\tAdding route "spellcheck"...')
   return router
