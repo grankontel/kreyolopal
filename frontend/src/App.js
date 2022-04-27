@@ -1,23 +1,32 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import AuthProvider from './components/AuthProvider'
+import ZakProvider from './components/ZakProvider'
 import AccountPage from './pages/AccountPage'
 import IndexPage from './pages/IndexPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import SpellcheckPage from './pages/SpellcheckPage'
 
 const App = () => {
   return (
     <div className="app">
-      <AuthProvider>
+      <ZakProvider>
         <BrowserRouter>
           <Routes>
             <Route index element={<IndexPage />} />
+            <Route
+              path="/spellcheck"
+              element={
+                <ZakProvider.Protected to="/login">
+                  <SpellcheckPage />
+                </ZakProvider.Protected>
+              }
+            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/account" element={<AccountPage />} />
             <Route path="/signup" element={<SignupPage />} />
           </Routes>
         </BrowserRouter>
-      </AuthProvider>
+      </ZakProvider>
     </div>
   )
 }
