@@ -53,7 +53,7 @@ const auth_route = ({ logger }) => {
       // username must be an email
       body('email').isEmail(),
       // password must be at least 6 chars long
-      body('password').isLength({ min: 5 }),
+      body('password').isString(),
     ],
     (req, res) => {
       const errors = validationResult(req)
