@@ -9,50 +9,115 @@ const config = require('../config')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
+const authenticateUser = (email, password) => {
+  return new Promise((resolve, reject) => {
+    logger.info('auth request', { email, password })
+    userService
+      .findbyEmail(email)
+      .then(
+        async (record) => {
+          logger.debug(record)
+          if (record === null) {
+            resolve(false)
+          }
+          const isValid = await authService.verifyPassword(
+            record.password,
+            password
+          )
+          return isValid ? resolve(record) : resolve(false)
+        },
+        (reason) => {
+          reject(reason)
+        }
+      )
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (username, password, done) => {
-    logger.info('auth request', { username, password })
-    userService.findbyEmail(username).then(async (record) => {
-      logger.debug(record)
-      if (record === null) {
-        return done(null, false)
-      }
-      const isValid = await authService.verifyPassword(
-        record.password,
-        password
-      )
-      return isValid ? done(null, record) : done(null, false)
-    })
+    authenticateUser(username, password).then(
+      (value) => done(null, value),
+      (reason) => done(reason, false)
+    )
   })
 )
 
-const auth_route = ({ dbcon, logger }) => {
+const auth_route = ({ logger }) => {
   var router = express.Router()
 
-  router.post('/auth/login', passport.authenticate('local'), (req, res) => {
-    jwt.sign({ user: req.user }, config.security.salt, (err, token) => {
-      if (err) return res.json(err)
+  router.post(
+    '/auth/login',
+    [
+      // username must be an email
+      body('email').isEmail(),
+      // password must be at least 6 chars long
+      body('password').isString(),
+    ],
+    (req, res) => {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ status: 'error', error: errors.array() })
+      }
 
-      console.log(req.user instanceof User)
+      const { email, password } = req.body
+      return authenticateUser(email, password).then(
+        (user) => {
+          if (!user) {
+            return res
+              .status(401)
+              .json({ status: 'error', error: 'Unauthorized' })
+          }
 
-      req.user.lastlogin = new Date()
-      req.user.save()
-      
-      // Send Set-Cookie header
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        sameSite: true,
-        signed: true,
-        secure: true,
-      })
+          req.session.passport = {
+            id: user.id,
+            username: user.email,
+          }
 
-      // Return json web token
-      return res.json({
-        status: 'success',
-        data: { email: req.user.email, jwt: token },
-      })
-    })
-  })
+          req.user = user
+          jwt.sign(
+            {
+              user: {
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+              },
+            },
+            config.security.salt,
+            (err, token) => {
+              if (err) return res.json(err)
+
+              req.user.lastlogin = new Date()
+              req.user.save()
+
+              // Send Set-Cookie header
+              res.cookie('jwt', token, {
+                httpOnly: true,
+                sameSite: true,
+                signed: true,
+                secure: true,
+              })
+
+              console.log(req.session)
+              // Return json web token
+              return res.json({
+                status: 'success',
+                data: { email: req.user.email, jwt: token },
+              })
+            }
+          )
+        },
+        (reason) => {
+          logger.error(reason)
+          return res
+            .status(500)
+            .json({ status: 'error', error: 'Internal error' })
+        }
+      )
+    }
+  )
 
   router.post(
     '/auth/logout',
@@ -60,6 +125,7 @@ const auth_route = ({ dbcon, logger }) => {
       session: false,
     }),
     (req, res) => {
+      console.log('ok')
       req.logout()
       res.status(200).send({
         status: 'success',
@@ -88,7 +154,7 @@ const auth_route = ({ dbcon, logger }) => {
       // Finds the validation errors in this request and wraps them in an object with handy functions
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
-        return res.status(422).json({ error: errors.array() })
+        return res.status(422).json({ status: 'error', error: errors.array() })
       }
 
       let record = {

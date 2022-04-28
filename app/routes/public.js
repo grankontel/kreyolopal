@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 
-const public_route = ({ dbcon, logger }) => {
+const public_route = ({ logger }) => {
   var router = express.Router()
 
   // create a GET route

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Navbar } from 'react-bulma-components'
-import { useAuth } from './AuthProvider'
+import { useZakari } from './ZakProvider'
 const classNames = require('classnames')
 
 const useToggle = (initialState = false) => {
@@ -16,30 +16,36 @@ const useToggle = (initialState = false) => {
 }
 
 const TopNavbar = () => {
-  const auth = useAuth()
+  const auth = useZakari()
   const [mobileOpen, openMobileMenu] = useToggle(false)
   const navMenu = classNames({
     'is-active': mobileOpen,
   })
 
-  console.log(auth)
   return (
-    <Navbar>
+    <Navbar color="primary" fixed="top">
       <Navbar.Brand>
-        <div className="logo_text">
-          <Link to="/">
-            <h1 className="logo_title">Zakari</h1>
-          </Link>
-          <h2 className="logo_subtitle">On zouti pou korijé kréyòl maké</h2>
-        </div>
+        <Navbar.Item href="/" renderAs="li">
+          <img
+            src="/Zakari-Mark-Light-32px.png"
+            width="32"
+            height="32"
+            alt="Zakari Brand"
+          />
+        </Navbar.Item>
+        <Navbar.Item renderAs="li">
+          <Link to="/">Home</Link>
+        </Navbar.Item>
       </Navbar.Brand>
 
       <Navbar.Burger onClick={openMobileMenu} aria-label="menu" />
       <Navbar.Menu renderAs="div" className={navMenu}>
         <Navbar.Container align="right">
-          <Navbar.Item href="/">Home</Navbar.Item>
           {auth.user ? (
-            <Navbar.Item href="/account">Account</Navbar.Item>
+            <>
+              <Navbar.Item href="/spellcheck">Korije</Navbar.Item>
+              <Navbar.Item href="/account">Account</Navbar.Item>
+            </>
           ) : (
             <Navbar.Item href="/login">Sign In</Navbar.Item>
           )}

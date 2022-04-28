@@ -22,7 +22,9 @@ const LoginForm = (props) => {
             name="email"
             type="email"
             value={email}
+            autoComplete="username"
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </Form.Control>
       </Form.Field>
@@ -34,12 +36,16 @@ const LoginForm = (props) => {
             name="pwd"
             type="password"
             value={pwd}
+            autoComplete="current-password"
             onChange={(e) => setPwd(e.target.value)}
+            required
           />
         </Form.Control>
       </Form.Field>
 
-      <Button color="primary">{btnLabel}</Button>
+      <Button.Group align="right">
+        <Button color="primary">{btnLabel}</Button>
+      </Button.Group>
     </form>
   )
 }
