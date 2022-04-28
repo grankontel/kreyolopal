@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
 
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
-      console.log('session',session)
+      console.log('session', session)
     })
   }, [])
 
@@ -35,7 +35,7 @@ const AuthProvider = ({ children }) => {
       })
   }
 
-  const signUp = ({ email, password}) => {
+  const signUp = ({ email, password }) => {
     return supabase.auth
       .signUp({
         email: email,
