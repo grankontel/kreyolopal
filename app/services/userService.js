@@ -1,7 +1,8 @@
 const logger = require('./logger')
 const authService = require('./authService')
-const sequelize = require('./db')
-const user = require('../models/user')
+const db = require ('../database/models')
+const sequelize = db.sequelize
+const user = db['User']
 
 const userService = {
   /**

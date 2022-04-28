@@ -1,7 +1,8 @@
 const config = require('./config')
 const express = require('express')
 const passport = require('passport')
-const sequelize = require('./services/db')
+const db = require ('./database/models')
+const sequelize = db.sequelize
 const expressSession = require('express-session')
 const SessionStore = require('express-session-sequelize')(expressSession.Store)
 const { apiRoutes, publicRoutes } = require('./routes')
