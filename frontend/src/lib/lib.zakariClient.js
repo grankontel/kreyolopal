@@ -200,4 +200,4 @@ const zakariClient = (host) => {
   return rep
 }
 
-module.exports = zakariClient
+export default zakariClient

@@ -7,7 +7,8 @@ const authService = require('../services/authService')
 const logger = require('../services/logger')
 const config = require('../config')
 const jwt = require('jsonwebtoken')
-const User = require('../models/user')
+const db = require ('../database/models')
+const User = db['User']
 
 const authenticateUser = (email, password) => {
   return new Promise((resolve, reject) => {

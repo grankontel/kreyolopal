@@ -11,7 +11,7 @@ const public_route = ({ logger }) => {
 
   router.use('/', express.static('./frontend/build'))
 
-  router.get('/*', function (req, res) {
+  router.get(/^(?!\/api)(.+)/, function (req, res) {
     const indexFile = path.join(__dirname, '../../frontend/build/index.html')
     console.log(`\n\n${indexFile}\n\n`)
     res.sendFile(indexFile)

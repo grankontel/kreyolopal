@@ -80,3 +80,6 @@ db/
 
 # Test files
 *.rest
+
+# Old files
+old/
