@@ -33,6 +33,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      message: {
+        type: DataTypes.STRING,
+      },
       response: DataTypes.JSONB,
     },
     {

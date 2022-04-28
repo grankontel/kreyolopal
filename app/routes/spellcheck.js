@@ -2,6 +2,8 @@ const express = require('express')
 const passport = require('passport')
 const { check, oneOf, validationResult } = require('express-validator')
 const spellchecker = require('../services/spellchecker')
+const db = require('../database/models')
+const Msg = db['Spellchecked']
 
 const sp_route = ({ logger }) => {
   var router = express.Router()
@@ -29,7 +31,15 @@ const sp_route = ({ logger }) => {
 
       // var message = cloneDeep(_message);
 
-      spellchecker.check(_message).then((response) => {
+      return spellchecker.check(_message).then(async (response) => {
+        await Msg.create({
+          userId: _message.user,
+          kreyol: _message.kreyol,
+          request: _message.request,
+          message: response.message,
+          status: response.status,
+          response: response,
+        })
         _message.response = response
         //console.info('%o',message)
         res.status(200).json(_message)

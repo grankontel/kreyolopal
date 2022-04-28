@@ -30,6 +30,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      message: {
+        type: Sequelize.STRING,
+      },
       response: {
         type: Sequelize.JSONB,
       },
