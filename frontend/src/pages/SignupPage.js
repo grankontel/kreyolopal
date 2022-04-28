@@ -1,10 +1,10 @@
 import React from 'react'
 import LoginForm from '../components/LoginForm'
 import StandardPage from '../layouts/StandardPage'
-import { useAuth } from '../components/AuthProvider'
+import { useZakari } from '../components/ZakProvider'
 
 const SignupPage = () => {
-  const auth = useAuth()
+  const auth = useZakari()
   const onSubmit = async ({ email, password, setLoading }) => {
     try {
       setLoading(true)
