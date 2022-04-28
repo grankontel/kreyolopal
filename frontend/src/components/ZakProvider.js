@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-const zakariClient = require('../lib/lib.zakariClient')
+import zakariClient from '../lib/lib.zakariClient'
 
 const ZakContext = React.createContext(null)
 
