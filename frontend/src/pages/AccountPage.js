@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import StandardPage from '../layouts/StandardPage'
 import { Box, Button, Heading, Notification } from 'react-bulma-components'
 import { useZakari } from '../components/ZakProvider'
-import Account from '../components/Account'
+import Account from '../components/AccountForm'
 
 const AccountPage = () => {
   const [notif, setNotif] = useState({ color: 'warning', message: '' })
