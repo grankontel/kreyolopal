@@ -4,11 +4,13 @@
   "description": "",
   "main": "app/index.js",
   "engines": {
-    "node": "16.x"
+    "node": "^16.14.2",
+    "npm": "^8.5.0"
   },
   "scripts": {
     "start": "node ./app/index.js",
-    "build": "cd frontend && npm install && npm run build",
+    "prebuild": "cd frontend && npm install && npm run build",
+    "build": "cd frontend && npm run build",
     "dev:server": "nodemon ./app/index.js | pino-pretty",
     "dev": "concurrently 'npm run dev:server' 'cd frontend && HTTPS=true npm run start' ",
     "migrate": "sequelize-cli db:migrate",
