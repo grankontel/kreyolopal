@@ -75,3 +75,11 @@ yarn-error.log
 # Yarn Integrity file
 .yarn-integrity
 
+# Database files
+db/
+
+# Test files
+*.rest
+
+# Old files
+old/
