@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const config = {
   app: {
-    port: process.env.APP_PORT,
+    port: process.env.PORT,
   },
   aws: {
     keyId: process.env.AWS_ACCESS_KEY_ID,
