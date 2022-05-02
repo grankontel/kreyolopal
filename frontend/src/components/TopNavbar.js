@@ -47,7 +47,10 @@ const TopNavbar = () => {
               <Navbar.Item href="/account">Account</Navbar.Item>
             </>
           ) : (
-            <Navbar.Item href="/login">Sign In</Navbar.Item>
+            <>
+              <Navbar.Item href="/login">Sign In</Navbar.Item>
+              <Navbar.Item href="/register">Register</Navbar.Item>
+            </>
           )}
         </Navbar.Container>
       </Navbar.Menu>
