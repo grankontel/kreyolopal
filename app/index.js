@@ -15,8 +15,8 @@ const _createServer = (app) => {
 
   console.log(__dirname)
   const options = {
-    key: fs.readFileSync(path.join(__dirname,'./devcert/key.pem')),
-    cert: fs.readFileSync(path.join(__dirname,'./devcert/cert.pem')),
+    key: fs.readFileSync(path.join(__dirname, './devcert/key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, './devcert/cert.pem')),
   }
 
   return https.createServer(options, app)
