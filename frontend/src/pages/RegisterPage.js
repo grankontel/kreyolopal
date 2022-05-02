@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import StandardPage from '../layouts/StandardPage'
 import { Box, Button, Heading, Notification } from 'react-bulma-components'
 import { useZakari } from '../components/ZakProvider'
@@ -8,7 +7,6 @@ import RegisterForm from '../components/RegisterForm'
 const RegisterPage = () => {
   const [notif, setNotif] = useState({ color: 'warning', message: '' })
   const auth = useZakari()
-  const navigate = useNavigate()
 
   const clearMessage = () => {
     setNotif({ color: notif.color, message: '' })
