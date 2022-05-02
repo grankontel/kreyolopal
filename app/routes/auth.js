@@ -1,13 +1,20 @@
 const express = require('express')
-const { check, body, oneOf, validationResult } = require('express-validator')
+const {
+  check,
+  body,
+  oneOf,
+  validationResult,
+  param,
+} = require('express-validator')
 const userService = require('../services/userService')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const authService = require('../services/authService')
+const sendEmail = require('../services/emailService')
 const logger = require('../services/logger')
 const config = require('../config')
 const jwt = require('jsonwebtoken')
-const db = require ('../database/models')
+const db = require('../database/models')
 const User = db['User']
 
 const authenticateUser = (email, password) => {
@@ -36,6 +43,52 @@ const authenticateUser = (email, password) => {
       })
   })
 }
+
+const logUserIn = (user, req, res) => {
+  req.session.passport = {
+    id: user.id,
+    username: user.email,
+  }
+
+  req.user = user
+
+  jwt.sign(
+    {
+      user: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+      },
+    },
+    config.security.salt,
+    (err, token) => {
+      if (err) return res.json(err)
+
+      req.user.lastlogin = new Date()
+      req.user.save()
+
+      // Send Set-Cookie header
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        sameSite: true,
+        signed: true,
+        secure: true,
+      })
+
+      console.log(req.session)
+
+      const payload = { email: req.user.email, jwt: token }
+      // Return json web token
+      return  res.json({
+        status: 'success',
+        data: payload,
+      })
+
+    }
+  )
+}
+
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (username, password, done) => {
     authenticateUser(username, password).then(
@@ -76,39 +129,8 @@ const auth_route = ({ logger }) => {
             username: user.email,
           }
 
-          req.user = user
-          jwt.sign(
-            {
-              user: {
-                id: user.id,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                email: user.email,
-              },
-            },
-            config.security.salt,
-            (err, token) => {
-              if (err) return res.json(err)
-
-              req.user.lastlogin = new Date()
-              req.user.save()
-
-              // Send Set-Cookie header
-              res.cookie('jwt', token, {
-                httpOnly: true,
-                sameSite: true,
-                signed: true,
-                secure: true,
-              })
-
-              console.log(req.session)
-              // Return json web token
-              return res.json({
-                status: 'success',
-                data: { email: req.user.email, jwt: token },
-              })
-            }
-          )
+          return logUserIn(user, req, res)
+          
         },
         (reason) => {
           logger.error(reason)
@@ -165,19 +187,56 @@ const auth_route = ({ logger }) => {
         lastname: req.body.lastname,
       }
 
-      userService
+      return userService
         .register(record)
         .then(
-          () => {
+          (_saveduser) => {
             logger.info('register success')
-            res.status(201).send({
-              status: 'success',
-              data: {
-                email: record.email,
-                firstname: record.firstname,
-                lastname: record.lastname,
+
+            const templateData = {
+              user: {
+                id: _saveduser.id,
+                firstname: _saveduser.firstname,
+                lastname: _saveduser.lastname,
+                email: _saveduser.email,
               },
-            })
+              confirm_url:
+                'https://kreyolopal.com/api/verifymail/' +
+                _saveduser.email_verif_token,
+            }
+            const recipient_mail = _saveduser.email
+
+            console.log('here')
+            console.log('templateData')
+
+            return sendEmail(
+              'verifyemail.mjml',
+              templateData,
+              `'${_saveduser.firstname} ${_saveduser.lastname}' <${recipient_mail}>`,
+              'Kontan vwè-w'
+            ).then(
+              () => {
+                return res.status(201).send({
+                  status: 'success',
+                  data: {
+                    email: record.email,
+                    firstname: record.firstname,
+                    lastname: record.lastname,
+                  },
+                })
+              },
+              (reason) => {
+                logger.error(reason)
+                return res.status(201).send({
+                  status: 'success',
+                  data: {
+                    email: record.email,
+                    firstname: record.firstname,
+                    lastname: record.lastname,
+                  },
+                })
+              }
+            )
           },
           (error) => {
             logger.error(error)
@@ -187,6 +246,35 @@ const auth_route = ({ logger }) => {
         .catch((_error) => {
           res.status(500).send({ status: 'error', error: [_error] })
         })
+    }
+  )
+
+  router.get(
+    '/verifymail/:token',
+    [
+      param('token')
+      .notEmpty()
+      .custom((value) => {
+        const isToken = /[A-Za-z0-9]{64}/
+        return value.length > 0 && isToken.test(value)
+      }),
+    ],
+    (req, res) => {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ status: 'error', error: errors.array() })
+      }
+
+      const token = req.params.token
+
+      User.findOne({ where: { email_verif_token: token } }).then((_user) => {
+        if (_user === null) {
+          return res.status(404).json({ status: 'error', error: 'Not Found' })
+        }
+
+        _user.email_verif_token = undefined
+        return logUserIn(_user, req, res)
+      })
     }
   )
 
