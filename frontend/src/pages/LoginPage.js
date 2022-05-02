@@ -20,7 +20,7 @@ const LoginPage = () => {
     console.log({ email, password, setLoading })
     try {
       setLoading(true)
-      setMessage('  ')
+      setMessage('')
       auth.signIn(email, password).then(
         () => {
           navigate('/')

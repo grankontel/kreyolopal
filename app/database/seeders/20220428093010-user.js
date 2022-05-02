@@ -17,8 +17,8 @@ module.exports = {
       firstname: 'Thierry',
       lastname: 'Malo',
       email: 'thierry.malo@gmail.com',
-      // password: 'admin',
-      password: '$argon2i$v=19$m=4096,t=3,p=1$J798EU39yRBwFMKZH0AJ3w$f+uuY3j3nQ8Tmr/B6qLeb7d0j8S0WnvtCQ4nD+i0AD0',
+      // password: 'admin6',
+      password: '$argon2i$v=19$m=4096,t=3,p=1$JDapNqYLL61+BJr0Ptfwow$jC6nxCQcrZgOxQA2L24CXOgmxrJPbnXfG0gWsfnXCso',
       createdAt: thistime,
       updatedAt: thistime,
     }], {});
