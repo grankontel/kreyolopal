@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Box, Button, Form, Progress } from 'react-bulma-components'
+import {  Button, Form, Progress } from 'react-bulma-components'
 import { useZakari } from './ZakProvider'
 
-const Account = () => {
+const Account = (props) => {
   const [loading, setLoading] = useState(true)
   const [firstname, setFirstname] = useState(null)
   const [lastname, setLastname] = useState(null)
@@ -37,34 +37,14 @@ const Account = () => {
   const updateProfile = async (e) => {
     e.preventDefault()
 
-    /*     try {
-      setLoading(true)
-      const user = auth.user()
-
-      const updates = {
-        id: user.id,
-        firstname,
-        lastname,
-      }
-
-
-
-      if (error) {
-        throw error
-      }
-    } catch (error) {
-      alert(error.message)
-    } finally {
-      setLoading(false)
-    } */
+    props.onSubmit({ profile: { firstname, lastname }, setLoading })
   }
 
   return (
-    <div aria-live="polite" className='account_box'>
+    <div aria-live="polite" >
       {loading ? (
         <Progress max={100} />
       ) : (
-        <Box>
           <form onSubmit={updateProfile} className="account_form">
             <Form.Field>
               <Form.Label>Email</Form.Label>
@@ -100,12 +80,9 @@ const Account = () => {
               </Button>
             </Button.Group>
           </form>
-        </Box>
       )}
 
-      <Button color="warning" onClick={() => auth.signOut()}>
-        Sign Out
-      </Button>
+
     </div>
   )
 }

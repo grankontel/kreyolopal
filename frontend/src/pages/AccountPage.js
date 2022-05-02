@@ -1,20 +1,68 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import StandardPage from '../layouts/StandardPage'
-import { Heading } from 'react-bulma-components'
+import { Box, Button, Heading, Notification } from 'react-bulma-components'
 import { useZakari } from '../components/ZakProvider'
 import Account from '../components/Account'
 
 const AccountPage = () => {
+  const [notif, setNotif] = useState({ color: 'warning', message: '' })
   const auth = useZakari()
   const navigate = useNavigate()
+
+  const clearMessage = () => {
+    setNotif({ color: notif.color, message: '' })
+  }
+  const onSubmit = async ({ profile, setLoading }) => {
+    console.log(profile)
+    try {
+      setLoading(true)
+      clearMessage()
+      auth.setProfile(profile).then(
+        () => {
+          setNotif({ color: 'info', message: 'Mise à jour réussie' })
+        },
+        (reason) => {
+          const code = reason?.code || 500
+          const msg =
+            code === 500
+              ? 'Erreur inconnue, veuillez essayer ultérieurement'
+              : reason
+          setNotif({ color: 'danger', message: msg })
+        }
+      )
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <StandardPage>
       <Heading size={2} renderAs="h1">
         Account
       </Heading>
-      {auth.user ? <Account /> : navigate('/')}
+      <div className="account_box">
+        <Box>
+          {notif.message.length > 0 ? (
+            <Notification color={notif.color}>
+              {notif.message}
+              <Button remove onClick={() => clearMessage()} />
+            </Notification>
+          ) : (
+            ''
+          )}
+
+          {auth.user ? <Account onSubmit={onSubmit} /> : navigate('/')}
+        </Box>
+
+        <Button.Group align="right">
+          <Button color="warning" onClick={() => auth.signOut()}>
+            Sign Out
+          </Button>
+        </Button.Group>
+      </div>
     </StandardPage>
   )
 }

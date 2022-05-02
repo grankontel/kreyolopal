@@ -8,6 +8,13 @@ function bindMethods() {
   })
 }
 
+/**
+ * @typedef {Object} ZakariResponse
+ * @property {string} status - User firstname
+ * @property {object} [data] - The data if the request succeeded
+ * @property {object} [error] - Errors if the request failed
+ */
+
 class ZakariClient {
   constructor(host) {
     this.host = host
@@ -132,7 +139,7 @@ class ZakariClient {
    */
 
   /**
-   * @typedef {Object} ZakariResponse
+   * @typedef {Object} SpellchekResponse
    * @property {number} user - A user id
    * @property {string} tool - Tool used to query
    * @property {string} service - The service called
@@ -145,7 +152,7 @@ class ZakariClient {
    *
    * @param {string} kreyol 'GP' or 'MQ', wiche language to use
    * @param {string} request The text to spellchek
-   * @returns {ZakariResponse} The spellchek attemp payload
+   * @returns {SpellchekResponse} The spellchek attemp payload
    */
   spellcheck(kreyol, request) {
     const me = this
@@ -183,14 +190,23 @@ class ZakariClient {
     })
   }
 
+  /**
+   * @typedef {Object} ProfileObject
+   * @property {string} firstname - User firstname
+   * @property {string} lastname - User lastname
+   */
+
+  /**
+   * Gets current user profile
+   * @returns ProfileObject
+   */
   getProfile() {
     const me = this
     return new Promise((resolve, reject) => {
       return axios
         .get(
           `${me.host}/api/profile`,
-          {
-          },
+          {},
           {
             headers: {
               'Content-Type': 'application/json',
@@ -200,6 +216,40 @@ class ZakariClient {
             withCredentials: true,
           }
         )
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = reason.response.data
+            data.code = reason.response.status
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+  }
+
+  /**
+   * Update the current user profile
+   * @param {ProfileObject} profile the profile data to update
+   * @returns ZakariResponse
+   */
+  setProfile(profile) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .post(`${me.host}/api/profile`, profile, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: me._authorization,
+            Cookie: me._cookies.join('; '),
+          },
+          withCredentials: true,
+        })
         .then(
           (result) => {
             const rep = result.data
