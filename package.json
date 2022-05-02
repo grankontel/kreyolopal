@@ -21,8 +21,12 @@
     "url": "https://git.heroku.com/kreyol.git"
   },
   "nodemonConfig": {
-    "ignore": ["frontend/*", "db/*", "old/*"]
-  },  
+    "ignore": [
+      "frontend/*",
+      "db/*",
+      "old/*"
+    ]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
