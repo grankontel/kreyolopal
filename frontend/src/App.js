@@ -22,7 +22,14 @@ const App = () => {
               }
             />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/account" element={<AccountPage />} />
+            <Route
+              path="/account"
+              element={
+                <ZakProvider.Protected to="/login">
+                  <AccountPage />{' '}
+                </ZakProvider.Protected>
+              }
+            />
             <Route path="/signup" element={<SignupPage />} />
           </Routes>
         </BrowserRouter>
