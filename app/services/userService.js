@@ -1,6 +1,6 @@
 const logger = require('./logger')
 const authService = require('./authService')
-const db = require ('../database/models')
+const db = require('../database/models')
 const sequelize = db.sequelize
 const user = db['User']
 
@@ -32,7 +32,9 @@ const userService = {
       sequelize.sync().then(
         () => {
           let myrecord = record
-          myrecord.emailveriftoken = authService.generateVerifToken()
+          myrecord.email_verif_token = authService.generateVerifToken(
+            record.email
+          )
 
           authService
             .hashPassword(record.password)
@@ -44,11 +46,12 @@ const userService = {
               (error) => reject(error)
             )
             .then((_record) => {
-              console.log(_record)
               user
                 .create(_record)
                 .then(
-                  (aUser) => resolve(aUser),
+                  (aUser) => {
+                    resolve(aUser)
+                  },
                   (reason) => {
                     logger.error('register rejected')
                     reject(reason.errors[0].message)

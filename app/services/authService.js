@@ -22,10 +22,10 @@ function generateHash(data) {
 }
 
 const authService = {
-  generateVerifToken:  () => {
-    let stamp = Date.now();
-    return generateHash(`${stamp}.${config.security.token}`)
-},
+  generateVerifToken: (userpart) => {
+    let stamp = Date.now()
+    return generateHash(`${stamp}:${userpart}:${config.security.token}`)
+  },
 
   /**
    * Hash the provided plain password

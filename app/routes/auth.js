@@ -4,10 +4,11 @@ const userService = require('../services/userService')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const authService = require('../services/authService')
+const sendEmail = require('../services/emailService')
 const logger = require('../services/logger')
 const config = require('../config')
 const jwt = require('jsonwebtoken')
-const db = require ('../database/models')
+const db = require('../database/models')
 const User = db['User']
 
 const authenticateUser = (email, password) => {
@@ -165,19 +166,56 @@ const auth_route = ({ logger }) => {
         lastname: req.body.lastname,
       }
 
-      userService
+      return userService
         .register(record)
         .then(
-          () => {
+          (_saveduser) => {
             logger.info('register success')
-            res.status(201).send({
-              status: 'success',
-              data: {
-                email: record.email,
-                firstname: record.firstname,
-                lastname: record.lastname,
+
+            const templateData = {
+              user: {
+                id: _saveduser.id,
+                firstname: _saveduser.firstname,
+                lastname: _saveduser.lastname,
+                email: _saveduser.email,
               },
-            })
+              confirm_url:
+                'https://kreyolopal.com/verifymail/' +
+                _saveduser.email_verif_token,
+            }
+            const recipient_mail = _saveduser.email
+
+            console.log('here')
+            console.log('templateData')
+
+            return sendEmail(
+              'verifyemail.mjml',
+              templateData,
+              `'${_saveduser.firstname} ${_saveduser.lastname}' <${recipient_mail}>`,
+              'Kontan vwè-w'
+            ).then(
+              () => {
+                return res.status(201).send({
+                  status: 'success',
+                  data: {
+                    email: record.email,
+                    firstname: record.firstname,
+                    lastname: record.lastname,
+                  },
+                })
+              },
+              (reason) => {
+                logger.error(reason)
+                return res.status(201).send({
+                  status: 'success',
+                  data: {
+                    email: record.email,
+                    firstname: record.firstname,
+                    lastname: record.lastname,
+                  },
+                })
+              }
+            )
           },
           (error) => {
             logger.error(error)
