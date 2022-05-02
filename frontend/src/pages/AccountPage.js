@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import StandardPage from '../layouts/StandardPage'
 import { Box, Button, Heading, Notification } from 'react-bulma-components'
 import { useZakari } from '../components/ZakProvider'
-import Account from '../components/AccountForm'
+import AccountForm from '../components/AccountForm'
 
 const AccountPage = () => {
   const [notif, setNotif] = useState({ color: 'warning', message: '' })
@@ -54,7 +54,7 @@ const AccountPage = () => {
             ''
           )}
 
-          {auth.user ? <Account onSubmit={onSubmit} /> : navigate('/')}
+          {auth.user ? <AccountForm onSubmit={onSubmit} /> : navigate('/')}
         </Box>
 
         <Button.Group align="right">

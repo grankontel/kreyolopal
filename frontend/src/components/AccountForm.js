@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import {  Button, Form, Progress } from 'react-bulma-components'
 import { useZakari } from './ZakProvider'
 
-const Account = (props) => {
+const AccountForm = (props) => {
   const [loading, setLoading] = useState(true)
   const [firstname, setFirstname] = useState(null)
   const [lastname, setLastname] = useState(null)
@@ -87,4 +87,4 @@ const Account = (props) => {
   )
 }
 
-export default Account
+export default AccountForm
