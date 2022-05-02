@@ -3,7 +3,7 @@ import ZakProvider from './components/ZakProvider'
 import AccountPage from './pages/AccountPage'
 import IndexPage from './pages/IndexPage'
 import LoginPage from './pages/LoginPage'
-import SignupPage from './pages/SignupPage'
+import RegisterPage from './pages/RegisterPage'
 import SpellcheckPage from './pages/SpellcheckPage'
 
 const App = () => {
@@ -30,7 +30,7 @@ const App = () => {
                 </ZakProvider.Protected>
               }
             />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/register" element={ <RegisterPage />} />
           </Routes>
         </BrowserRouter>
       </ZakProvider>
