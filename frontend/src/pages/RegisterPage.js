@@ -13,24 +13,27 @@ const RegisterPage = () => {
   const clearMessage = () => {
     setNotif({ color: notif.color, message: '' })
   }
-  const onSubmit = async ({ profile, setLoading }) => {
-    console.log(profile)
+  const onSubmit = async ({ user, setLoading }) => {
+    console.log(user)
     try {
       setLoading(true)
       clearMessage()
-      auth.setProfile(profile).then(
+      auth.register(user).then(
         () => {
-          setNotif({ color: 'info', message: 'Mise à jour réussie' })
+          setNotif({ color: 'info', message: 'Inscription réussie' })
         },
         (reason) => {
+          console.log(reason)
           const code = reason?.code || 500
           const msg =
             code === 500
               ? 'Erreur inconnue, veuillez essayer ultérieurement'
-              : reason
+              : reason.error[0].msg
           setNotif({ color: 'danger', message: msg })
         }
-      )
+      ).catch(err => {
+        console.log(err)
+      })
     } catch (error) {
       console.log(error)
     } finally {
@@ -45,6 +48,11 @@ const RegisterPage = () => {
       </Heading>
       <div className="register_box">
         <Box>
+
+
+          <RegisterForm onSubmit={onSubmit} />
+
+          <div className='notif_space' mt={1} mb={1}>
           {notif.message.length > 0 ? (
             <Notification color={notif.color}>
               {notif.message}
@@ -53,8 +61,7 @@ const RegisterPage = () => {
           ) : (
             ''
           )}
-
-          <RegisterForm onSubmit={onSubmit} />
+          </div>
         </Box>
       </div>
     </StandardPage>
