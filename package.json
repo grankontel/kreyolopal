@@ -11,6 +11,9 @@
     "build": "cd frontend && npm install && npm run build",
     "dev:server": "nodemon ./app/index.js | pino-pretty",
     "dev": "concurrently 'npm run dev:server' 'cd frontend && npm run start' ",
+    "migrate": "sequelize-cli db:migrate",
+    "seed": "sequelize-cli db:seed:all",
+    "pwd": "node ./app/scripts/hash.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -46,6 +49,7 @@
   "devDependencies": {
     "concurrently": "^7.1.0",
     "nodemon": "^2.0.15",
-    "pino-pretty": "^7.6.1"
+    "pino-pretty": "^7.6.1",
+    "sequelize-cli": "^6.4.1"
   }
 }
