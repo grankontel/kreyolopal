@@ -1,43 +1,31 @@
 import { useState, useEffect } from 'react'
 import { Box, Button, Form, Progress } from 'react-bulma-components'
-import { supabase } from '../lib/supabaseClient'
-import { useAuth } from './AuthProvider'
+import { useZakari } from './ZakProvider'
 
-const Account = ({ session }) => {
+const Account = () => {
   const [loading, setLoading] = useState(true)
   const [firstname, setFirstname] = useState(null)
   const [lastname, setLastname] = useState(null)
-  const [website, setWebsite] = useState(null)
-  const [avatar_url, setAvatarUrl] = useState(null)
-  const auth = useAuth()
+  const auth = useZakari()
 
-  console.log('session', session)
   useEffect(() => {
     getProfile()
-  }, [session])
+  }, [])
 
   const getProfile = async () => {
     try {
       setLoading(true)
-      const user = supabase.auth.user()
+      const user = auth.user
       console.log('user', user)
 
-      let { data, error, status } = await supabase
-        .from('profiles')
-        .select(`firstname, lastname, website, avatar_url`)
-        .eq('id', user.id)
-        .single()
+      let {
+        data: { profile },
+      } = await auth.getProfile()
+      console.log(profile)
 
-      console.log('result', { data, error, status })
-      /*       if (error && status !== 406) {
-        throw error
-      }
- */
-      if (data) {
-        setFirstname(data.firstname)
-        setLastname(data.lastname)
-        setWebsite(data.website)
-        setAvatarUrl(data.avatar_url)
+      if (profile) {
+        setFirstname(profile.firstname)
+        setLastname(profile.lastname)
       }
     } catch (error) {
       alert(error.message)
@@ -49,22 +37,17 @@ const Account = ({ session }) => {
   const updateProfile = async (e) => {
     e.preventDefault()
 
-    try {
+    /*     try {
       setLoading(true)
-      const user = supabase.auth.user()
+      const user = auth.user()
 
       const updates = {
         id: user.id,
         firstname,
         lastname,
-        website,
-        avatar_url,
-        updated_at: new Date(),
       }
 
-      let { error } = await supabase.from('profiles').upsert(updates, {
-        returning: 'minimal', // Don't return the value after inserting
-      })
+
 
       if (error) {
         throw error
@@ -73,20 +56,20 @@ const Account = ({ session }) => {
       alert(error.message)
     } finally {
       setLoading(false)
-    }
+    } */
   }
 
   return (
-    <div aria-live="polite">
+    <div aria-live="polite" className='account_box'>
       {loading ? (
         <Progress max={100} />
       ) : (
         <Box>
-          <form onSubmit={updateProfile} className="form-account">
+          <form onSubmit={updateProfile} className="account_form">
             <Form.Field>
               <Form.Label>Email</Form.Label>
               <Form.Control>
-                <Form.Input readOnly value={session.user.email} />
+                <Form.Input readOnly value={auth.user.email} />
               </Form.Control>
             </Form.Field>
             <Form.Field>
@@ -108,17 +91,6 @@ const Account = ({ session }) => {
                   type="text"
                   value={lastname || ''}
                   onChange={(e) => setLastname(e.target.value)}
-                />
-              </Form.Control>
-            </Form.Field>
-            <Form.Field>
-              <Form.Label>Website</Form.Label>
-              <Form.Control>
-                <Form.Input
-                  id="website"
-                  type="url"
-                  value={website || ''}
-                  onChange={(e) => setWebsite(e.target.value)}
                 />
               </Form.Control>
             </Form.Field>

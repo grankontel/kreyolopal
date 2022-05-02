@@ -182,6 +182,40 @@ class ZakariClient {
         })
     })
   }
+
+  getProfile() {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .get(
+          `${me.host}/api/profile`,
+          {
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: me._authorization,
+              Cookie: me._cookies.join('; '),
+            },
+            withCredentials: true,
+          }
+        )
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = reason.response.data
+            data.code = reason.response.status
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+  }
 }
 
 const zakariClient = (host) => {
