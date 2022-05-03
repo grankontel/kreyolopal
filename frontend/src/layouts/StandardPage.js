@@ -1,21 +1,43 @@
 import React from 'react'
-import { Container } from 'react-bulma-components'
+import { Container, Content } from 'react-bulma-components'
 import TopNavbar from '../components/TopNavbar'
+import findByType from '../lib/findByType'
 
-const StandardPage = ({ children }) => {
+const _Footer = () => null
+const _Title = () => null
+
+const StandardPage = ({ children, ...props }) => {
+  const PageFooter = () => {
+    const footer = findByType(children, _Footer)
+
+    return (
+      <Container
+        max
+        breakpoint="fullhd"
+        textAlign="center"
+        className="page-footer"
+        renderAs="footer"
+      >
+        {footer?.props.children}
+        <Content>&copy; TiMalo — 2022</Content>
+      </Container>
+    )
+  }
+
   return (
     <>
-      <header>
-        <TopNavbar />
-      </header>
-      <Container max breakpoint="desktop" className="main" renderAs="main">
+      <TopNavbar />
+
+      <Container {...props} className="main" renderAs="main">
         {children}
       </Container>
-      <footer className="footer">
-        <Container textAlign="center">&copy; TiMalo — 2022</Container>
-      </footer>
+
+      <PageFooter />
     </>
   )
 }
+
+StandardPage.Title = _Title
+StandardPage.Footer = _Footer
 
 export default StandardPage
