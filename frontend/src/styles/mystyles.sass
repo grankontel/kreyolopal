@@ -6,37 +6,8 @@
 // @import "variables"
 // $primary: #FFBC8C
 // $secondary: #599EED
+@import "./components/colors"
 
-$primary: #14342B
-//$link: #12e3a8 // #6320ee
-$info: $cyan
-$success: #3ab795
-$warning: #f9db6d
-$danger: #c3423f
-$dark: $grey-darker
-$text: $grey-dark
-
-$blue: #007bff
-$indigo: #6610f2
-$purple: #6f42c1
-$pink: #e83e8c
-$red: #dc3545
-$orange: #fd7e14
-$yellow: #ffc107
-$green: #28a745
-$teal: #20c997
-$cyan: #17a2b8
-$white: #fff
-$gray: #6c757d
-$gray-dark: #343a40
-$primary: #422B8F
-$secondary: #6f7f8c
-$success: #1A8224
-$info: #018089
-$warning: #E57600
-$danger: #961C1C
-$light: #eceeec
-$dark: #28185c
 
 $body-size: 14px
 
@@ -45,23 +16,8 @@ $body-size: 14px
 $family-primary: 'Titillium Web', BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif
 $family-secondary: 'Alegreya', serif
 
-@import "brands"
-
-$facebook-invert: findColorInvert($facebook)
-$linkedin-invert: findColorInvert($linkedin)
-$twitter-invert: findColorInvert($twitter)
-$grey-invert: findColorInvert($grey)
-
-$custom-colors: ("grey":($grey, $grey-invert), "twitter":($twitter, $twitter-invert), "linkedin": ($linkedin, $linkedin-invert), "facebook": ($facebook, $facebook-invert))
-
+    
 @import "../../node_modules/bulma/sass/utilities/derived-variables"
-
-$addColors: ( "twitter":($twitter, $twitter-invert), "linkedin": ($linkedin, $linkedin-invert), "facebook": ($facebook, $facebook-invert))
-
-//$custom-shades: null !default
-
-// $colors: map-merge($colors, $addColors)
-
 @import "../../node_modules/bulma/bulma.sass"
 
 main.main
@@ -83,24 +39,10 @@ footer.page-footer
 .navbar_top
     padding: 1rem 2rem
 
-.label
-    font-weight: 600
+.app_mockup
+    img
+        max-height: 400px
+        object-fit: contain
+    padding: 2rem
 
-.login_form
-    max-width: 32rem
-    margin: auto
-
-.zakari_form
-    max-width: 48rem
-    margin: auto
-
-.account_box
-    max-width: 48rem
-    margin: auto
-
-.register_box
-    max-width: 48rem
-    margin: auto
-
-.notif_space
-    margin: 1rem 0
+@import "./components/forms"
