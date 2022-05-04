@@ -4,14 +4,23 @@ import { BrowserRouter } from 'react-router-dom'
 import { App } from './app'
 import './styles/mystyles.sass'
 
- ReactDOM.hydrateRoot(
-  document.getElementById('app'),
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-)
+if (process.env.NOSSR) {
+  const root = ReactDOM.createRoot(document.getElementById('app'))
+  root.render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  )
+} else {
+  ReactDOM.hydrateRoot(
+    document.getElementById('app'),
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  )
+}
 
- /*
+/*
 const root = ReactDOM.createRoot(document.getElementById('app'))
 root.render(
   <BrowserRouter>
