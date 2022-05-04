@@ -17,7 +17,7 @@ const LoginPage = () => {
   })
 
   const onSubmit = async ({ email, password, setLoading }) => {
-    console.log({ email, password, setLoading })
+
     try {
       setLoading(true)
       setMessage('')
