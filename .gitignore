@@ -83,3 +83,5 @@ db/
 
 # Old files
 old/
+
+react.strict*
