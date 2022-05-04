@@ -44,8 +44,8 @@ const authService = {
    */
   verifyPassword: async (recpassword, plainpwd) => {
     logger.info('Verifying password...')
-
-    return (res = await argon2.verify(recpassword, plainpwd, argonOptions))
+    const res = await argon2.verify(recpassword, plainpwd, argonOptions)
+    return res
   },
 }
 

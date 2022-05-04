@@ -16,7 +16,7 @@ const isSpace = new RegExp("^\s+$", 'g');
 async function nspell_spellcheck(src, kreyol) {
     let  affix ='', dictionary =''
 
-    value = myCache.get( "dicofiles" );
+    var value = myCache.get( "dicofiles" );
     if (value !== undefined) {
         affix= value.affix
         dictionary=value.dictionary

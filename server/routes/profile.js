@@ -23,7 +23,7 @@ const profile_route = ({ logger }) => {
           .json({ status: 'error', error: 'Internal error' })
       }
 
-      _user = {
+      const _user = {
         firstname: profile.firstname,
         lastname: profile.lastname,
         email: profile.email,

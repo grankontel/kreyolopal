@@ -6,7 +6,7 @@ const spellchecker = {
         return new Promise(function(resolve, reject) {
             hunspell(message.request, message.kreyol)
             .then(response => {
-                msgresponse = {
+                var msgresponse = {
                     //status: '', success | warning | error
                     status: response.unknown_words.length > 0 ? 'warning' : 'success',
                     kreyol: 'GP', //message.request.kreyol,
