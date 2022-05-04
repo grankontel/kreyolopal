@@ -1,16 +1,17 @@
 import React from 'react'
-import { Heading } from 'react-bulma-components'
+import { Heading, Section } from 'react-bulma-components'
 import StandardPage from '../layouts/StandardPage'
 import ZakariForm from '../components/ZakariForm'
 
 const SpellcheckPage = () => {
   return (
     <StandardPage>
+      <Section>
       <Heading size={2} renderAs="h1">
-        Check
+        Lòwtograf
       </Heading>
-
-      <ZakariForm />
+        <ZakariForm />
+      </Section>
     </StandardPage>
   )
 }

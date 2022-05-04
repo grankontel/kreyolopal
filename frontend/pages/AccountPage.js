@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import StandardPage from '../layouts/StandardPage'
-import { Box, Button, Heading, Notification } from 'react-bulma-components'
+import {
+  Box,
+  Button,
+  Heading,
+  Notification,
+  Section,
+} from 'react-bulma-components'
 import { useZakari } from '../components/ZakProvider'
 import AccountForm from '../components/AccountForm'
 
@@ -40,29 +46,36 @@ const AccountPage = () => {
 
   return (
     <StandardPage>
-      <Heading size={2} renderAs="h1">
-        Account
-      </Heading>
-      <div className="account_box">
-        <Box>
-          {notif.message.length > 0 ? (
-            <Notification color={notif.color}>
-              {notif.message}
-              <Button remove onClick={() => clearMessage()} />
-            </Notification>
-          ) : (
-            ''
-          )}
+      <Section>
+        <Heading size={2} renderAs="h1">
+          Account
+        </Heading>
+        <div className="account_box">
+          <Box>
+            {notif.message.length > 0 ? (
+              <Notification color={notif.color}>
+                {notif.message}
+                <Button remove onClick={() => clearMessage()} />
+              </Notification>
+            ) : (
+              ''
+            )}
 
-          {auth.user ? <AccountForm onSubmit={onSubmit} /> : navigate('/')}
-        </Box>
+            {auth?.user ? <AccountForm onSubmit={onSubmit} /> : navigate('/')}
+          </Box>
 
-        <Button.Group align="right">
-          <Button color="warning" onClick={() => auth.signOut()}>
-            Sign Out
-          </Button>
-        </Button.Group>
-      </div>
+          <Button.Group align="right">
+            <Button
+              color="warning"
+              onClick={() => {
+                auth.signOut().then(() => navigate('/'))
+              }}
+            >
+              Sign Out
+            </Button>
+          </Button.Group>
+        </div>
+      </Section>
     </StandardPage>
   )
 }

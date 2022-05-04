@@ -11,7 +11,7 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (auth.user !== null) {
+    if (auth !== null && auth.user !== null) {
       navigate('/')
     }
   })
