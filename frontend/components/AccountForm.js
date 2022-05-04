@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {  Button, Form, Progress } from 'react-bulma-components'
 import { useZakari } from './ZakProvider'
 
@@ -9,19 +9,18 @@ const AccountForm = (props) => {
   const auth = useZakari()
 
   useEffect(() => {
-    getProfile()
-  }, [])
+    if (auth !== null) 
+      getProfile()
+  }, [auth])
 
   const getProfile = async () => {
     try {
       setLoading(true)
       const user = auth.user
-      console.log('user', user)
 
       let {
         data: { profile },
       } = await auth.getProfile()
-      console.log(profile)
 
       if (profile) {
         setFirstname(profile.firstname)

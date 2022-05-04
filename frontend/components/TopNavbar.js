@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Navbar } from 'react-bulma-components'
+import { Button, Navbar } from 'react-bulma-components'
 import { useZakari } from './ZakProvider'
 const classNames = require('classnames')
 
@@ -23,15 +23,10 @@ const TopNavbar = () => {
   })
 
   return (
-    <Navbar color="primary" fixed="top">
+    <Navbar color="dark" className="navbar_top">
       <Navbar.Brand>
         <Navbar.Item href="/" renderAs="li">
-          <img
-            src="/Zakari-Mark-Light-32px.png"
-            width="32"
-            height="32"
-            alt="Zakari Brand"
-          />
+          <img src="images/logo_name.svg" alt="Zakari Brand" />
         </Navbar.Item>
         <Navbar.Item renderAs="li">
           <Link to="/">Home</Link>
@@ -41,14 +36,18 @@ const TopNavbar = () => {
       <Navbar.Burger onClick={openMobileMenu} aria-label="menu" />
       <Navbar.Menu renderAs="div" className={navMenu}>
         <Navbar.Container align="right">
-          {auth.user ? (
+          {auth?.user ? (
             <>
               <Navbar.Item href="/spellcheck">Korije</Navbar.Item>
               <Navbar.Item href="/account">Account</Navbar.Item>
             </>
           ) : (
             <>
-              <Navbar.Item href="/login">Sign In</Navbar.Item>
+              <Navbar.Item href="/login">
+                <Button outlined colorVariant="light">
+                  Sign In
+                </Button>
+              </Navbar.Item>
               <Navbar.Item href="/register">Register</Navbar.Item>
             </>
           )}
