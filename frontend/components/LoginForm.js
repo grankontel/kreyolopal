@@ -44,7 +44,7 @@ const LoginForm = (props) => {
       </Form.Field>
 
       <Button.Group align="right">
-        <Button color="primary">{btnLabel}</Button>
+        <Button loading={loading} color="primary">{btnLabel}</Button>
       </Button.Group>
     </form>
   )

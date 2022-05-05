@@ -1,21 +1,21 @@
-const path = require('path')
-const webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack');
 
-const HtmlWebPackPlugin = require('html-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const processRequire = new webpack.ProvidePlugin({
   process: 'process/browser',
-})
+});
 const htmlPlugin = new HtmlWebPackPlugin({
   template: './frontend/index.html',
   filename: './index.html',
-})
+});
 // extract css to external stylesheet file
 const cssPlugin = new MiniCssExtractPlugin({
   filename: 'styles.css',
-})
+});
 
 const copyPlugin = new CopyWebpackPlugin({
   patterns: [
@@ -24,16 +24,16 @@ const copyPlugin = new CopyWebpackPlugin({
       to: path.resolve(__dirname, 'dist'),
     },
   ],
-})
+});
 
-module.exports = (env) => {
+module.exports = (/* env */) => {
   const envPlugin = new webpack.EnvironmentPlugin({
     NOSSR: false,
-  })
+  });
 
   return {
     target: 'browserslist',
-    mode: 'development' === process.env.NODE_ENV ? 'development' : 'production',
+    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     entry: {
       client: './frontend/index.js',
     },
@@ -89,5 +89,5 @@ module.exports = (env) => {
       },
     },
     devtool: 'source-map',
-  }
-}
+  };
+};

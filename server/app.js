@@ -1,71 +1,73 @@
-const config = require('./config')
-const express = require('express')
-const passport = require('passport')
-const db = require ('./database/models')
-const sequelize = db.sequelize
-const expressSession = require('express-session')
-const SessionStore = require('express-session-sequelize')(expressSession.Store)
-const { apiRoutes, publicRoutes } = require('./routes')
-const JwtCookieComboStrategy = require('passport-jwt-cookiecombo')
-const userService = require('./services/userService')
+const express = require('express');
+const cors = require('cors');
+const cookie_parser = require('cookie-parser');
+const body_parser = require('body-parser');
+const pino_logger = require('express-pino-logger');
+
+const expressSession = require('express-session');
+const SessionStore = require('express-session-sequelize')(expressSession.Store);
+
+const passport = require('passport');
+const JwtCookieComboStrategy = require('passport-jwt-cookiecombo');
+
+const config = require('./config');
+const db = require('./database/models');
+const { apiRoutes, publicRoutes } = require('./routes');
+
+const { sequelize } = db;
 
 const passportPrepare = (logger) => {
-  passport.serializeUser(function (user, cb) {
-    console.log('serializeUser')
-    process.nextTick(function () {
-      cb(null, { id: user.id, username: user.email })
-    })
-  })
+  passport.serializeUser((user, cb) => {
+    logger.info('serializeUser');
+    process.nextTick(() => {
+      cb(null, { id: user.id, username: user.email });
+    });
+  });
 
-  passport.deserializeUser(function (user, cb) {
-    console.log('deserializeUser')
-    process.nextTick(function () {
-      return cb(null, user)
-    })
-  })
+  passport.deserializeUser((user, cb) => {
+    logger.info('deserializeUser');
+    process.nextTick(() => cb(null, user));
+  });
 
   passport.use(
     new JwtCookieComboStrategy(
       {
         secretOrPublicKey: config.security.salt,
       },
-      (payload, done) => {
-        return done(null, payload.user)
-      }
+      (payload, done) => done(null, payload.user)
     )
-  )
-}
+  );
+};
 
 async function configureApp({
   app,
   logger,
   routesCallback = { apiCallback: apiRoutes, publicCallback: publicRoutes },
 }) {
-  //configure logger
-  const expressPino = require('express-pino-logger')({
-    logger: logger,
-  })
+  // configure logger
+  const expressPino = pino_logger({
+    logger,
+  });
 
-  app.use(expressPino)
+  app.use(expressPino);
 
-  //trust proxy
-  app.enable('trust proxy')
+  // trust proxy
+  app.enable('trust proxy');
 
   // cross-origin
-  const cors = require('cors')
-  app.options('*', cors()) // include before other routes
+  app.options('*', cors()); // include before other routes
 
-  app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*')
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
     res.header(
       'Access-Control-Allow-Headers',
       'Origin, X-Requested-With, Content-Type, Accept'
-    )
-    next()
-  })
+    );
+    next();
+  });
 
-  app.use(require('cookie-parser')(config.security.salt))
-  app.use(require('body-parser').urlencoded({ extended: true }))
+  app.use(cookie_parser(config.security.salt));
+  app.use(body_parser.urlencoded({ extended: true }));
   app.use(
     expressSession({
       secret: config.auth.secret,
@@ -75,16 +77,16 @@ async function configureApp({
         db: sequelize,
       }),
     })
-  )
-  passportPrepare(logger)
-  app.use(passport.initialize())
+  );
+  passportPrepare(logger);
+  app.use(passport.initialize());
 
   /*     //jwt
     const jwt = require('./middlewares/jwt');
     jwt({app, logger});
  */
-  //body parser
-  app.use(express.json())
+  // body parser
+  app.use(express.json());
 
   /*     //db connection
     connectMongo = require('./services/db');
@@ -99,46 +101,39 @@ async function configureApp({
     })
  */
 
-  const { apiCallback, publicCallback } = routesCallback
-  var apiRouter = express.Router()
-  apiCallback({ app: apiRouter, logger })
-  //prefix
-  app.use('/api', apiRouter)
+  const { apiCallback, publicCallback } = routesCallback;
+  const apiRouter = express.Router();
+  apiCallback({ app: apiRouter, logger });
+  // prefix
+  app.use('/api', apiRouter);
 
-  var publicRouter = express.Router()
-  publicCallback({ app: publicRouter, logger })
-  //prefix
-  app.use('/', publicRouter)
+  const publicRouter = express.Router();
+  publicCallback({ app: publicRouter, logger });
+  // prefix
+  app.use('/', publicRouter);
 
-  //errors
-  app.use(function (err, req, res, next) {
+  // errors
+  app.use((err, req, res, next) => {
     // Do logging and user-friendly error message display
-    logger.error(err)
+    logger.error(err);
     return res.status(500).json({
       status: 'error',
       code: 500,
       message: 'internal error',
       error: new Error('internal error'),
-    })
+    });
+  });
 
-    res
-      .status(500)
-      .send({ status: 500, message: 'internal error', type: 'internal' })
-  })
-
-  app.use(function (req, res) {
-    return res.status(404).json({
+  app.use((req, res) =>
+    res.status(404).json({
       status: 'error',
       code: 404,
       message: 'Not Found',
       error: new Error('Not Found'),
     })
-    res
-      .status(404)
-      .send({ status: 404, message: 'Not found', type: 'internal' })
-  })
+  );
 
-  return app
+  return app;
 }
 
-module.exports = configureApp
+module.exports = configureApp;

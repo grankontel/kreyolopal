@@ -1,65 +1,66 @@
-const config = require('./config')
-const express = require('express')
-const passport = require('passport')
-const db = require('./database/models')
-const sequelize = db.sequelize
-const expressSession = require('express-session')
-const SessionStore = require('express-session-sequelize')(expressSession.Store)
-const JwtCookieComboStrategy = require('passport-jwt-cookiecombo')
+const express = require('express');
+const pino_logger = require('express-pino-logger');
+const cors = require('cors');
+const cookie_parser = require('cookie-parser');
+const body_parser = require('body-parser');
+const passport = require('passport');
+const expressSession = require('express-session');
+const SessionStore = require('express-session-sequelize')(expressSession.Store);
+const JwtCookieComboStrategy = require('passport-jwt-cookiecombo');
+
+const config = require('./config');
+const db = require('./database/models');
+
+const { sequelize } = db;
 
 const passportPrepare = (logger) => {
-  passport.serializeUser(function (user, cb) {
-    console.log('serializeUser')
-    process.nextTick(function () {
-      cb(null, { id: user.id, username: user.email })
-    })
-  })
+  passport.serializeUser((user, cb) => {
+    logger.info('serializeUser');
+    process.nextTick(() => {
+      cb(null, { id: user.id, username: user.email });
+    });
+  });
 
-  passport.deserializeUser(function (user, cb) {
-    console.log('deserializeUser')
-    process.nextTick(function () {
-      return cb(null, user)
-    })
-  })
+  passport.deserializeUser((user, cb) => {
+    logger.info('deserializeUser');
+    process.nextTick(() => cb(null, user));
+  });
 
   passport.use(
     new JwtCookieComboStrategy(
       {
         secretOrPublicKey: config.security.salt,
       },
-      (payload, done) => {
-        return done(null, payload.user)
-      }
+      (payload, done) => done(null, payload.user)
     )
-  )
-}
+  );
+};
 
 async function coreConfig({ app, logger, routeCallback }) {
-  //configure logger
-  const expressPino = require('express-pino-logger')({
-    logger: logger,
-  })
+  // configure logger
+  const expressPino = pino_logger({
+    logger,
+  });
 
-  app.use(expressPino)
+  app.use(expressPino);
 
-  //trust proxy
-  app.enable('trust proxy')
+  // trust proxy
+  app.enable('trust proxy');
 
   // cross-origin
-  const cors = require('cors')
-  app.options('*', cors()) // include before other routes
+  app.options('*', cors()); // include before other routes
 
-  app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*')
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
     res.header(
       'Access-Control-Allow-Headers',
       'Origin, X-Requested-With, Content-Type, Accept'
-    )
-    next()
-  })
+    );
+    next();
+  });
 
-  app.use(require('cookie-parser')(config.security.salt))
-  app.use(require('body-parser').urlencoded({ extended: true }))
+  app.use(cookie_parser(config.security.salt));
+  app.use(body_parser.urlencoded({ extended: true }));
   app.use(
     expressSession({
       secret: config.auth.secret,
@@ -69,16 +70,16 @@ async function coreConfig({ app, logger, routeCallback }) {
         db: sequelize,
       }),
     })
-  )
+  );
 
-  passportPrepare(logger)
-  app.use(passport.initialize())
+  passportPrepare(logger);
+  app.use(passport.initialize());
 
-  //body parser
-  app.use(express.json())
+  // body parser
+  app.use(express.json());
 
   // instance callBack
-  routeCallback({ app, logger })
+  routeCallback({ app, logger });
 
   /*     
   const { apiCallback, publicCallback } = routesCallback
@@ -93,28 +94,28 @@ async function coreConfig({ app, logger, routeCallback }) {
     app.use('/', publicRouter)
  */
 
-  //errors
-  app.use(function (err, req, res, next) {
+  // errors
+  app.use((err, req, res, next) => {
     // Do logging and user-friendly error message display
-    logger.error(err)
+    logger.error(err);
     return res.status(500).json({
       status: 'error',
       code: 500,
       message: 'internal error',
       error: new Error('internal error'),
-    })
-  })
+    });
+  });
 
-  app.use(function (req, res) {
-    return res.status(404).json({
+  app.use((req, res) =>
+    res.status(404).json({
       status: 'error',
       code: 404,
       message: 'Not Found',
       error: new Error('Not Found'),
     })
-  })
+  );
 
-  return app
+  return app;
 }
 
-module.exports = coreConfig
+module.exports = coreConfig;

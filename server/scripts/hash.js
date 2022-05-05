@@ -1,10 +1,11 @@
-const authService = require('../services/authService')
+/* eslint-disable no-console */
+const authService = require('../services/authService');
 
-const plain = process.argv[process.argv.length - 1]
+const plain = process.argv[process.argv.length - 1];
 
 console.log(plain);
 
 (async () => {
-  const pwd = await authService.hashPassword(plain)
-  console.log(pwd)
+  const pwd = await authService.hashPassword(plain);
+  console.log(pwd);
 })();
