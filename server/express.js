@@ -50,7 +50,9 @@ async function startServer() {
       return;
     }
 
-    process.stdout.write(`🚀 Your server is ready on http://localhost:${port}`);
+    process.stdout.write(
+      `🚀 Your server is ready on http://localhost:${port}\n\n`
+    );
   });
 }
 

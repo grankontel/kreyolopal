@@ -104,6 +104,7 @@ const auth_route = ({ logger }) => {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
       };
+      const origin = `${req.protocol}://${req.get('host')}`;
 
       return userService
         .register(record)
@@ -118,7 +119,7 @@ const auth_route = ({ logger }) => {
                 lastname: _saveduser.lastname,
                 email: _saveduser.email,
               },
-              confirm_url: `https://kreyolopal.com/api/verifymail/${_saveduser.email_verif_token}`,
+              confirm_url: `${origin}/api/verifymail/${_saveduser.email_verif_token}`,
             };
             const recipient_mail = _saveduser.email;
 
