@@ -1,30 +1,30 @@
-const config = require('../config')
-const argon2 = require('argon2')
-const { SHA3 } = require('sha3')
-const logger = require('./logger')
+const argon2 = require('argon2');
+const { SHA3 } = require('sha3');
+const config = require('../config');
+const logger = require('./logger');
 
 const argonOptions = {
   type: argon2.argon2i,
   memoryCost: config.security.memoryCost,
   hashLength: config.security.hashLength,
   timeCost: config.security.iterations,
-}
+};
 
 /**
  * Generate a hash
  * @param {string} data the data to make the hash for
  */
 function generateHash(data) {
-  const hash = new SHA3(256)
+  const hash = new SHA3(256);
 
-  hash.update(data)
-  return hash.digest('hex')
+  hash.update(data);
+  return hash.digest('hex');
 }
 
 const authService = {
   generateVerifToken: (userpart) => {
-    let stamp = Date.now()
-    return generateHash(`${stamp}:${userpart}:${config.security.token}`)
+    const stamp = Date.now();
+    return generateHash(`${stamp}:${userpart}:${config.security.token}`);
   },
 
   /**
@@ -33,7 +33,8 @@ const authService = {
    * @returns hashed password
    */
   hashPassword: async (plain) => {
-    return (res = await argon2.hash(plain, config.security.salt, argonOptions))
+    const res = await argon2.hash(plain, config.security.salt, argonOptions);
+    return res;
   },
 
   /**
@@ -43,10 +44,10 @@ const authService = {
    * @returns true if password match
    */
   verifyPassword: async (recpassword, plainpwd) => {
-    logger.info('Verifying password...')
-    const res = await argon2.verify(recpassword, plainpwd, argonOptions)
-    return res
+    logger.info('Verifying password...');
+    const res = await argon2.verify(recpassword, plainpwd, argonOptions);
+    return res;
   },
-}
+};
 
-module.exports = authService
+module.exports = authService;

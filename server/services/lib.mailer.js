@@ -1,6 +1,6 @@
-const nodemailer = require('nodemailer')
-const config = require('../config')
-const mg = require('nodemailer-mailgun-transport')
+const nodemailer = require('nodemailer');
+const mg = require('nodemailer-mailgun-transport');
+const config = require('../config');
 
 const auth = {
   auth: {
@@ -8,8 +8,8 @@ const auth = {
     domain: config.mail.domain, // 'one of your domain names listed at your https://mailgun.com/app/domains'
   },
   host: config.mail.host,
-}
-let transport = mg(auth)
-const mailer = nodemailer.createTransport(transport)
+};
+const transport = mg(auth);
+const mailer = nodemailer.createTransport(transport);
 
-module.exports = mailer
+module.exports = mailer;

@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 
 const config = {
   app: {
@@ -40,6 +40,6 @@ const config = {
     secret: process.env.SESSION_SECRET,
     duration: process.env.SESSION_DURATION,
   },
-}
+};
 
-module.exports = config
+module.exports = config;

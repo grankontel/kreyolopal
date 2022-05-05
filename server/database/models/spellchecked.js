@@ -1,5 +1,5 @@
-'use strict'
-const { Model } = require('sequelize')
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Spellchecked extends Model {
     /**
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Spellchecked.belongsTo(models.User, {
         foreignKey: 'userId',
         onDelete: 'CASCADE',
-      })
+      });
     }
   }
   Spellchecked.init(
@@ -42,6 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'Spellchecked',
     }
-  )
-  return Spellchecked
-}
+  );
+  return Spellchecked;
+};

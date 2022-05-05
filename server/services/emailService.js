@@ -1,35 +1,35 @@
-const mailer = require('./lib.mailer')
-const logger = require('./logger')
-const mustache = require('mustache')
-const mjml = require('mjml')
-const { htmlToText } = require('html-to-text')
-const config = require('../config')
+const mustache = require('mustache');
+const mjml = require('mjml');
+const { htmlToText } = require('html-to-text');
+const NodeCache = require('node-cache');
+const config = require('../config');
+const logger = require('./logger');
+const mailer = require('./lib.mailer');
 
-const NodeCache = require('node-cache')
-const myCache = new NodeCache()
+const myCache = new NodeCache();
 
-const path = require('path')
-const fs = require('fs/promises')
+const path = require('path');
+const fs = require('fs/promises');
 
 /**
  * Get the content of the template
  * @param {string} templateFilename The template file name
  * @returns contents of the template
  */
-const getTemplate =  (templateFilename) => {
-  const name = templateFilename.toLowerCase()
-  const _file = path.join(__dirname, "../mails/", templateFilename);
+const getTemplate = (templateFilename) => {
+  const name = templateFilename.toLowerCase();
+  const _file = path.join(__dirname, '../mails/', templateFilename);
 
   return new Promise(async (resolve, reject) => {
-    let value = myCache.get(name)
+    let value = myCache.get(name);
     if (value === undefined) {
-        value = await fs.readFile(_file, 'utf-8')
-        myCache.set(name, value)
+      value = await fs.readFile(_file, 'utf-8');
+      myCache.set(name, value);
     }
-    
-    resolve(value)
-  })
-}
+
+    resolve(value);
+  });
+};
 
 /**
  * Create an email
@@ -37,21 +37,19 @@ const getTemplate =  (templateFilename) => {
  * @param {string} templateData - The mjml template data
  * @returns {Promise} a Promise to create the email
  */
-const makeEmail = (templateFilename, templateData) => {
-  return new Promise(function (resolve, reject) {
-    return getTemplate(templateFilename).then(mjmlTemplate => {
-        if (!mjmlTemplate) reject(`No such template ${templateFilename}`)
+const makeEmail = (templateFilename, templateData) =>
+  new Promise((resolve, reject) =>
+    getTemplate(templateFilename).then((mjmlTemplate) => {
+      if (!mjmlTemplate) reject(`No such template ${templateFilename}`);
 
-        const renderedMjml = mustache.render(mjmlTemplate, templateData)
-    
-        const html = mjml(renderedMjml).html
-        const text = htmlToText(html, { wordwrap: 130 })
-    
-        resolve({ html, text })
+      const renderedMjml = mustache.render(mjmlTemplate, templateData);
+
+      const { html } = mjml(renderedMjml);
+      const text = htmlToText(html, { wordwrap: 130 });
+
+      resolve({ html, text });
     })
-
-  })
-}
+  );
 
 /**
  *
@@ -61,28 +59,26 @@ const makeEmail = (templateFilename, templateData) => {
  * @param {string} subject The subject of the email
  * @returns {Promise} a Promise to send the email
  */
-const sendEmail = (templateFilename, templateData, recipient, subject) => {
-  return new Promise(function (resolve, reject) {
-    return makeEmail(templateFilename, templateData)
-    .then((email) => {
+const sendEmail = (templateFilename, templateData, recipient, subject) =>
+  new Promise((resolve, reject) =>
+    makeEmail(templateFilename, templateData).then((email) => {
       mailer.sendMail(
         {
           from: config.mail.from,
-          to: recipient, //_saveduser.email,
-          subject: subject,
+          to: recipient, // _saveduser.email,
+          subject,
           text: email.text,
           html: email.html,
         },
         (err, info) => {
           if (err) {
-            reject(err)
+            reject(err);
           } else {
-            resolve(info)
+            resolve(info);
           }
         }
-      )
+      );
     })
-  })
-}
+  );
 
-module.exports=sendEmail
+module.exports = sendEmail;

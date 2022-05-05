@@ -1,8 +1,8 @@
-const { promisify } = require('util')
-const fs = require('fs')
-const path = require('path')
+const { promisify } = require('util');
+const fs = require('fs');
+const path = require('path');
 
-const readFile = promisify(fs.readFile)
+const readFile = promisify(fs.readFile);
 
 /**
  * Read dictionary files for a kreyol
@@ -12,16 +12,16 @@ async function readDicoFiles(kreyol) {
   const readAff = readFile(
     path.resolve(__dirname, '../dico/cpf_GP.aff'),
     'utf8'
-  )
+  );
   const readDic = readFile(
     path.resolve(__dirname, '../dico/cpf_GP.dic'),
     'utf8'
-  )
+  );
 
-  const affix = Buffer.from(await readAff)
-  const dictionary = Buffer.from(await readDic)
+  const affix = Buffer.from(await readAff);
+  const dictionary = Buffer.from(await readDic);
 
-  return { affix: affix, dictionary: dictionary }
+  return { affix, dictionary };
 }
 
-module.exports = { readDicoFiles }
+module.exports = { readDicoFiles };
