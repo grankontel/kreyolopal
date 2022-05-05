@@ -1,8 +1,15 @@
 const express = require('express');
-const passport = require('passport');
+const cors = require('cors');
+const cookie_parser = require('cookie-parser');
+const body_parser = require('body-parser');
+const pino_logger = require('express-pino-logger');
+
 const expressSession = require('express-session');
 const SessionStore = require('express-session-sequelize')(expressSession.Store);
+
+const passport = require('passport');
 const JwtCookieComboStrategy = require('passport-jwt-cookiecombo');
+
 const config = require('./config');
 const db = require('./database/models');
 const { apiRoutes, publicRoutes } = require('./routes');
@@ -11,14 +18,14 @@ const { sequelize } = db;
 
 const passportPrepare = (logger) => {
   passport.serializeUser((user, cb) => {
-    console.log('serializeUser');
+    logger.info('serializeUser');
     process.nextTick(() => {
       cb(null, { id: user.id, username: user.email });
     });
   });
 
   passport.deserializeUser((user, cb) => {
-    console.log('deserializeUser');
+    logger.info('deserializeUser');
     process.nextTick(() => cb(null, user));
   });
 
@@ -38,7 +45,7 @@ async function configureApp({
   routesCallback = { apiCallback: apiRoutes, publicCallback: publicRoutes },
 }) {
   // configure logger
-  const expressPino = require('express-pino-logger')({
+  const expressPino = pino_logger({
     logger,
   });
 
@@ -48,7 +55,6 @@ async function configureApp({
   app.enable('trust proxy');
 
   // cross-origin
-  const cors = require('cors');
   app.options('*', cors()); // include before other routes
 
   app.use((req, res, next) => {
@@ -60,8 +66,8 @@ async function configureApp({
     next();
   });
 
-  app.use(require('cookie-parser')(config.security.salt));
-  app.use(require('body-parser').urlencoded({ extended: true }));
+  app.use(cookie_parser(config.security.salt));
+  app.use(body_parser.urlencoded({ extended: true }));
   app.use(
     expressSession({
       secret: config.auth.secret,
@@ -116,23 +122,16 @@ async function configureApp({
       message: 'internal error',
       error: new Error('internal error'),
     });
-
-    res
-      .status(500)
-      .send({ status: 500, message: 'internal error', type: 'internal' });
   });
 
-  app.use((req, res) => {
-    return res.status(404).json({
+  app.use((req, res) =>
+    res.status(404).json({
       status: 'error',
       code: 404,
       message: 'Not Found',
       error: new Error('Not Found'),
-    });
-    res
-      .status(404)
-      .send({ status: 404, message: 'Not found', type: 'internal' });
-  });
+    })
+  );
 
   return app;
 }

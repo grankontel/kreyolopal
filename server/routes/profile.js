@@ -61,7 +61,7 @@ const profile_route = ({ logger }) => {
 
       const profile = await User.findByPk(req.user.id);
       if (profile === null) {
-        logger.error(reason);
+        logger.error(`Cannot find user : ${req.user.id}`);
         return res
           .status(500)
           .json({ status: 'error', error: 'Internal error' });
@@ -70,7 +70,7 @@ const profile_route = ({ logger }) => {
       profile.firstname = firstname;
       profile.lastname = lastname;
 
-      profile.save().then(
+      return profile.save().then(
         () => {
           res.status(200).send({
             status: 'success',

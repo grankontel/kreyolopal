@@ -9,13 +9,13 @@ const streamToString = (stream) =>
     stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
   });
 
-const streamToBuffer = (stream) =>
+/* const streamToBuffer = (stream) =>
   new Promise((resolve, reject) => {
     const chunks = [];
     stream.on('data', (chunk) => chunks.push(chunk));
     stream.on('error', reject);
     stream.on('end', () => resolve(Buffer.concat(chunks)));
-  });
+  }); */
 
 const getObjectContent = (client, command) =>
   new Promise((resolve, reject) => {
@@ -41,6 +41,7 @@ const getObjectContent = (client, command) =>
  * Read dictionary files for a kreyol
  * @param {string} kreyol Wich kreyol
  */
+// eslint-disable-next-line no-unused-vars
 async function readDicoFiles(kreyol) {
   const s3Options = {
     credentials: {

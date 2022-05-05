@@ -2,85 +2,12 @@ const express = require('express');
 const { body, validationResult, param } = require('express-validator');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const jwt = require('jsonwebtoken');
-const config = require('../config');
 const userService = require('../services/userService');
-const authService = require('../services/authService');
 const sendEmail = require('../services/emailService');
-const logger = require('../services/logger');
 const db = require('../database/models');
+const { authenticateUser, logUserIn } = require('../services/lib.auth');
 
 const { User } = db;
-
-const authenticateUser = (email, password) =>
-  new Promise((resolve, reject) => {
-    logger.info('auth request', { email, password });
-    userService
-      .findbyEmail(email)
-      .then(
-        async (record) => {
-          logger.debug(record);
-          if (record === null) {
-            resolve(false);
-          }
-          const isValid = await authService.verifyPassword(
-            record.password,
-            password
-          );
-          return isValid ? resolve(record) : resolve(false);
-        },
-        (reason) => {
-          reject(reason);
-        }
-      )
-      .catch((error) => {
-        reject(error);
-      });
-  });
-
-const logUserIn = (user, req, res) => {
-  req.session.passport = {
-    id: user.id,
-    username: user.email,
-  };
-
-  req.user = user;
-
-  jwt.sign(
-    {
-      user: {
-        id: user.id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-      },
-    },
-    config.security.salt,
-    (err, token) => {
-      if (err) return res.json(err);
-
-      req.user.lastlogin = new Date();
-      req.user.save();
-
-      // Send Set-Cookie header
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        sameSite: true,
-        signed: true,
-        secure: true,
-      });
-
-      console.log(req.session);
-
-      const payload = { email: req.user.email, jwt: token };
-      // Return json web token
-      return res.json({
-        status: 'success',
-        data: payload,
-      });
-    }
-  );
-};
 
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (username, password, done) => {
@@ -252,14 +179,18 @@ const auth_route = ({ logger }) => {
 
       const { token } = req.params;
 
-      User.findOne({ where: { email_verif_token: token } }).then((_user) => {
-        if (_user === null) {
-          return res.status(404).json({ status: 'error', error: 'Not Found' });
-        }
+      return User.findOne({ where: { email_verif_token: token } }).then(
+        (_user) => {
+          if (_user === null) {
+            return res
+              .status(404)
+              .json({ status: 'error', error: 'Not Found' });
+          }
 
-        _user.email_verif_token = undefined;
-        return logUserIn(_user, req, res);
-      });
+          _user.email_verif_token = undefined;
+          return logUserIn(_user, req, res);
+        }
+      );
     }
   );
 

@@ -9,4 +9,4 @@ require('@babel/register')({
 });
 
 // import express server
-require('./express.js');
+require('./express');

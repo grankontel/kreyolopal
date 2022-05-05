@@ -1,12 +1,13 @@
+/* eslint-disable no-plusplus, no-continue */
 const nspell = require('nspell');
 const NodeCache = require('node-cache');
 const dicoSource = require('./lib.s3-dicofile');
 
 const myCache = new NodeCache();
 
-const puncRegex = new RegExp('^[^A-Za-z0-9_]+$', 'g');
-const withDigits = new RegExp('^([A-Za-z]*)[0-9]+([A-Za-z]*)$', 'g');
-const isSpace = new RegExp('^s+$', 'g');
+const puncRegex = /^[^A-Za-z0-9_]+$/g;
+const withDigits = /^([A-Za-z]*)[0-9]+([A-Za-z]*)$/g;
+const isSpace = /^s+$/g;
 
 /**
  * Verify spelling for a string
@@ -74,7 +75,7 @@ async function nspell_spellcheck(src, kreyol) {
     if (item.isCorrect) {
       nl = item.word;
     } else if (item.suggestions.length) {
-      nl = item.suggestions[0];
+      [nl] = item.suggestions;
     } else {
       nl = `~${item.word}~`;
     }

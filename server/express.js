@@ -1,20 +1,17 @@
 const express = require('express');
+const http = require('http');
 const path = require('path');
 const config = require('./config');
 const { apiRoutes, publicRoutes } = require('./routes');
 const { reactRoute } = require('./react.strict');
 const coreConfig = require('./prepare');
-const logger = require('./services/logger');
+const myLogger = require('./services/logger');
 
 const port = config.app.port || 5000;
 
-const _createServer = (app) => {
-  const http = require('http');
-  return http.createServer(app);
-};
+const createServer = (app) => http.createServer(app);
 
 const installRoutes = ({ app, logger }) => {
-  console.log('inside installRoutes');
   const apiRouter = express.Router();
   apiRoutes({ app: apiRouter, logger });
   // prefix
@@ -39,21 +36,21 @@ async function startServer() {
   const app = express();
 
   // configure express
-  const _server = await coreConfig({
+  const lServer = await coreConfig({
     app,
-    logger /* , routesCallback: allRoutes */,
+    logger: myLogger /* , routesCallback: allRoutes */,
     routeCallback: installRoutes,
   });
 
-  const server = _createServer(_server);
+  const server = createServer(lServer);
 
   server.listen(port, (err) => {
     if (err) {
-      logger.error(err);
+      myLogger.error(err);
       return;
     }
 
-    console.log(`Your server is ready on http://localhost:${port}`);
+    process.stdout.write(`🚀 Your server is ready on http://localhost:${port}`);
   });
 }
 

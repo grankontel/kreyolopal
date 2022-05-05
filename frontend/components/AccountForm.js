@@ -16,7 +16,6 @@ const AccountForm = (props) => {
   const getProfile = async () => {
     try {
       setLoading(true)
-      const user = auth.user
 
       let {
         data: { profile },
