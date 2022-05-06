@@ -15,17 +15,17 @@ const IndexPage = () => {
     <StandardPage max breakpoint="fullhd">
       <StandardPage.Head
         title="Kreyolopal"
-        description="On aplikasyon pou konnèt lang kréyòl é kilti a pèp kréyolopal pi myé."
+        description="Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole."
       />
 
       <Hero color="magnolia" className="index_hero" size="medium">
         <Columns>
           <Columns.Column size="half">
             <Hero.Body>
-              <Heading>Kreyolopal</Heading>
+              <Heading size={1}>Kreyolopal</Heading>
               <Heading subtitle>
-                On aplikasyon pou konnèt lang kréyòl é kilti a pèp kréyolopal pi
-                myé.
+                Utiliser les technologies d'aujourd'hui pour encourager,
+                améliorer et diffuser l'écriture du créole.
               </Heading>
             </Hero.Body>
           </Columns.Column>
@@ -34,8 +34,12 @@ const IndexPage = () => {
           </Columns.Column>
         </Columns>
       </Hero>
-      <Container max breakpoint="desktop">
-        <Section>Content</Section>
+      <Container max breakpoint="fullhd">
+        <Section>
+          <Heading renderAs="h2" size={3}>
+            Le correcteur orthographique
+          </Heading>
+        </Section>
       </Container>
       <StandardPage.Footer>
         <Link to="/">
