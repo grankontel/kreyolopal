@@ -24,7 +24,7 @@
     "build-client": "NODE_ENV=production webpack --mode=production",
     "build": "concurrently 'npm:build-*'",
     "start": "node ./server/index.js",
-    "lint" :"eslint ./",
+    "lint": "eslint ./",
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all",
     "pwd": "node ./scripts/hash.js",
@@ -123,9 +123,11 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "glob": "^7.2.0",
     "nodemon": "^2.0.16",
     "pino-pretty": "^7.6.1",
     "prettier": "^2.6.2",
-    "sequelize-cli": "^6.4.1"
+    "sequelize-cli": "^6.4.1",
+    "sharp": "^0.30.4"
   }
 }
