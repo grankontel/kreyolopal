@@ -34,6 +34,15 @@ module.exports = (/* env */) => {
   return {
     target: 'browserslist',
     mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+    watchOptions: {
+      ignored: [
+        '**/node_modules',
+        path.resolve(__dirname, './db'),
+        path.resolve(__dirname, './dist'),
+        path.resolve(__dirname, './old'),
+        path.resolve(__dirname, './server'),
+      ],
+    },
     entry: {
       client: './frontend/index.js',
     },
@@ -83,6 +92,9 @@ module.exports = (/* env */) => {
       },
     },
     devServer: {
+      static: {
+        directory: path.join(__dirname, 'frontend/public'),
+      },
       historyApiFallback: true,
       proxy: {
         '/api': 'http://localhost:5000',
