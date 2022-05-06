@@ -27,7 +27,7 @@
     "lint" :"eslint ./",
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all",
-    "pwd": "node ./server/scripts/hash.js",
+    "pwd": "node ./scripts/hash.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
