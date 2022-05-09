@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] 
 
+## [1.0.2] - 2022-05-09
+
+- added SEO elements
+
+## [build_images] - 2022-05-09
+
+- extra images are created at build time
+
 ## [1.0.1] - 2022-05-09
 
 - can now set document language

@@ -28,10 +28,13 @@ const IndexPage = () => {
         <Columns>
           <Columns.Column size="half">
             <Hero.Body>
-              <Heading size={1}>Kreyolopal</Heading>
-              <Heading subtitle>
-                Utiliser les technologies d'aujourd'hui pour encourager,
-                améliorer et diffuser l'écriture du créole.
+              <Heading size={1} renderAs="h1">
+                Kreyolopal
+              </Heading>
+              <Heading subtitle renderAs="div">
+                Kreyolopal est né de l'envie d'utiliser les technologies
+                d'aujourd'hui pour encourager, améliorer et diffuser l'écriture
+                du créole.
               </Heading>
             </Hero.Body>
           </Columns.Column>
