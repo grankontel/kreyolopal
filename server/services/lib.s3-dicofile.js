@@ -1,13 +1,13 @@
-const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
-const config = require('../config');
+const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3')
+const config = require('../config')
 
 const streamToString = (stream) =>
   new Promise((resolve, reject) => {
-    const chunks = [];
-    stream.on('data', (chunk) => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-  });
+    const chunks = []
+    stream.on('data', (chunk) => chunks.push(chunk))
+    stream.on('error', reject)
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
+  })
 
 /* const streamToBuffer = (stream) =>
   new Promise((resolve, reject) => {
@@ -23,19 +23,19 @@ const getObjectContent = (client, command) =>
       .send(command)
       .then(
         (result) => {
-          const { Body } = result;
-          streamToString(Body).then((data) => resolve(data));
+          const { Body } = result
+          streamToString(Body).then((data) => resolve(data))
         },
         (reason) => {
           // console.log('small error');
-          reject(reason);
+          reject(reason)
         }
       )
       .catch((error) => {
         // console.log('big error');
-        reject(error);
-      });
-  });
+        reject(error)
+      })
+  })
 
 /**
  * Read dictionary files for a kreyol
@@ -49,31 +49,31 @@ async function readDicoFiles(kreyol) {
       secretAccessKey: config.aws.keySecret,
     },
     region: config.aws.region,
-  };
-  const client = new S3Client(s3Options);
+  }
+  const client = new S3Client(s3Options)
   const affixParams = {
     Bucket: config.aws.bucketName,
     Key: 'dico/cpf_GP.aff',
-  };
+  }
   const dicParams = {
     Bucket: config.aws.bucketName,
     Key: 'dico/cpf_GP.dic',
-  };
+  }
 
-  const getAffix = new GetObjectCommand(affixParams);
-  const getDic = new GetObjectCommand(dicParams);
+  const getAffix = new GetObjectCommand(affixParams)
+  const getDic = new GetObjectCommand(dicParams)
 
-  const affixP = getObjectContent(client, getAffix);
-  const dicP = getObjectContent(client, getDic);
+  const affixP = getObjectContent(client, getAffix)
+  const dicP = getObjectContent(client, getDic)
 
   /*   const affix = Buffer.from(await affixP)
   const dictionary = Buffer.from(await dicP)
   return { affix: affix, dictionary: dictionary }
  */
-  const values = await Promise.all([affixP, dicP]);
-  const dicofiles = { affix: values[0], dictionary: values[1] };
+  const values = await Promise.all([affixP, dicP])
+  const dicofiles = { affix: values[0], dictionary: values[1] }
 
-  return dicofiles;
+  return dicofiles
 }
 
-module.exports = { readDicoFiles };
+module.exports = { readDicoFiles }
