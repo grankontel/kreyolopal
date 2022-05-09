@@ -29,6 +29,7 @@ sizes.forEach((size) => {
     // process the files
     files.forEach((file) => {
       const filename = path.basename(file)
+      console.log(`\tProcessing : ${destDir}/${filename} ...`)
       const image = sharp(file)
       image
         .resize({ width: size })
