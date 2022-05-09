@@ -52,7 +52,7 @@ const AccountForm = (props) => {
             </Form.Control>
           </Form.Field>
           <Form.Field>
-            <Form.Label>First name</Form.Label>
+            <Form.Label>Prénom</Form.Label>
             <Form.Control>
               <Form.Input
                 id="firstname"
@@ -63,7 +63,7 @@ const AccountForm = (props) => {
             </Form.Control>
           </Form.Field>
           <Form.Field>
-            <Form.Label>Last name</Form.Label>
+            <Form.Label>Nom</Form.Label>
             <Form.Control>
               <Form.Input
                 id="lastname  "
@@ -75,7 +75,7 @@ const AccountForm = (props) => {
           </Form.Field>
           <Button.Group>
             <Button color="primary" disabled={loading}>
-              Update profile
+              Mettre à jour
             </Button>
           </Button.Group>
         </form>

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button, Navbar } from 'react-bulma-components'
 import { useZakari } from './ZakProvider'
 const classNames = require('classnames')
@@ -17,6 +17,7 @@ const useToggle = (initialState = false) => {
 
 const TopNavbar = () => {
   const auth = useZakari()
+  const navigate = useNavigate()
   const [mobileOpen, openMobileMenu] = useToggle(false)
   const navMenu = classNames({
     'is-active': mobileOpen,
@@ -29,7 +30,7 @@ const TopNavbar = () => {
           <img src="images/logo_name.svg" alt="Zakari Brand" />
         </Navbar.Item>
         <Navbar.Item renderAs="li">
-          <Link to="/">Home</Link>
+          <Link to="/">Accueil</Link>
         </Navbar.Item>
       </Navbar.Brand>
 
@@ -39,16 +40,25 @@ const TopNavbar = () => {
           {auth?.user ? (
             <>
               <Navbar.Item href="/spellcheck">Korije</Navbar.Item>
-              <Navbar.Item href="/account">Account</Navbar.Item>
+              <Navbar.Item href="/account">Compte</Navbar.Item>
+              <Navbar.Item>
+                <Button outlined colorVariant="light" 
+                  onClick={() => {
+                    auth.signOut().then(() => navigate('/'))
+                  }}
+                >
+                  Se déconnecter
+                </Button>
+              </Navbar.Item>
             </>
           ) : (
             <>
               <Navbar.Item href="/login">
                 <Button outlined colorVariant="light">
-                  Sign In
+                  Se connecter
                 </Button>
               </Navbar.Item>
-              <Navbar.Item href="/register">Register</Navbar.Item>
+              <Navbar.Item href="/register">S'inscrire</Navbar.Item>
             </>
           )}
         </Navbar.Container>

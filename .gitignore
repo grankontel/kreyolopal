@@ -85,3 +85,5 @@ db/
 old/
 
 react.strict*
+
+frontend/public/images/w*

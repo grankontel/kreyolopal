@@ -48,7 +48,7 @@ const AccountPage = () => {
     <StandardPage>
       <Section>
         <Heading size={2} renderAs="h1">
-          Account
+          Mon compte
         </Heading>
         <div className="account_box">
           <Box>
@@ -71,7 +71,7 @@ const AccountPage = () => {
                 auth.signOut().then(() => navigate('/'))
               }}
             >
-              Sign Out
+              Se déconnecter
             </Button>
           </Button.Group>
         </div>

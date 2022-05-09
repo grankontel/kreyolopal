@@ -1,41 +1,98 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
+  Button,
   Columns,
   Container,
+  Content,
   Heading,
   Hero,
   Image,
   Section,
 } from 'react-bulma-components'
 import StandardPage from '../layouts/StandardPage'
+import ImageSet from '../components/ImageSet'
+import FeatureList from '../components/FeatureList'
 
 const IndexPage = () => {
+  const navigate = useNavigate()
+
   return (
     <StandardPage max breakpoint="fullhd">
       <StandardPage.Head
         title="Kreyolopal"
-        description="On aplikasyon pou konnèt lang kréyòl é kilti a pèp kréyolopal pi myé."
+        description="Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole."
       />
 
       <Hero color="magnolia" className="index_hero" size="medium">
         <Columns>
           <Columns.Column size="half">
             <Hero.Body>
-              <Heading>Kreyolopal</Heading>
+              <Heading size={1}>Kreyolopal</Heading>
               <Heading subtitle>
-                On aplikasyon pou konnèt lang kréyòl é kilti a pèp kréyolopal pi
-                myé.
+                Utiliser les technologies d'aujourd'hui pour encourager,
+                améliorer et diffuser l'écriture du créole.
               </Heading>
             </Hero.Body>
           </Columns.Column>
           <Columns.Column size="half">
-            <Image src="images/kreol_app2.png" className="app_mockup" />
+            <ImageSet
+              className="app_mockup"
+              src="images/black_peoples.jpeg"
+              alt="People using the app"
+            />
           </Columns.Column>
         </Columns>
       </Hero>
       <Container max breakpoint="desktop">
-        <Section>Content</Section>
+        <Section>
+          <Heading renderAs="h2" size={3}>
+            Le correcteur orthographique
+          </Heading>
+          <Columns>
+            <Columns.Column size={4}>
+              <ImageSet
+                className="app_mockup mx-auto"
+                src="images/kreol_app2.png"
+                alt="Application mockup"
+              />
+            </Columns.Column>
+            <Columns.Column size={8}>
+              <Columns>
+                <Columns.Column size="three-quarters">
+                  <Content textSize={5} textFamily="secondary">
+                    <p>
+                      Le correcteur orthographique en ligne repere les erreurs
+                      dans la graphie du créole.
+                    </p>
+                    <p>
+                      Il est particulièrement utile pour ceux qui écrivent le
+                      créole de façon occasionnelle et veulent éviter les
+                      erreurs de graphie grossières.
+                    </p>
+                    <FeatureList>
+                      <FeatureList.Item icon="thumbs-up">
+                        Déjà près de 5000 mots de vocabulaire !
+                      </FeatureList.Item>
+                    </FeatureList>
+                  </Content>
+                  <Button.Group align="right">
+                    <Button
+                      mt={4}
+                      size="large"
+                      color="primary"
+                      onClick={() => {
+                        navigate('/spellcheck')
+                      }}
+                    >
+                      Essayer
+                    </Button>
+                  </Button.Group>
+                </Columns.Column>
+              </Columns>
+            </Columns.Column>
+          </Columns>
+        </Section>
       </Container>
       <StandardPage.Footer>
         <Link to="/">

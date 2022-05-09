@@ -24,10 +24,10 @@
     "build-client": "NODE_ENV=production webpack --mode=production",
     "build": "concurrently 'npm:build-*'",
     "start": "node ./server/index.js",
-    "lint" :"eslint ./",
+    "lint": "eslint ./",
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all",
-    "pwd": "node ./server/scripts/hash.js",
+    "pwd": "node ./scripts/hash.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -63,6 +63,7 @@
     "body-parser": "^1.20.0",
     "buffer": "^6.0.3",
     "bulma": "^0.9.3",
+    "classnames": "^2.3.1",
     "concurrently": "^7.1.0",
     "cookie-parser": "^1.4.6",
     "copy-webpack-plugin": "^10.2.4",
@@ -75,6 +76,7 @@
     "express-session": "^1.17.2",
     "express-session-sequelize": "^2.3.0",
     "express-validator": "^6.14.0",
+    "feather-icons": "^4.29.0",
     "html-to-text": "^8.2.0",
     "html-webpack-plugin": "^5.5.0",
     "https-browserify": "^1.0.0",
@@ -91,10 +93,12 @@
     "passport": "^0.5.2",
     "passport-jwt-cookiecombo": "^1.0.5",
     "passport-local": "^1.0.0",
+    "path-browserify": "^1.0.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "pino": "^7.11.0",
     "process": "^0.11.10",
+    "prop-types": "^15.8.1",
     "react": "^18.0.0",
     "react-bulma-components": "^4.1.0",
     "react-copy-to-clipboard": "^5.1.0",
@@ -123,9 +127,11 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "glob": "^7.2.0",
     "nodemon": "^2.0.16",
     "pino-pretty": "^7.6.1",
     "prettier": "^2.6.2",
-    "sequelize-cli": "^6.4.1"
+    "sequelize-cli": "^6.4.1",
+    "sharp": "^0.30.4"
   }
 }
