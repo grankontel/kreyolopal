@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] 
 
+- added SEO elements
+
 ## [build_images] - 2022-05-09
 
 - extra images are created at build time
