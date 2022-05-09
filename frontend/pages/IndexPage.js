@@ -9,6 +9,7 @@ import {
   Section,
 } from 'react-bulma-components'
 import StandardPage from '../layouts/StandardPage'
+import ImageSet from '../components/ImageSet'
 
 const IndexPage = () => {
   return (
@@ -30,7 +31,11 @@ const IndexPage = () => {
             </Hero.Body>
           </Columns.Column>
           <Columns.Column size="half">
-            <Image src="images/kreol_app2.png" className="app_mockup" />
+            <ImageSet
+              className="app_mockup"
+              src="images/black_peoples.jpeg"
+              alt="People using the app"
+            />
           </Columns.Column>
         </Columns>
       </Hero>
