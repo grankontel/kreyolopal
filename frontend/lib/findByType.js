@@ -1,6 +1,6 @@
 import React from 'react'
 
-const findByType = (children, component) => {
+export const findAllByType= (children, component) => {
   const result = []
   /* This is the array of result since Article can have multiple times the same sub-component */
   const type = [component.name]
@@ -13,6 +13,11 @@ const findByType = (children, component) => {
     }
   })
   /* Then we go through each React children, if one of matches the name of the sub-component we’re looking for we put it in the result array */
+  return result
+}
+
+export const findByType = (children, component) => {
+  const result = findAllByType(children, component)
   return result[0]
 }
-export default findByType
+
