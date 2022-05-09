@@ -5,7 +5,7 @@ import ZakariForm from '../components/ZakariForm'
 
 const SpellcheckPage = () => {
   return (
-    <StandardPage>
+    <StandardPage lang='cpf_GP'>
       <StandardPage.Head
         title="Kreyolopal | Lòwtograf"
         description="Correcteur orthographique en ligne pour le créole."
