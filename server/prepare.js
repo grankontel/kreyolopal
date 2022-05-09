@@ -1,30 +1,30 @@
-const express = require('express');
-const pino_logger = require('express-pino-logger');
-const cors = require('cors');
-const cookie_parser = require('cookie-parser');
-const body_parser = require('body-parser');
-const passport = require('passport');
-const expressSession = require('express-session');
-const SessionStore = require('express-session-sequelize')(expressSession.Store);
-const JwtCookieComboStrategy = require('passport-jwt-cookiecombo');
+const express = require('express')
+const pino_logger = require('express-pino-logger')
+const cors = require('cors')
+const cookie_parser = require('cookie-parser')
+const body_parser = require('body-parser')
+const passport = require('passport')
+const expressSession = require('express-session')
+const SessionStore = require('express-session-sequelize')(expressSession.Store)
+const JwtCookieComboStrategy = require('passport-jwt-cookiecombo')
 
-const config = require('./config');
-const db = require('./database/models');
+const config = require('./config')
+const db = require('./database/models')
 
-const { sequelize } = db;
+const { sequelize } = db
 
 const passportPrepare = (logger) => {
   passport.serializeUser((user, cb) => {
-    logger.info('serializeUser');
+    logger.info('serializeUser')
     process.nextTick(() => {
-      cb(null, { id: user.id, username: user.email });
-    });
-  });
+      cb(null, { id: user.id, username: user.email })
+    })
+  })
 
   passport.deserializeUser((user, cb) => {
-    logger.info('deserializeUser');
-    process.nextTick(() => cb(null, user));
-  });
+    logger.info('deserializeUser')
+    process.nextTick(() => cb(null, user))
+  })
 
   passport.use(
     new JwtCookieComboStrategy(
@@ -33,34 +33,34 @@ const passportPrepare = (logger) => {
       },
       (payload, done) => done(null, payload.user)
     )
-  );
-};
+  )
+}
 
 async function coreConfig({ app, logger, routeCallback }) {
   // configure logger
   const expressPino = pino_logger({
     logger,
-  });
+  })
 
-  app.use(expressPino);
+  app.use(expressPino)
 
   // trust proxy
-  app.enable('trust proxy');
+  app.enable('trust proxy')
 
   // cross-origin
-  app.options('*', cors()); // include before other routes
+  app.options('*', cors()) // include before other routes
 
   app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', '*')
     res.header(
       'Access-Control-Allow-Headers',
       'Origin, X-Requested-With, Content-Type, Accept'
-    );
-    next();
-  });
+    )
+    next()
+  })
 
-  app.use(cookie_parser(config.security.salt));
-  app.use(body_parser.urlencoded({ extended: true }));
+  app.use(cookie_parser(config.security.salt))
+  app.use(body_parser.urlencoded({ extended: true }))
   app.use(
     expressSession({
       secret: config.auth.secret,
@@ -70,16 +70,16 @@ async function coreConfig({ app, logger, routeCallback }) {
         db: sequelize,
       }),
     })
-  );
+  )
 
-  passportPrepare(logger);
-  app.use(passport.initialize());
+  passportPrepare(logger)
+  app.use(passport.initialize())
 
   // body parser
-  app.use(express.json());
+  app.use(express.json())
 
   // instance callBack
-  routeCallback({ app, logger });
+  routeCallback({ app, logger })
 
   /*     
   const { apiCallback, publicCallback } = routesCallback
@@ -97,14 +97,14 @@ async function coreConfig({ app, logger, routeCallback }) {
   // errors
   app.use((err, req, res, next) => {
     // Do logging and user-friendly error message display
-    logger.error(err);
+    logger.error(err)
     return res.status(500).json({
       status: 'error',
       code: 500,
       message: 'internal error',
       error: new Error('internal error'),
-    });
-  });
+    })
+  })
 
   app.use((req, res) =>
     res.status(404).json({
@@ -113,9 +113,9 @@ async function coreConfig({ app, logger, routeCallback }) {
       message: 'Not Found',
       error: new Error('Not Found'),
     })
-  );
+  )
 
-  return app;
+  return app
 }
 
-module.exports = coreConfig;
+module.exports = coreConfig

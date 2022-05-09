@@ -1,11 +1,11 @@
-const path = require('path');
-const nodeExternals = require('webpack-node-externals');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path')
+const nodeExternals = require('webpack-node-externals')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 // extract css to external stylesheet file
 const cssPlugin = new MiniCssExtractPlugin({
   filename: 'styles.css',
-});
+})
 
 module.exports = {
   entry: './server/react.js',
@@ -36,4 +36,4 @@ module.exports = {
   },
   plugins: [cssPlugin],
   devtool: 'source-map',
-};
+}

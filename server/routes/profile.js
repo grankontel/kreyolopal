@@ -1,12 +1,12 @@
-const express = require('express');
-const { body, validationResult } = require('express-validator');
-const passport = require('passport');
-const db = require('../database/models');
+const express = require('express')
+const { body, validationResult } = require('express-validator')
+const passport = require('passport')
+const db = require('../database/models')
 
-const { User } = db;
+const { User } = db
 
 const profile_route = ({ logger }) => {
-  const router = express.Router();
+  const router = express.Router()
 
   // create a GET route
   router.get(
@@ -15,27 +15,27 @@ const profile_route = ({ logger }) => {
       session: false,
     }),
     async (req, res) => {
-      const profile = await User.findByPk(req.user.id);
+      const profile = await User.findByPk(req.user.id)
       if (profile === null) {
-        logger.error('cannot find user');
-        logger.error(req.user);
+        logger.error('cannot find user')
+        logger.error(req.user)
         return res
           .status(500)
-          .json({ status: 'error', error: 'Internal error' });
+          .json({ status: 'error', error: 'Internal error' })
       }
 
       const lUser = {
         firstname: profile.firstname,
         lastname: profile.lastname,
         email: profile.email,
-      };
+      }
 
       return res.json({
         status: 'success',
         data: { profile: lUser },
-      });
+      })
     }
-  );
+  )
 
   // create a POST route
   router.post(
@@ -50,45 +50,43 @@ const profile_route = ({ logger }) => {
     }),
     async (req, res) => {
       // Finds the validation errors in this request and wraps them in an object with handy functions
-      const errors = validationResult(req);
+      const errors = validationResult(req)
       if (!errors.isEmpty()) {
-        return res
-          .status(422)
-          .json({ status: 'error', errors: errors.array() });
+        return res.status(422).json({ status: 'error', errors: errors.array() })
       }
 
-      const { firstname, lastname } = req.body;
+      const { firstname, lastname } = req.body
 
-      const profile = await User.findByPk(req.user.id);
+      const profile = await User.findByPk(req.user.id)
       if (profile === null) {
-        logger.error(`Cannot find user : ${req.user.id}`);
+        logger.error(`Cannot find user : ${req.user.id}`)
         return res
           .status(500)
-          .json({ status: 'error', error: 'Internal error' });
+          .json({ status: 'error', error: 'Internal error' })
       }
 
-      profile.firstname = firstname;
-      profile.lastname = lastname;
+      profile.firstname = firstname
+      profile.lastname = lastname
 
       return profile.save().then(
         () => {
           res.status(200).send({
             status: 'success',
             data: {},
-          });
+          })
         },
         (reason) => {
-          logger.error(reason);
+          logger.error(reason)
           return res
             .status(500)
-            .json({ status: 'error', error: 'Internal error' });
+            .json({ status: 'error', error: 'Internal error' })
         }
-      );
+      )
     }
-  );
+  )
 
-  logger.info('\tAdding route "profile"...');
-  return router;
-};
+  logger.info('\tAdding route "profile"...')
+  return router
+}
 
-module.exports = profile_route;
+module.exports = profile_route

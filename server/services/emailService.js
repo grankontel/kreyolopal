@@ -1,15 +1,15 @@
-const mustache = require('mustache');
-const mjml = require('mjml');
-const { htmlToText } = require('html-to-text');
-const NodeCache = require('node-cache');
+const mustache = require('mustache')
+const mjml = require('mjml')
+const { htmlToText } = require('html-to-text')
+const NodeCache = require('node-cache')
 
-const path = require('path');
-const fs = require('fs/promises');
+const path = require('path')
+const fs = require('fs/promises')
 
-const config = require('../config');
-const mailer = require('./lib.mailer');
+const config = require('../config')
+const mailer = require('./lib.mailer')
 
-const myCache = new NodeCache();
+const myCache = new NodeCache()
 
 /**
  * Get the content of the template
@@ -17,22 +17,22 @@ const myCache = new NodeCache();
  * @returns contents of the template
  */
 const getTemplate = (templateFilename) => {
-  const name = templateFilename.toLowerCase();
-  const lFile = path.join(__dirname, '../mails/', templateFilename);
+  const name = templateFilename.toLowerCase()
+  const lFile = path.join(__dirname, '../mails/', templateFilename)
 
   return new Promise((resolve, reject) => {
-    const value = myCache.get(name);
-    if (value !== undefined) resolve(value);
+    const value = myCache.get(name)
+    if (value !== undefined) resolve(value)
 
     fs.readFile(lFile, 'utf-8').then(
       (content) => {
-        myCache.set(name, content);
-        resolve(content);
+        myCache.set(name, content)
+        resolve(content)
       },
       (reason) => reject(reason)
-    );
-  });
-};
+    )
+  })
+}
 
 /**
  * Create an email
@@ -45,20 +45,20 @@ const makeEmail = (templateFilename, templateData) =>
     getTemplate(templateFilename).then(
       (mjmlTemplate) => {
         if (!mjmlTemplate) {
-          reject(new Error(`No such template ${templateFilename}`));
-          return;
+          reject(new Error(`No such template ${templateFilename}`))
+          return
         }
 
-        const renderedMjml = mustache.render(mjmlTemplate, templateData);
+        const renderedMjml = mustache.render(mjmlTemplate, templateData)
 
-        const { html } = mjml(renderedMjml);
-        const text = htmlToText(html, { wordwrap: 130 });
+        const { html } = mjml(renderedMjml)
+        const text = htmlToText(html, { wordwrap: 130 })
 
-        resolve({ html, text });
+        resolve({ html, text })
       },
       (reason) => reject(reason)
-    );
-  });
+    )
+  })
 
 /**
  *
@@ -81,13 +81,13 @@ const sendEmail = (templateFilename, templateData, recipient, subject) =>
         },
         (err, info) => {
           if (err) {
-            reject(err);
+            reject(err)
           } else {
-            resolve(info);
+            resolve(info)
           }
         }
-      );
-    });
-  });
+      )
+    })
+  })
 
-module.exports = { getTemplate, sendEmail };
+module.exports = { getTemplate, sendEmail }

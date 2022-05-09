@@ -1,4 +1,4 @@
-const hunspell = require('./lib.spellcheck');
+const hunspell = require('./lib.spellcheck')
 
 const spellchecker = {
   check: (message) =>
@@ -13,14 +13,14 @@ const spellchecker = {
             message: response.message,
             user_evaluation: undefined,
             admin_evaluation: undefined,
-          };
+          }
 
-          resolve(msgresponse);
+          resolve(msgresponse)
         })
         .catch((err) => {
-          reject(err);
-        });
+          reject(err)
+        })
     }),
-};
+}
 
-module.exports = spellchecker;
+module.exports = spellchecker
