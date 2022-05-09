@@ -83,3 +83,7 @@ db/
 
 # Old files
 old/
+
+react.strict*
+
+frontend/public/images/w*

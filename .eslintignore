@@ -1,0 +1,18 @@
+# production
+dist
+build
+
+# Database files
+db/
+
+# Test files
+*.rest
+
+# Old files
+old/
+
+react.strict.js
+react.js
+
+# Sequelize generated files
+server/database/
