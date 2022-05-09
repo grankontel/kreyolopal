@@ -21,6 +21,7 @@
     "predev": "concurrently 'npm:dev-build-*'",
     "dev": "concurrently 'npm:dev-start-*'",
     "build-server": "NODE_ENV=production webpack --config webpack.server.js --mode=production",
+    "prebuild-client": "npm run images",
     "build-client": "NODE_ENV=production webpack --mode=production",
     "build": "concurrently 'npm:build-*'",
     "start": "node ./server/index.js",
@@ -28,6 +29,7 @@
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all",
     "pwd": "node ./scripts/hash.js",
+    "images": "node ./scripts/sharpImgs.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -109,6 +111,7 @@
     "sass-loader": "^12.6.0",
     "sequelize": "^6.19.0",
     "sha3": "^2.1.4",
+    "sharp": "^0.30.4",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "style-loader": "^3.3.1",
@@ -131,7 +134,6 @@
     "nodemon": "^2.0.16",
     "pino-pretty": "^7.6.1",
     "prettier": "^2.6.2",
-    "sequelize-cli": "^6.4.1",
-    "sharp": "^0.30.4"
+    "sequelize-cli": "^6.4.1"
   }
 }
