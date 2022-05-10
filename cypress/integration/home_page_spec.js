@@ -32,7 +32,7 @@ describe('login', function () {
     cy.get('.box > form > .field:nth-child(1) > .control > .input').click()
 
     cy.get('.box > form > .field:nth-child(1) > .control > .input').type(
-      'thierry.malo@gmail.com'
+      'thierry.malo@egzanp.com'
     )
 
     cy.get('.box > form > .field:nth-child(2) > .control > .input').type(
