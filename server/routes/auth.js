@@ -49,7 +49,16 @@ const auth_route = ({ logger }) => {
             username: user.email,
           }
 
-          return logUserIn(user, req, res)
+          return logUserIn(user, req).then(
+            (result) => {
+              result.setCookie(res)
+              return res.status(200).json({
+                status: 'success',
+                data: result.payload,
+              })
+            },
+            (err) => res.json(err)
+          )
         },
         (reason) => {
           logger.error(reason)
@@ -186,8 +195,14 @@ const auth_route = ({ logger }) => {
             return res.status(404).json({ status: 'error', error: 'Not Found' })
           }
 
-          _user.email_verif_token = undefined
-          return logUserIn(_user, req, res)
+          _user.email_verif_token = null
+          return logUserIn(_user, req).then(
+            (result) => {
+              result.setCookie(res)
+              return res.redirect('/')
+            },
+            (err) => res.json(err)
+          )
         }
       )
     }
