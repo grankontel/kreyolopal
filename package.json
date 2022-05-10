@@ -25,6 +25,8 @@
     "build-client": "NODE_ENV=production webpack --mode=production",
     "build": "concurrently 'npm:build-*'",
     "start": "node ./server/index.js",
+    "precypress": "npm start & wait-on http://localhost:5000",
+    "cypress": "cypress run",
     "lint": "eslint ./",
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all",
@@ -126,6 +128,7 @@
     "@babel/eslint-parser": "^7.17.0",
     "@testing-library/react": "^13.2.0",
     "babel-jest": "^28.1.0",
+    "cypress": "^9.6.1",
     "eslint": "^8.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
@@ -139,6 +142,7 @@
     "pino-pretty": "^7.6.1",
     "prettier": "^2.6.2",
     "react-test-renderer": "^18.1.0",
-    "sequelize-cli": "^6.4.1"
+    "sequelize-cli": "^6.4.1",
+    "wait-on": "^6.0.1"
   }
 }
