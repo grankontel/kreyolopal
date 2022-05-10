@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Form, Progress } from 'react-bulma-components'
 
 const RegisterForm = (props) => {
