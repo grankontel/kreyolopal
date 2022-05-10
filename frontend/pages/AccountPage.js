@@ -20,7 +20,6 @@ const AccountPage = () => {
     setNotif({ color: notif.color, message: '' })
   }
   const onSubmit = async ({ profile, setLoading }) => {
-    console.log(profile)
     try {
       setLoading(true)
       clearMessage()
@@ -38,7 +37,7 @@ const AccountPage = () => {
         }
       )
     } catch (error) {
-      console.log(error)
+      setNotif({ color: 'danger', message: error?.error || error })
     } finally {
       setLoading(false)
     }
