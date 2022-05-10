@@ -4,6 +4,9 @@ const config = {
   app: {
     port: process.env.PORT,
   },
+  dico: {
+    useLocal: process.env.LOCAL_DICO,
+  },
   aws: {
     keyId: process.env.AWS_ACCESS_KEY_ID,
     keySecret: process.env.AWS_SECRET_ACCESS_KEY,
