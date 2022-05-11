@@ -7,8 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] 
 
+- added 404 page
 - verified page
 - enhanced bundling
+- use Typo.js via factory
 
 ## [1.0.3] - 2022-05-10
 

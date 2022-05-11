@@ -1,7 +1,10 @@
 /* eslint-disable no-plusplus, no-continue */
-const nspell = require('nspell')
 const NodeCache = require('node-cache')
-const dicoSource = require('./lib.s3-dicofile')
+const createSpellchecker = require('./facto.typo')
+const config = require('../config')
+const dicoSource = config.dico.useLocal
+  ? require('./lib.fs-dicofile')
+  : require('./lib.s3-dicofile')
 
 const myCache = new NodeCache()
 
@@ -24,12 +27,14 @@ async function nspell_spellcheck(src, kreyol) {
     dictionary = value.dictionary
   } else {
     value = await dicoSource.readDicoFiles(kreyol)
-    myCache.set('dicofiles', value)
+    if (!config.dico.useLocal) {
+      myCache.set('dicofiles', value)
+    }
     affix = value.affix
     dictionary = value.dictionary
   }
 
-  let diko = nspell(affix, dictionary)
+  let diko = createSpellchecker(affix, dictionary)
 
   // make an array from string
   const source = src.split(' ')
@@ -56,7 +61,7 @@ async function nspell_spellcheck(src, kreyol) {
       continue
     }
 
-    const isCorrect = diko.correct(word)
+    const isCorrect = diko.check(word)
     hunspelled.push({ word, isCorrect })
   }
 

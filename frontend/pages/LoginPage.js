@@ -17,7 +17,6 @@ const LoginPage = () => {
   })
 
   const onSubmit = async ({ email, password, setLoading }) => {
-
     try {
       setLoading(true)
       setMessage('')
@@ -35,7 +34,7 @@ const LoginPage = () => {
         }
       )
     } catch (error) {
-      console.log(error)
+      setMessage(error?.error || error)
     } finally {
       setLoading(false)
     }
