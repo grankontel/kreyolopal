@@ -7,6 +7,7 @@ import IndexPage from './pages/IndexPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import SpellcheckPage from './pages/SpellcheckPage'
+import VerifiedPage from './pages/VerifiedPage'
 
 export const App = () => {
   return (
@@ -32,6 +33,7 @@ export const App = () => {
             }
           />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verified" element={<VerifiedPage />} />
         </Routes>
       </ZakProvider>
     </HelmetProvider>
