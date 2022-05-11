@@ -199,7 +199,7 @@ const auth_route = ({ logger }) => {
           return logUserIn(_user, req).then(
             (result) => {
               result.setCookie(res)
-              return res.redirect('/')
+              return res.redirect('/verified')
             },
             (err) => res.json(err)
           )
