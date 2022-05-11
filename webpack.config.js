@@ -33,7 +33,7 @@ module.exports = (/* env */) => {
 
   return {
     target: 'browserslist',
-    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     watchOptions: {
       ignored: [
         '**/node_modules',
@@ -61,6 +61,10 @@ module.exports = (/* env */) => {
       },
     },
     output: {
+      // `filename` provides a template for naming your bundles (remember to use `[name]`)
+      filename: '[name].bundle.js',
+      // `chunkFilename` provides a template for naming code-split bundles (optional)
+      chunkFilename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
     module: {
@@ -79,11 +83,17 @@ module.exports = (/* env */) => {
     },
     plugins: [processRequire, htmlPlugin, copyPlugin, cssPlugin, envPlugin],
     optimization: {
+      runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {
           default: false,
           vendors: false,
 
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-bulma-components)[\\/]/,
+            name: 'react',
+            chunks: 'all',
+          },
           vendor: {
             chunks: 'all', // both : consider sync + async chunks for evaluation
             name: 'vendor', // name of chunk file

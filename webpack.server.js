@@ -15,7 +15,7 @@ module.exports = {
   externalsPresets: { node: true },
   externals: [nodeExternals()],
 
-  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   output: {
     path: path.resolve('server'),
     filename: 'react.strict.js',
