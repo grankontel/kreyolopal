@@ -1,8 +1,10 @@
 const express = require('express')
 const passport = require('passport')
 const { check, validationResult } = require('express-validator')
+const config = require('../config')
 const spellchecker = require('../services/spellchecker')
 const db = require('../database/models')
+const webhook = require('../services/slackService')
 
 const Msg = db.Spellchecked
 
@@ -32,20 +34,45 @@ const sp_route = ({ logger }) => {
 
       // var message = cloneDeep(_message);
 
-      return spellchecker.check(lMessage).then(async (response) => {
-        await Msg.create({
-          userId: lMessage.user,
-          kreyol: lMessage.kreyol,
-          request: lMessage.request,
-          message: response.message,
-          status: response.status,
-          response,
+      return spellchecker
+        .check(lMessage)
+        .then(async (response) => {
+          const msg = await Msg.create({
+            userId: lMessage.user,
+            kreyol: lMessage.kreyol,
+            request: lMessage.request,
+            message: response.message,
+            status: response.status,
+            response,
+          })
+
+          return msg
         })
-        lMessage.response = response
-        // console.info('%o',message)
-        res.status(200).json(lMessage)
-        return lMessage
-      })
+        .tap((savedMsg) => {
+/*           if (config.slack.noSend) {
+            return
+          }
+ */
+          const checkedMsg = savedMsg.response
+          if (!checkedMsg.unknown_words.length) {
+            return
+          }
+
+          const wlist = checkedMsg.unknown_words.join(',')
+          const str = `Words [${wlist}] are unknown.\nMessage id : ${savedMsg?.id}`
+
+          try {
+            webhook.send({ text: str })
+          } catch (eSlack) {
+            logger.error(eSlack)
+          }
+        })
+        .then(async (msg) => {
+          lMessage.response = msg.response
+          // console.info('%o',message)
+          res.status(200).json(lMessage)
+          return lMessage
+        })
     }
   )
 
