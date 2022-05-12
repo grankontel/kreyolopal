@@ -1,4 +1,6 @@
 const winston = require('winston')
+const SlackHook = require('winston-slack-webhook-transport')
+
 const config = require('../config')
 
 const alignedWithColorsAndTime = winston.format.combine(
@@ -22,7 +24,10 @@ const options = {
 }
 
 const log = winston.createLogger({
-  transports: [new winston.transports.Console(options.console)],
+  transports: [
+    new winston.transports.Console(options.console),
+    new SlackHook({ level: 'warn', webhookUrl: config.slack.webhook }),
+  ],
   exitOnError: false, // do not exit on handled exceptions
 })
 

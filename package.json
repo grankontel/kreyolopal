@@ -65,6 +65,7 @@
     "assert": "^2.0.0",
     "axios": "^0.27.2",
     "babel-loader": "^8.2.5",
+    "bluebird": "^3.7.2",
     "body-parser": "^1.20.0",
     "buffer": "^6.0.3",
     "bulma": "^0.9.3",
@@ -125,7 +126,8 @@
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.8.1",
     "webpack-node-externals": "^3.0.0",
-    "winston": "^3.7.2"
+    "winston": "^3.7.2",
+    "winston-slack-webhook-transport": "^2.1.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
