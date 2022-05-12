@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] 
 
+- created slackService
+- remove pino, added winston/morgan
 - added 404 page
 - verified page
 - enhanced bundling

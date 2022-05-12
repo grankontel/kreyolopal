@@ -35,8 +35,8 @@ async function readDicoFiles(kreyol) {
 const client = new S3Client(s3Options)
 // https://kreyol-dico.s3.amazonaws.com/dico/cpf_GP.aff
 
-const createPutCommand = (file, content) => {
-  return new Promise((reject, resolve) => {
+const createPutCommand = (file, content) =>
+  new Promise((reject, resolve) => {
     let data = ''
     try {
       data = content.toString('utf-8')
@@ -71,7 +71,6 @@ const createPutCommand = (file, content) => {
         reject(exc)
       })
   })
-}
 
 readDicoFiles('GP')
   .then(

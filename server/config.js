@@ -7,6 +7,10 @@ const config = {
   dico: {
     useLocal: process.env.LOCAL_DICO,
   },
+  slack: {
+    webhook: process.env.SLACK_WEBHOOK_URL,
+    noSend: process.env.NODE_ENV !== 'production',
+  },
   aws: {
     keyId: process.env.AWS_ACCESS_KEY_ID,
     keySecret: process.env.AWS_SECRET_ACCESS_KEY,
