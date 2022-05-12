@@ -1,5 +1,6 @@
 const express = require('express')
-const pino_logger = require('express-pino-logger')
+// const pino_logger = require('express-pino-logger')
+const morgan = require('morgan')
 const cors = require('cors')
 const cookie_parser = require('cookie-parser')
 const body_parser = require('body-parser')
@@ -38,11 +39,7 @@ const passportPrepare = (logger) => {
 
 async function coreConfig({ app, logger, routeCallback }) {
   // configure logger
-  const expressPino = pino_logger({
-    logger,
-  })
-
-  app.use(expressPino)
+  app.use(morgan('combined', { stream: logger.stream }))
 
   // trust proxy
   app.enable('trust proxy')
