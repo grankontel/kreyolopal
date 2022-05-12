@@ -49,10 +49,10 @@ const sp_route = ({ logger }) => {
           return msg
         })
         .tap((savedMsg) => {
-/*           if (config.slack.noSend) {
+           if (config.slack.noSend) {
             return
           }
- */
+ 
           const checkedMsg = savedMsg.response
           if (!checkedMsg.unknown_words.length) {
             return
