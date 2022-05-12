@@ -33,7 +33,7 @@ const log = winston.createLogger({
 
 // create a stream object with a 'write' function that will be used by `morgan`
 log.stream = {
-  write: (message, encoding) => {
+  write: (message) => {
     // use the 'info' log level so the output will be picked up by both transports (file and console)
     log.info(message)
   },

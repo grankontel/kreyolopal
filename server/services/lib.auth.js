@@ -71,7 +71,6 @@ export const logUserIn = (user, req) => {
             })
           },
         })
-
       }
     )
   })
