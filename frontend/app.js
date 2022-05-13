@@ -5,8 +5,10 @@ import ZakProvider from './components/ZakProvider'
 import AccountPage from './pages/AccountPage'
 import IndexPage from './pages/IndexPage'
 import LoginPage from './pages/LoginPage'
+import NotFoundPage from './pages/NotFound'
 import RegisterPage from './pages/RegisterPage'
 import SpellcheckPage from './pages/SpellcheckPage'
+import VerifiedPage from './pages/VerifiedPage'
 
 export const App = () => {
   return (
@@ -32,6 +34,9 @@ export const App = () => {
             }
           />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verified" element={<VerifiedPage />} />
+
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ZakProvider>
     </HelmetProvider>

@@ -16,3 +16,6 @@ react.js
 
 # Sequelize generated files
 server/database/
+
+# Jest generated file
+jest.config.js

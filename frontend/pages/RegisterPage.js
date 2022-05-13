@@ -12,7 +12,6 @@ const RegisterPage = () => {
     setNotif({ color: notif.color, message: '' })
   }
   const onSubmit = async ({ user, setLoading }) => {
-    console.log(user)
     try {
       setLoading(true)
       clearMessage()
@@ -21,7 +20,6 @@ const RegisterPage = () => {
           setNotif({ color: 'info', message: 'Inscription réussie' })
         },
         (reason) => {
-          console.log(reason)
           const code = reason?.code || 500
           const msg =
             code === 500
@@ -30,10 +28,10 @@ const RegisterPage = () => {
           setNotif({ color: 'danger', message: msg })
         }
       ).catch(err => {
-        console.log(err)
+        setNotif({ color: 'danger', message: err?.error || err })
       })
     } catch (error) {
-      console.log(error)
+      setNotif({ color: 'danger', message: error?.error || error })
     } finally {
       setLoading(false)
     }

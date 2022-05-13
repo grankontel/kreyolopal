@@ -29,7 +29,7 @@ export const authenticateUser = (email, password) =>
       })
   })
 
-export const logUserIn = (user, req, res) => {
+export const logUserIn = (user, req) => {
   req.session.passport = {
     id: user.id,
     username: user.email,
@@ -37,36 +37,41 @@ export const logUserIn = (user, req, res) => {
 
   req.user = user
 
-  jwt.sign(
-    {
-      user: {
-        id: user.id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      {
+        user: {
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+        },
       },
-    },
-    config.security.salt,
-    (err, token) => {
-      if (err) return res.json(err)
+      config.security.salt,
+      (err, token) => {
+        if (err) {
+          reject(err)
+          return
+        }
 
-      req.user.lastlogin = new Date()
-      req.user.save()
+        req.user.lastlogin = new Date()
+        req.user.save()
 
-      // Send Set-Cookie header
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        sameSite: true,
-        signed: true,
-        secure: true,
-      })
-
-      const payload = { email: req.user.email, jwt: token }
-      // Return json web token
-      return res.json({
-        status: 'success',
-        data: payload,
-      })
-    }
-  )
+        const payload = { email: req.user.email, jwt: token }
+        // Return json web token
+        resolve({
+          payload,
+          setCookie: (res) => {
+            // Send Set-Cookie header
+            res.cookie('jwt', token, {
+              httpOnly: true,
+              sameSite: true,
+              signed: true,
+              secure: true,
+            })
+          },
+        })
+      }
+    )
+  })
 }
