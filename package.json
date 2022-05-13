@@ -1,6 +1,6 @@
 {
   "name": "kreyolopal",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole.",
   "main": "server/index.js",
   "engines": {
@@ -21,7 +21,7 @@
     "_predev": "concurrently 'npm:dev-build-*'",
     "dev": "concurrently 'npm:dev-start-*'",
     "build-server": "NODE_ENV=production webpack --config webpack.server.js --mode=production",
-    "prebuild-client": "npm run images",
+    "build-images": "node ./scripts/sharpImgs.js",
     "build-client": "NODE_ENV=production webpack --mode=production",
     "build": "concurrently 'npm:build-*'",
     "start": "node ./server/index.js",
@@ -31,7 +31,6 @@
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all",
     "pwd": "node ./scripts/hash.js",
-    "images": "node ./scripts/sharpImgs.js",
     "jest": "jest"
   },
   "repository": {
