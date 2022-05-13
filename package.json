@@ -1,6 +1,6 @@
 {
   "name": "kreyolopal",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole.",
   "main": "server/index.js",
   "engines": {
