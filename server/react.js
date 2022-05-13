@@ -14,8 +14,6 @@ const ReactDOMServer = require('react-dom/server');
 const { StaticRouter } = require('react-router-dom/server');
 const { App } = require('../frontend/app');
 
-const logger = require('./services/logger');
-
 const srcFile = path.resolve(__dirname, '../dist/index.html');
 
 const reactRoute = (req, res) => {
@@ -23,10 +21,6 @@ const reactRoute = (req, res) => {
   let indexHTML = fs.readFileSync(srcFile, {
     encoding: 'utf8',
   });
-
-  if (indexHTML?.length === 0) {
-    logger.error(`cannot read ${srcFile}`);
-  }
 
   // get HTML string from the `App` component
   const appHTML = ReactDOMServer.renderToString(

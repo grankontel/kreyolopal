@@ -3,5 +3,11 @@
     "extends": [
         "eslint:recommended",
         "react-app"
-    ]
+    ],
+    "ignorePatterns": [
+        "**/*spec.js"
+    ],
+    "rules": {
+        "no-console": "error"
+    }
 }

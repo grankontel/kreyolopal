@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 const hunspell = require('./lib.spellcheck')
 
 const spellchecker = {

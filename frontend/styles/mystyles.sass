@@ -8,7 +8,6 @@
 // $secondary: #599EED
 @import "./components/colors"
 
-
 $body-size: 16px
 
 @import url('https://fonts.googleapis.com/css2?family=Alegreya&family=Titillium+Web:wght@400;600;700&display=swap')
@@ -16,7 +15,6 @@ $body-size: 16px
 $family-primary: 'Titillium Web', BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif
 $family-secondary: 'Alegreya', serif
 
-    
 @import "../../node_modules/bulma/sass/utilities/derived-variables"
 @import "../../node_modules/bulma/bulma.sass"
 
@@ -25,16 +23,15 @@ main.main
     min-height: 450px
 
 footer.page-footer
-        min-height: 150px
-        background-color: $dark
-        color: $light
-        padding: 2rem
+    min-height: 150px
+    background-color: $dark
+    color: $light
+    padding: 2rem
 
-        .logo-footer
-            img
-                max-width: 400px
-                margin: auto
-
+    .logo-footer
+        img
+            max-width: 400px
+            margin: auto
 
 .navbar_top
     padding: 1rem 2rem
@@ -43,6 +40,13 @@ footer.page-footer
     img
         max-height: 400px
         object-fit: contain
-    padding: 2rem
+        padding: 2rem
+
+.fullImage
+    max-width: 80%
+    max-height: 500px
+    margin: auto
+    img
+        height: 500px
 
 @import "./components/forms"
