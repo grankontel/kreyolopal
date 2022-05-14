@@ -29,7 +29,7 @@ export const App = () => {
             path="/account"
             element={
               <ZakProvider.Protected to="/login">
-                <AccountPage />{' '}
+                <AccountPage />
               </ZakProvider.Protected>
             }
           />
