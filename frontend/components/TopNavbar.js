@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Navbar } from 'react-bulma-components'
 import { useZakari } from './ZakProvider'
@@ -16,12 +16,21 @@ const useToggle = (initialState = false) => {
 }
 
 const TopNavbar = () => {
+  const [isLoggedIn, setLoggedIn] = useState(false)
   const auth = useZakari()
   const navigate = useNavigate()
   const [mobileOpen, openMobileMenu] = useToggle(false)
   const navMenu = classNames({
     'is-active': mobileOpen,
   })
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (auth !== null) {
+      setLoggedIn(auth?.user !== null)
+    }
+  }, [auth?.user])
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   return (
     <Navbar color="dark" className="navbar_top">
@@ -37,7 +46,7 @@ const TopNavbar = () => {
       <Navbar.Burger onClick={openMobileMenu} aria-label="menu" />
       <Navbar.Menu renderAs="div" className={navMenu}>
         <Navbar.Container align="right">
-          {auth?.user ? (
+          {isLoggedIn ? (
             <>
               <Navbar.Item href="/spellcheck">Korije</Navbar.Item>
               <Navbar.Item href="/account">Compte</Navbar.Item>
