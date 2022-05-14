@@ -1,12 +1,12 @@
 const express = require('express')
-const passport = require('passport')
 const { check, validationResult } = require('express-validator')
 const config = require('../config')
 const spellchecker = require('../services/spellchecker')
 const db = require('../database/models')
 const webhook = require('../services/slackService')
+const { protectedRoute } = require('../services/lib.auth')
 
-const Msg = db.Spellchecked
+const { User, Spellchecked: Msg } = db
 
 const sp_route = ({ logger }) => {
   const router = express.Router()
@@ -22,12 +22,23 @@ const sp_route = ({ logger }) => {
         return res.status(422).json({ status: 'error', errors: errors.array() })
       }
 
+      const profile = await User.findByPk(req.user.id)
+      logger.info(profile)
+      if (profile === null) {
+        return res.status(401).json({
+          status: 'error',
+          code: 401,
+          message: 'Unauthorized',
+          error: new Error('Unauthorized'),
+        })
+      }
+
       const lMessage = {
         user: req.user.id,
         tool: req.headers['user-agent'],
         service: 'spellcheck',
         kreyol: req.body.kreyol,
-        request: req.body.request,
+        request: req.body.request.replace(/ç/, 's'),
       }
 
       // var message = cloneDeep(_message);
