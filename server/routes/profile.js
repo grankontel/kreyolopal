@@ -2,6 +2,7 @@ const express = require('express')
 const { body, validationResult } = require('express-validator')
 const passport = require('passport')
 const db = require('../database/models')
+const { protectedRoute } = require('../services/lib.auth')
 
 const { User } = db
 
@@ -9,33 +10,25 @@ const profile_route = ({ logger }) => {
   const router = express.Router()
 
   // create a GET route
-  router.get(
-    '/profile',
-    passport.authenticate('jwt-cookiecombo', {
-      session: false,
-    }),
-    async (req, res) => {
-      const profile = await User.findByPk(req.user.id)
-      if (profile === null) {
-        logger.error('cannot find user')
-        logger.error(req.user)
-        return res
-          .status(500)
-          .json({ status: 'error', error: 'Internal error' })
-      }
-
-      const lUser = {
-        firstname: profile.firstname,
-        lastname: profile.lastname,
-        email: profile.email,
-      }
-
-      return res.json({
-        status: 'success',
-        data: { profile: lUser },
-      })
+  router.get('/profile', protectedRoute, async (req, res) => {
+    const profile = await User.findByPk(req.user.id)
+    if (profile === null) {
+      logger.error('cannot find user')
+      logger.error(req.user)
+      return res.status(500).json({ status: 'error', error: 'Internal error' })
     }
-  )
+
+    const lUser = {
+      firstname: profile.firstname,
+      lastname: profile.lastname,
+      email: profile.email,
+    }
+
+    return res.json({
+      status: 'success',
+      data: { profile: lUser },
+    })
+  })
 
   // create a POST route
   router.post(

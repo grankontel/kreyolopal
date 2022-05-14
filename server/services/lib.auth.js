@@ -1,8 +1,51 @@
 const jwt = require('jsonwebtoken')
+const passport = require('passport')
 const config = require('../config')
 const userService = require('./userService')
 const authService = require('./authService')
 const logger = require('./logger')
+
+class NotAuthenticatedError extends Error {
+  constructor(error) {
+    super('Unauthorized')
+    this.name = 'NotAuthenticatedError'
+    this.error = error
+    this.code = 401
+  }
+}
+
+function passportCb(req, res, next) {
+  return async (error, user) => {
+    // Wrap errors in not authenticated error
+    if (error) {
+      return next(new NotAuthenticatedError(error))
+    }
+
+    // No user found?
+    if (!user) {
+      return res.status(401).json({
+        status: 'error',
+        code: 401,
+        message: 'Unauthorized',
+        error: new Error('Unauthorized'),
+      })
+    }
+
+    /*       //User pending approval?
+      if (user.isPending) {
+        return next(new UserPendingError());
+      }
+  
+      //User archived?
+      if (user.isArchived) {
+        return next(new UserArchivedError());
+      } */
+
+    // Set user in request
+    req.user = user
+    return next()
+  }
+}
 
 export const authenticateUser = (email, password) =>
   new Promise((resolve, reject) => {
@@ -48,6 +91,7 @@ export const logUserIn = (user, req) => {
         },
       },
       config.security.salt,
+      { expiresIn: '1d' },
       (err, token) => {
         if (err) {
           reject(err)
@@ -74,4 +118,9 @@ export const logUserIn = (user, req) => {
       }
     )
   })
+}
+
+export const protectedRoute = (req, res, next) => {
+  const callback = passportCb(req, res, next)
+  return passport.authenticate('jwt-cookiecombo', callback)(req, res, next)
 }
