@@ -45,6 +45,10 @@ const AccountPage = () => {
 
   return (
     <StandardPage>
+      <StandardPage.Head
+        title="Kreyolopal | Account"
+        description="Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole."
+      />
       <Section>
         <Heading size={2} renderAs="h1">
           Mon compte
@@ -60,7 +64,7 @@ const AccountPage = () => {
               ''
             )}
 
-            {auth?.user ? <AccountForm onSubmit={onSubmit} /> : navigate('/')}
+            <AccountForm onSubmit={onSubmit} />
           </Box>
 
           <Button.Group align="right">

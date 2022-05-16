@@ -41,6 +41,10 @@ const LoginPage = () => {
   }
   return (
     <StandardPage>
+      <StandardPage.Head
+        title="Kreyolopal | Login"
+        description="Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole."
+      />
       <Box className="login_form">
         <Heading size={2} renderAs="h1">
           Log in
