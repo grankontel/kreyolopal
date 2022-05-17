@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Button, Form, Progress } from 'react-bulma-components'
+import { Button,Content, Form, Progress } from 'react-bulma-components'
+import { Link } from 'react-router-dom'
 
 const RegisterForm = (props) => {
   const [loading, setLoading] = useState(false)
@@ -94,8 +95,13 @@ const RegisterForm = (props) => {
         </Form.Field>
 
         <hr />
-        <Button.Group>
+        <Button.Group  align="right">
           {loading ? <Progress max={100} /> : ' '}
+          <Content>
+          Déjà inscrit ?{' '}
+          <Link to="/login">Connectez-vous ici !</Link>
+        </Content>
+
           <Button color="primary" disabled={loading}>
             Register
           </Button>

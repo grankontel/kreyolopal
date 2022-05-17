@@ -23,11 +23,15 @@ const options = {
   },
 }
 
+const transports = [new winston.transports.Console(options.console)]
+
+if (!config.slack.noSend)
+  transports.push(
+    new SlackHook({ level: 'warn', webhookUrl: config.slack.webhook })
+  )
+
 const log = winston.createLogger({
-  transports: [
-    new winston.transports.Console(options.console),
-    new SlackHook({ level: 'warn', webhookUrl: config.slack.webhook }),
-  ],
+  transports,
   exitOnError: false, // do not exit on handled exceptions
 })
 
