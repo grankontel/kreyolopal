@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import LoginForm from '../components/LoginForm'
 import StandardPage from '../layouts/StandardPage'
-import { Box, Button, Heading, Notification } from 'react-bulma-components'
+import {
+  Box,
+  Button,
+  Heading,
+  Notification,
+  Section,
+} from 'react-bulma-components'
 import { useZakari } from '../components/ZakProvider'
 import { useNavigate } from 'react-router-dom'
 
@@ -45,21 +51,24 @@ const LoginPage = () => {
         title="Kreyolopal | Login"
         description="Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole."
       />
-      <Box className="login_form">
-        <Heading size={2} renderAs="h1">
-          Log in
-        </Heading>
-        {message.length > 0 ? (
-          <Notification color="danger">
-            {message}
-            <Button remove onClick={() => setMessage('')} />
-          </Notification>
-        ) : (
-          ''
-        )}
+      <Section>
+        <Box className="login_form">
+          <Heading size={2} renderAs="h1">
+            Log in
+          </Heading>
 
-        <LoginForm buttonLabel="Login" onSubmit={onSubmit} />
-      </Box>
+          {message.length > 0 ? (
+            <Notification color="danger">
+              {message}
+              <Button remove onClick={() => setMessage('')} />
+            </Notification>
+          ) : (
+            ''
+          )}
+
+          <LoginForm buttonLabel="Login" onSubmit={onSubmit} />
+        </Box>
+      </Section>
     </StandardPage>
   )
 }
