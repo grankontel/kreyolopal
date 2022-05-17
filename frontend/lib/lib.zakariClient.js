@@ -26,6 +26,13 @@ class ZakariClient {
     bindMethods.call(this)
   }
 
+  handleFailure(reason) {
+    const data = reason.response.data
+    data.code = reason.response.status
+    if (data.code === 401) this._clean()
+    return data
+  }
+
   _clean() {
     this._cookies = []
     this._authorization = ''
@@ -83,6 +90,7 @@ class ZakariClient {
           (reason) => {
             const data = reason.response.data
             data.code = reason.response.status
+            me._clean()
             return reject(data)
           }
         )
@@ -179,8 +187,7 @@ class ZakariClient {
             resolve(rep)
           },
           (reason) => {
-            const data = reason.response.data
-            data.code = reason.response.status
+            const data = me.handleFailure(reason)
             return reject(data)
           }
         )
@@ -222,8 +229,7 @@ class ZakariClient {
             resolve(rep)
           },
           (reason) => {
-            const data = reason.response.data
-            data.code = reason.response.status
+            const data = me.handleFailure(reason)
             return reject(data)
           }
         )
@@ -256,8 +262,7 @@ class ZakariClient {
             resolve(rep)
           },
           (reason) => {
-            const data = reason.response.data
-            data.code = reason.response.status
+            const data = me.handleFailure(reason)
             return reject(data)
           }
         )
@@ -271,21 +276,21 @@ class ZakariClient {
     const me = this
     return new Promise((resolve, reject) => {
       return axios
-      .post(`${me.host}/api/auth/register`, newuser)
-      .then(
-        (result) => {
-          const rep = result.data
-          resolve(rep)
-        },
-        (reason) => {
-          const data = reason.response.data
-          data.code = reason.response.status
-          return reject(data)
-        }
-      )
-      .catch((error) => {
-        return reject({ code: 500, status: 'error', error })
-      })
+        .post(`${me.host}/api/auth/register`, newuser)
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = reason.response.data
+            data.code = reason.response.status
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
     })
   }
 }

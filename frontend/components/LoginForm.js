@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Form, Button } from 'react-bulma-components'
+import { Form, Button, Content } from 'react-bulma-components'
+import { Link } from 'react-router-dom'
 
 const LoginForm = (props) => {
   const [loading, setLoading] = useState(false)
@@ -44,7 +45,14 @@ const LoginForm = (props) => {
       </Form.Field>
 
       <Button.Group align="right">
-        <Button loading={loading} color="primary">{btnLabel}</Button>
+        <Content>
+          Pas encore de compte ?{' '}
+          <Link to="/register">Inscrivez-vous ici !</Link>
+        </Content>
+
+        <Button loading={loading} color="primary">
+          {btnLabel}
+        </Button>
       </Button.Group>
     </form>
   )
