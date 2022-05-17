@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- call mailgun api directly
 - better 401 code handing
 
 ## [1.0.4] - 2022-05-13
