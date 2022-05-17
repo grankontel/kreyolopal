@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 const logger = require('./logger')
 const authService = require('./authService')
 const db = require('../database/models')
