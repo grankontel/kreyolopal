@@ -140,7 +140,8 @@ class ZakariClient {
 
   /**
    * @typedef {Object} SpellcheckMessage
-   * @property {number} status - The X Coordinate
+   * @property {number} id - The id of the stored result
+   * @property {number} status - The status of the result
    * @property {string} kreyol - The kreyol used
    * @property {Array<string>} unknown_words - List of unrecognized words in the request
    * @property {string} message - The spellchecked result

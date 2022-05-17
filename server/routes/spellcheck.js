@@ -77,8 +77,7 @@ const sp_route = ({ logger }) => {
           }
         })
         .then(async (msg) => {
-          lMessage.response = msg.response
-          // console.info('%o',message)
+          lMessage.response = { id: msg.id, ...msg.response }
           res.status(200).json(lMessage)
           return lMessage
         })
