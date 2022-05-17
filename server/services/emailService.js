@@ -8,6 +8,7 @@ const fs = require('fs/promises')
 
 const config = require('../config')
 const mailer = require('./lib.mailer')
+const { logger } = require('./lib.mailer')
 
 const myCache = new NodeCache()
 
@@ -70,24 +71,30 @@ const makeEmail = (templateFilename, templateData) =>
  */
 const sendEmail = (templateFilename, templateData, recipient, subject) =>
   new Promise((resolve, reject) => {
-    makeEmail(templateFilename, templateData).then((email) => {
-      mailer.sendMail(
-        {
+    makeEmail(templateFilename, templateData).then(
+      (email) => {
+        const message = {
           from: config.mail.from,
           to: recipient, // _saveduser.email,
           subject,
           text: email.text,
           html: email.html,
-        },
-        (err, info) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(info)
-          }
         }
-      )
-    })
+
+        mailer.sendMail(message).then(
+          (info) => {
+            resolve(info.data)
+          },
+          (err) => {
+            reject(err.response.data)
+          }
+        )
+      },
+      (reason) => {
+        logger.error('could not make email')
+        reject(reason)
+      }
+    )
   })
 
 module.exports = { getTemplate, sendEmail }

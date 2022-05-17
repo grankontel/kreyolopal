@@ -3,7 +3,7 @@ const { body, validationResult, param } = require('express-validator')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const userService = require('../services/userService')
-const sendEmail = require('../services/emailService')
+const { sendEmail } = require('../services/emailService')
 const db = require('../database/models')
 const { authenticateUser, logUserIn } = require('../services/lib.auth')
 
@@ -117,52 +117,48 @@ const auth_route = ({ logger }) => {
 
       return userService
         .register(record)
-        .then(
-          (_saveduser) => {
-            logger.info('register success')
+        .tap((_saveduser) => {
+          logger.info('sending mail')
 
-            const templateData = {
-              user: {
-                id: _saveduser.id,
-                firstname: _saveduser.firstname,
-                lastname: _saveduser.lastname,
-                email: _saveduser.email,
-              },
-              confirm_url: `${origin}/api/verifymail/${_saveduser.email_verif_token}`,
+          const templateData = {
+            user: {
+              id: _saveduser.id,
+              firstname: _saveduser.firstname,
+              lastname: _saveduser.lastname,
+              email: _saveduser.email,
+            },
+            confirm_url: `${origin}/api/verifymail/${_saveduser.email_verif_token}`,
+          }
+          const recipient_mail = _saveduser.email
+
+          return sendEmail(
+            'verifyemail.mjml',
+            templateData,
+            `'${_saveduser.firstname} ${_saveduser.lastname}' <${recipient_mail}>`,
+            'Kontan vwè-w'
+          ).then(
+            (sent) => logger.info(sent),
+            (reason) => {
+              logger.error('could not send email')
+              logger(reason)
             }
-            const recipient_mail = _saveduser.email
-
-            return sendEmail(
-              'verifyemail.mjml',
-              templateData,
-              `'${_saveduser.firstname} ${_saveduser.lastname}' <${recipient_mail}>`,
-              'Kontan vwè-w'
-            ).then(
-              () =>
-                res.status(201).send({
-                  status: 'success',
-                  data: {
-                    email: record.email,
-                    firstname: record.firstname,
-                    lastname: record.lastname,
-                  },
-                }),
-              (reason) => {
-                logger.error(reason)
-                return res.status(201).send({
-                  status: 'success',
-                  data: {
-                    email: record.email,
-                    firstname: record.firstname,
-                    lastname: record.lastname,
-                  },
-                })
-              }
-            )
+          )
+        })
+        .then(
+          () => {
+            logger.info('register suceeded')
+            return res.status(201).send({
+              status: 'success',
+              data: {
+                email: record.email,
+                firstname: record.firstname,
+                lastname: record.lastname,
+              },
+            })
           },
-          (error) => {
-            logger.error(error)
-            res.status(500).send({ status: 'error', error })
+          (reason) => {
+            logger.error(reason)
+            return res.status(500).send({ status: 'error', error: [reason] })
           }
         )
         .catch((_error) => {
