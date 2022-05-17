@@ -1,12 +1,48 @@
 const express = require('express')
 const { check, validationResult } = require('express-validator')
+const { Op } = require('sequelize')
 const config = require('../config')
 const spellchecker = require('../services/spellchecker')
 const db = require('../database/models')
 const webhook = require('../services/slackService')
 const { protectedRoute } = require('../services/lib.auth')
 
-const { User, Spellchecked: Msg } = db
+const { User, Spellchecked: Msg, Rating } = db
+
+function sqlPrepare(req, paramQuerySQL) {
+  let { sort, limit } = req.query
+  const { name, order, offset } = req.query
+  // sort par defaut si param vide ou inexistant
+  if (
+    typeof sort === 'undefined' ||
+    !['asc', 'desc'].includes(sort.toLowerCase())
+  ) {
+    sort = 'ASC'
+  }
+  // Recherche LIKE '%%'
+  if (typeof name !== 'undefined' && name !== '') {
+    paramQuerySQL.where.name = {
+      [Op.like]: `%${name}%`,
+    }
+  }
+  // order by
+  if (typeof order !== 'undefined' && ['name'].includes(order.toLowerCase())) {
+    paramQuerySQL.order = [[order, sort]]
+  }
+  // limit
+  if (typeof limit === 'undefined' || limit === '') {
+    limit = 20
+  } else {
+    limit = parseInt(limit, 10)
+  }
+
+  paramQuerySQL.limit = limit
+
+  // offset
+  if (typeof offset !== 'undefined' && offset !== '' && offset > 0) {
+    paramQuerySQL.offset = parseInt(offset, 10)
+  }
+}
 
 const sp_route = ({ logger }) => {
   const router = express.Router()
@@ -84,6 +120,36 @@ const sp_route = ({ logger }) => {
     }
   )
 
+  router.get('/account/spellcheck', protectedRoute, (req, res) => {
+    const paramQuerySQL = {}
+    paramQuerySQL.include = {
+      model: Rating,
+      attributes: [
+        'rating',
+        'user_correction',
+        'user_notes',
+        'admin_correction',
+        'admin_notes',
+      ],
+    }
+
+    paramQuerySQL.attributes = ['id','request', 'response']
+    paramQuerySQL.where = {
+      userId: {
+        [Op.eq]: req.user.id,
+      },
+    }
+
+    sqlPrepare(req, paramQuerySQL)
+
+    Msg.findAndCountAll(paramQuerySQL).then((items) =>
+      res.json({
+        error: false,
+        count: items.count,
+        data: items.rows,
+      })
+    )
+  })
   logger.info('\tAdding route "spellcheck"...')
   return router
 }
