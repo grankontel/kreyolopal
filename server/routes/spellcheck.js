@@ -1,5 +1,5 @@
 const express = require('express')
-const { check, validationResult } = require('express-validator')
+const { check, validationResult, param } = require('express-validator')
 const { Op } = require('sequelize')
 const config = require('../config')
 const spellchecker = require('../services/spellchecker')
@@ -120,6 +120,86 @@ const sp_route = ({ logger }) => {
     }
   )
 
+  router.post(
+    '/account/spellcheck/:id/rating',
+    [
+      param('id').isNumeric(),
+      check('rating').isNumeric(),
+      check('user_correction').optional().isString(),
+      check('user_notes').optional().isString(),
+    ],
+    protectedRoute,
+    (req, res) => {
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ status: 'error', errors: errors.array() })
+      }
+      const msgId = req.params.id
+      const { rating, user_correction, user_notes } = req.body
+
+      return new Promise((resolve, reject) => {
+        Msg.findByPk(msgId).then(
+          (message) => {
+            if (req.user.id !== message.userId) {
+              reject({
+                status: 'error',
+                code: 401,
+                message: 'Unauthorized',
+                error: new Error('Unauthorized'),
+              })
+              return
+            }
+
+            Rating.findAll({
+              where: {
+                spellcheckedId: msgId,
+              },
+            }).then((ratings) => {
+              if (ratings.length === 0) {
+                Rating.create({
+                  spellcheckedId: msgId,
+                  rating,
+                  user_correction,
+                  user_notes,
+                }).then(
+                  (obj) => {
+                    resolve(obj)
+                  },
+                  (err) => reject({ status: 'error', code: 500, error: [err] })
+                )
+              } else {
+                const yourRating = ratings[ratings.length - 1]
+                const value = {}
+
+                value.rating = rating
+                if (user_correction !== undefined)
+                  value.user_correction = user_correction
+                if (user_notes !== undefined) value.user_notes = user_notes
+
+                yourRating.update(value).then(
+                  (obj) => {
+                    resolve(obj)
+                  },
+                  (err) => reject({ status: 'error', code: 500, error: [err] })
+                )
+              }
+            })
+          },
+          (reason) => {
+            logger.error(reason)
+            reject(reason)
+          }
+        )
+      }).then(
+        (result) => {
+          return res.status(200).json({ id: result.id })
+        },
+        (reason) => res.status(500).json(reason)
+      )
+    }
+  )
+
   router.get('/account/spellcheck', protectedRoute, (req, res) => {
     const paramQuerySQL = {}
     paramQuerySQL.include = {
@@ -133,7 +213,7 @@ const sp_route = ({ logger }) => {
       ],
     }
 
-    paramQuerySQL.attributes = ['id','request', 'response']
+    paramQuerySQL.attributes = ['id', 'request', 'response']
     paramQuerySQL.where = {
       userId: {
         [Op.eq]: req.user.id,
