@@ -3,9 +3,11 @@ import {
   Box,
   Button,
   Form,
+  Icon,
   Message,
   Notification,
 } from 'react-bulma-components'
+import * as feather from 'feather-icons'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useZakari } from '../components/ZakProvider'
 import StarRating from './StarRating'
@@ -57,7 +59,7 @@ const ZakariForm = () => {
         } else {
           const result = data.response
           result.html = addEmphasis(result.message)
-          
+
           setResponse(result)
         }
       })
@@ -84,9 +86,11 @@ const ZakariForm = () => {
             />
           </Form.Control>
         </Form.Field>
-        <Message className='zakari_repons'>
+        <Message className="zakari_repons">
           <Message.Header>Répons</Message.Header>
-          <Message.Body dangerouslySetInnerHTML={{__html: response?.html}}></Message.Body>
+          <Message.Body
+            dangerouslySetInnerHTML={{ __html: response?.html }}
+          ></Message.Body>
         </Message>
         {errorMessage.length > 0 && (
           <Notification className="error" mt={2} light color="danger">
@@ -96,10 +100,23 @@ const ZakariForm = () => {
         )}
         <hr />
         <Button.Group align="right">
-          <StarRating  hidden={response === null} />
-          <CopyToClipboard text={response?.message} onCopy={() => setCopied(true)}>
+          {response === null ? null : (
+            <Icon
+              size={24}
+              color="success"
+              dangerouslySetInnerHTML={{
+                __html: feather.icons.info.toSvg({
+                  height: '1em',
+                  width: '1em',
+                }),
+              }}
+            />)}
+          <StarRating hidden={response === null} />
+          <CopyToClipboard
+            text={response?.message}
+            onCopy={() => setCopied(true)}
+          >
             <Button
-            
               color={copied ? 'info' : 'light'}
               disabled={response === null}
             >
