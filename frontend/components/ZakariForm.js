@@ -100,9 +100,11 @@ const ZakariForm = () => {
         )}
         <hr />
         <Button.Group align="right">
-          {response === null ? null : (
+          {response !== null ? null : (
             <Icon
               size={24}
+              data-tooltip={`Kliké sé zétwal-la pou mèt on nòt,\n sa ké rédé-nou amélyoré zouti-la.`}
+              className='has-tooltip-arrow'
               color="success"
               dangerouslySetInnerHTML={{
                 __html: feather.icons.info.toSvg({

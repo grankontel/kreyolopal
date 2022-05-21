@@ -59,6 +59,7 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/register": "^7.17.7",
     "@babel/runtime": "^7.17.9",
+    "@creativebulma/bulma-tooltip": "^1.2.0",
     "@slack/webhook": "^6.1.0",
     "argon2": "^0.28.5",
     "assert": "^2.0.0",
