@@ -40,6 +40,25 @@ const ZakariForm = () => {
   const eraseErrorMessage = () => setErrorMessage('')
   const auth = useZakari()
 
+  const rateCorrection = (note) => {
+    if (response?.id === undefined) return
+    setIsLoading(true)
+    try {
+      const resp = auth.rateCorrection(response?.id, { rating: note })
+
+      resp.then((data) => {
+        setIsLoading(false)
+
+        if (data.errors !== undefined) {
+          setErrorMessage('Erreur de zakari')
+        }
+      })
+    } catch (error) {
+      setIsLoading(false)
+      setErrorMessage(error)
+    }
+  }
+  
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -100,11 +119,11 @@ const ZakariForm = () => {
         )}
         <hr />
         <Button.Group align="right">
-          {response !== null ? null : (
+          {response === null ? null : (
             <Icon
               size={24}
               data-tooltip={`Kliké sé zétwal-la pou mèt on nòt,\n sa ké rédé-nou amélyoré zouti-la.`}
-              className='has-tooltip-arrow'
+              className="has-tooltip-arrow"
               color="success"
               dangerouslySetInnerHTML={{
                 __html: feather.icons.info.toSvg({
@@ -112,8 +131,9 @@ const ZakariForm = () => {
                   width: '1em',
                 }),
               }}
-            />)}
-          <StarRating hidden={response === null} />
+            />
+          )}
+          <StarRating hidden={response === null} onRated={rateCorrection} />
           <CopyToClipboard
             text={response?.message}
             onCopy={() => setCopied(true)}
