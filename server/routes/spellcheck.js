@@ -124,7 +124,7 @@ const sp_route = ({ logger }) => {
     '/account/spellcheck/:id/rating',
     [
       param('id').isNumeric(),
-      check('rating').isNumeric(),
+      check('rating').isInt({ min: 0, max: 5 }),
       check('user_correction').optional().isString(),
       check('user_notes').optional().isString(),
     ],

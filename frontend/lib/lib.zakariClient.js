@@ -199,6 +199,47 @@ class ZakariClient {
   }
 
   /**
+   * @typedef {Object} CorrectionRating
+   * @property {number} rating - a rating from 0 to 5
+   * @property {string} user_correction - a correction proposed by the user
+   * @property {string} user_notes - notes of comment on the rating fron the user
+   */
+
+  /**
+   * Rate the provided correction
+   * @param {string} msgId The id of the correction to rate
+   * @param {CorrectionRating} rating the rating info
+   */
+  rateCorrection(msgId, rating) {
+    const me = this
+    const url = `${me.host}/api/account/spellcheck/${msgId}/rating`
+    return new Promise((resolve, reject) => {
+      return axios
+        .post(url, rating, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: me._authorization,
+            Cookie: me._cookies.join('; '),
+          },
+          withCredentials: true,
+        })
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+  }
+
+  /**
    * @typedef {Object} ProfileObject
    * @property {string} firstname - User firstname
    * @property {string} lastname - User lastname
