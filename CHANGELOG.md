@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- can now change password
 - correction can be rated
 
 ## [1.0.5] - 2022-05-17

@@ -3,7 +3,7 @@ import { Button, Progress } from 'react-bulma-components'
 import FormField from './FormField'
 
 const UpdPwdForm = (props) => {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [currentPwd, setCurrentPwd] = useState('')
   const [newPwd, setNewPwd] = useState('')
   const [newPwd2, setNewPwd2] = useState('')
@@ -12,9 +12,11 @@ const UpdPwdForm = (props) => {
     e.preventDefault()
 
     props.onSubmit({
-      currentPassword: currentPwd,
-      newPassword: newPwd,
-      verification: newPwd2,
+      data: {
+        currentPassword: currentPwd,
+        newPassword: newPwd,
+        verification: newPwd2,
+      },
       setLoading,
     })
   }
