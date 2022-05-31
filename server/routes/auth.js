@@ -204,6 +204,48 @@ const auth_route = ({ logger }) => {
     }
   )
 
+  router.post('/resetpwd', [body('email').isEmail()], async (req, res) => {
+    // Finds the validation errors in this request and wraps them in an object with handy functions
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ status: 'error', error: errors.array() })
+    }
+
+    const { email } = req.body
+    const origin = `${req.protocol}://${req.get('host')}`
+
+    return userService.resetPwdToken(email).then((retrievedUser) => {
+      if (retrievedUser === null) {
+        // silently stop
+        return res.status(200).json()
+      }
+
+      logger.info('sending reset pwd mail')
+
+      const templateData = {
+        user: {
+          id: retrievedUser.id,
+          firstname: retrievedUser.firstname,
+          lastname: retrievedUser.lastname,
+          email: retrievedUser.email,
+        },
+        confirm_url: `${origin}/resetpwd/${retrievedUser.reset_pwd_token}`,
+      }
+      const recipient_mail = retrievedUser.email
+
+      return sendEmail(
+        'resetpwd.mjml',
+        templateData,
+        `'${retrievedUser.firstname} ${retrievedUser.lastname}' <${recipient_mail}>`,
+        'Chanjé modpas'
+      ).then(() => {
+        logger.info('Just sent mail')
+
+        return res.status(200).json()
+      })
+    })
+  })
+
   logger.info('\tAdding route "auth"...')
   return router
 }

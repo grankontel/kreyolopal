@@ -11,8 +11,8 @@ const userService = {
    * Find a user by his email
    * @param {string} email Email of the user to find
    */
-  findbyEmail: (email) =>
-    user
+  findbyEmail(email) {
+    return user
       .findOne({ where: { email } })
       .then(
         (record) => record,
@@ -24,10 +24,24 @@ const userService = {
       .catch((error) => {
         logger.error(error)
         return null
-      }),
+      })
+  },
 
-  register: (record) =>
-    new Promise((resolve, reject) => {
+  resetPwdToken(email) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      me.findbyEmail(email).then((record) => {
+        if (!record) reject(new Error(`cannot find user for : ${email}`))
+
+        record.reset_pwd_token = authService.generateVerifToken(record.email)
+        record.save()
+        resolve(record)
+      })
+    })
+  },
+
+  register(record) {
+    return new Promise((resolve, reject) => {
       sequelize.sync().then(
         () => {
           const myrecord = record
@@ -64,7 +78,8 @@ const userService = {
         },
         (reason) => reject(reason)
       )
-    }),
+    })
+  },
 }
 
 module.exports = userService
