@@ -314,6 +314,38 @@ class ZakariClient {
     })
   }
 
+  updatePassword(currentPassword, newPassword, verification) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .post(`${me.host}/api/updatepwd`, {
+          currentPassword,
+          newPassword,
+          verification
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: me._authorization,
+            Cookie: me._cookies.join('; '),
+          },
+          withCredentials: true,
+        })
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+  }
+
   register(newuser) {
     const me = this
     return new Promise((resolve, reject) => {

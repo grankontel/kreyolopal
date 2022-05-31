@@ -23,6 +23,17 @@ $family-secondary: 'Alegreya', serif
 main.main
     margin-bottom: 1rem
     min-height: 450px
+    .main_content
+        margin-top: 2rem
+        .page_content
+            section:not(:first-child)
+                margin-top: 3rem
+            section:last-child
+                margin-bottom: 3rem
+.side_menu
+    a
+        color: $text
+        font-size: 0.9rem
 
 footer.page-footer
     min-height: 150px
@@ -50,5 +61,9 @@ footer.page-footer
     margin: auto
     img
         height: 500px
+
+.pseudo_link
+    color: $text
+    cursor: default
 
 @import "./components/forms"

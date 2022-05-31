@@ -58,6 +58,7 @@ const AccountForm = (props) => {
                 id="firstname"
                 type="text"
                 value={firstname || ''}
+                autoComplete='given-name'
                 onChange={(e) => setFirstname(e.target.value)}
               />
             </Form.Control>
@@ -69,6 +70,7 @@ const AccountForm = (props) => {
                 id="lastname  "
                 type="text"
                 value={lastname || ''}
+                autoComplete='family-name'
                 onChange={(e) => setLastname(e.target.value)}
               />
             </Form.Control>
