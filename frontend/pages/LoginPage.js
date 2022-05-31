@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import LoginForm from '../components/LoginForm'
+import LoginForm from '../components/Forms/LoginForm'
 import StandardPage from '../layouts/StandardPage'
 import {
   Box,
