@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button,Content, Form, Progress } from 'react-bulma-components'
+import { Button, Content, Form, Progress } from 'react-bulma-components'
 import { Link } from 'react-router-dom'
 
 const RegisterForm = (props) => {
@@ -35,6 +35,7 @@ const RegisterForm = (props) => {
               id="firstname"
               type="text"
               value={firstname || ''}
+              autoComplete="given-name"
               onChange={(e) => setFirstname(e.target.value)}
             />
           </Form.Control>
@@ -46,6 +47,7 @@ const RegisterForm = (props) => {
               id="lastname  "
               type="text"
               value={lastname || ''}
+              autoComplete="family-name"
               onChange={(e) => setLastname(e.target.value)}
             />
           </Form.Control>
@@ -58,7 +60,7 @@ const RegisterForm = (props) => {
               name="email"
               type="email"
               value={email}
-              autoComplete="username"
+              autoComplete="email"
               onChange={(e) => setEmail(e.target.value)}
               required
             />
@@ -95,12 +97,11 @@ const RegisterForm = (props) => {
         </Form.Field>
 
         <hr />
-        <Button.Group  align="right">
+        <Button.Group align="right">
           {loading ? <Progress max={100} /> : ' '}
           <Content>
-          Déjà inscrit ?{' '}
-          <Link to="/login">Connectez-vous ici !</Link>
-        </Content>
+            Déjà inscrit ? <Link to="/login">Connectez-vous ici !</Link>
+          </Content>
 
           <Button color="primary" disabled={loading}>
             Register
