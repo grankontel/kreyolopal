@@ -3,11 +3,14 @@ import {
   Box,
   Button,
   Form,
+  Icon,
   Message,
   Notification,
 } from 'react-bulma-components'
+import * as feather from 'feather-icons'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useZakari } from '../components/ZakProvider'
+import StarRating from './StarRating'
 
 function addEmphasis(src) {
   const strArray = Array.from(src)
@@ -32,16 +35,35 @@ const ZakariForm = () => {
 
   const [request, setRequest] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const [response, setResponse] = useState('')
+  const [response, setResponse] = useState(null)
 
   const eraseErrorMessage = () => setErrorMessage('')
   const auth = useZakari()
 
+  const rateCorrection = (note) => {
+    if (response?.id === undefined) return
+    setIsLoading(true)
+    try {
+      const resp = auth.rateCorrection(response?.id, { rating: note })
+
+      resp.then((data) => {
+        setIsLoading(false)
+
+        if (data.errors !== undefined) {
+          setErrorMessage('Erreur de zakari')
+        }
+      })
+    } catch (error) {
+      setIsLoading(false)
+      setErrorMessage(error)
+    }
+  }
+  
   const handleSubmit = (e) => {
     e.preventDefault()
 
     setErrorMessage('')
-    setResponse('')
+    setResponse(null)
     setIsLoading(true)
     setCopied(false)
 
@@ -54,8 +76,10 @@ const ZakariForm = () => {
         if (data.errors !== undefined) {
           setErrorMessage('Erreur de zakari')
         } else {
-          const msg = addEmphasis(data.response.message)
-          setResponse(msg)
+          const result = data.response
+          result.html = addEmphasis(result.message)
+
+          setResponse(result)
         }
       })
     } catch (error) {
@@ -81,9 +105,11 @@ const ZakariForm = () => {
             />
           </Form.Control>
         </Form.Field>
-        <Message className='zakari_repons'>
+        <Message className="zakari_repons">
           <Message.Header>Répons</Message.Header>
-          <Message.Body dangerouslySetInnerHTML={{__html: response}}></Message.Body>
+          <Message.Body
+            dangerouslySetInnerHTML={{ __html: response?.html }}
+          ></Message.Body>
         </Message>
         {errorMessage.length > 0 && (
           <Notification className="error" mt={2} light color="danger">
@@ -93,10 +119,28 @@ const ZakariForm = () => {
         )}
         <hr />
         <Button.Group align="right">
-          <CopyToClipboard text={response} onCopy={() => setCopied(true)}>
+          {response === null ? null : (
+            <Icon
+              size={24}
+              data-tooltip={`Kliké sé zétwal-la pou mèt on nòt,\n sa ké rédé-nou amélyoré zouti-la.`}
+              className="has-tooltip-arrow"
+              color="success"
+              dangerouslySetInnerHTML={{
+                __html: feather.icons.info.toSvg({
+                  height: '1em',
+                  width: '1em',
+                }),
+              }}
+            />
+          )}
+          <StarRating hidden={response === null} onRated={rateCorrection} />
+          <CopyToClipboard
+            text={response?.message}
+            onCopy={() => setCopied(true)}
+          >
             <Button
               color={copied ? 'info' : 'light'}
-              disabled={response === ''}
+              disabled={response === null}
             >
               {copied ? 'I adan !' : 'Kopyé'}
             </Button>
