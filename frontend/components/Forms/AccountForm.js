@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Progress } from 'react-bulma-components';
-import { useZakari } from './ZakProvider';
+import { useZakari } from '../ZakProvider';
 
 const AccountForm = (props) => {
   const [loading, setLoading] = useState(true);

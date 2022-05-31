@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Content } from 'react-bulma-components'
 import { Link } from 'react-router-dom'
-import FormField from './FormField'
+import FormField from '../FormField'
 
 const LoginForm = (props) => {
   const [loading, setLoading] = useState(false)
