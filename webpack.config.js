@@ -66,6 +66,7 @@ module.exports = (/* env */) => {
       // `chunkFilename` provides a template for naming code-split bundles (optional)
       chunkFilename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
     },
     module: {
       rules: [
