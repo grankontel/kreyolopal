@@ -3,6 +3,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import { Routes, Route } from 'react-router-dom'
 import ZakProvider from './components/ZakProvider'
 import AccountPage from './pages/AccountPage'
+import ChangePwdPage from './pages/ChangePwdPage'
 import IndexPage from './pages/IndexPage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFound'
@@ -35,6 +36,10 @@ export const App = () => {
           />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verified" element={<VerifiedPage />} />
+
+          <Route path="/resetpwd">
+            <Route path=":token" element={<ChangePwdPage />} />
+          </Route>
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
