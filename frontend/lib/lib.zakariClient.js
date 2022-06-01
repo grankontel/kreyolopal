@@ -282,6 +282,41 @@ class ZakariClient {
   }
 
   /**
+   * Get the user associated to a reset password token (sent by email)
+   * @param {string} token The reset password token
+   * @returns user info associated with token if any
+   */
+  userByToken(token) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .get(
+          `${me.host}/api/bytoken/${token}`,
+          {},
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+
+  }
+
+  /**
    * Update the current user profile
    * @param {ProfileObject} profile the profile data to update
    * @returns ZakariResponse

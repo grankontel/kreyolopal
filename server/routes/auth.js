@@ -217,7 +217,10 @@ const auth_route = ({ logger }) => {
     return userService.resetPwdToken(email).then((retrievedUser) => {
       if (retrievedUser === null) {
         // silently stop
-        return res.status(200).json()
+        return res.status(200).json({
+          status: 'success',
+          data: {},
+        })
       }
 
       logger.info('sending reset pwd mail')
@@ -241,10 +244,51 @@ const auth_route = ({ logger }) => {
       ).then(() => {
         logger.info('Just sent mail')
 
-        return res.status(200).json()
+        return res.status(200).json({
+          status: 'success',
+          data: {},
+        })
       })
     })
   })
+
+  router.get(
+    '/bytoken/:token',
+    [
+      param('token')
+        .notEmpty()
+        .custom((value) => {
+          const isToken = /[A-Za-z0-9]{64}/
+          return value.length > 0 && isToken.test(value)
+        }),
+    ],
+    (req, res) => {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ status: 'error', error: errors.array() })
+      }
+
+      const { token } = req.params
+      return User.findOne({ where: { reset_pwd_token: token } }).then(
+        (profile) => {
+          if (profile === null) {
+            return res.status(404).json({ status: 'error', error: 'Not Found' })
+          }
+
+          const lUser = {
+            firstname: profile.firstname,
+            lastname: profile.lastname,
+            email: profile.email,
+          }
+
+          return res.json({
+            status: 'success',
+            data: { profile: lUser },
+          })
+        }
+      )
+    }
+  )
 
   logger.info('\tAdding route "auth"...')
   return router

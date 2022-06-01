@@ -36,7 +36,7 @@ const TopNavbar = () => {
     <Navbar color="dark" className="navbar_top">
       <Navbar.Brand>
         <Navbar.Item href="/" renderAs="li">
-          <img src="images/logo_name.svg" alt="Zakari Brand" />
+          <img src="/images/logo_name.svg" alt="Zakari Brand" />
         </Navbar.Item>
         <Navbar.Item renderAs="li">
           <Link to="/">Accueil</Link>
