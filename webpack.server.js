@@ -32,8 +32,17 @@ module.exports = {
         test: /\.js$/,
         use: 'babel-loader',
       },
+      {
+        test: /\.sass$/,
+        use: 'null-loader',
+      },
     ],
   },
   plugins: [cssPlugin],
   devtool: 'source-map',
+  resolve: {
+    alias: {
+      Styles: path.resolve(__dirname, 'frontend/styles'),
+    },
+  },
 }

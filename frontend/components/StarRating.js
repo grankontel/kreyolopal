@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import '../styles/components/star.sass'
+import 'Styles/components/star.sass'
 import PropTypes from 'prop-types'
 
 const StarRating = ({ disabled, hidden, value, onRated }) => {

@@ -59,6 +59,9 @@ module.exports = (/* env */) => {
         url: require.resolve('url'),
         util: require.resolve('util/'),
       },
+      alias: {
+        Styles: path.resolve(__dirname, 'frontend/styles'),
+      },
     },
     output: {
       // `filename` provides a template for naming your bundles (remember to use `[name]`)
