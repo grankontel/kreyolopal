@@ -63,6 +63,52 @@ const makeEmail = (templateFilename, templateData) =>
 
 /**
  *
+ * @param {string} replyTo Sender of the Email
+ * @param {string} templateFilename The MJML templatefile
+ * @param {object} templateData The MJML template data
+ * @param {string} recipient Recipient of the email
+ * @param {string} subject The subject of the email
+ * @returns {Promise} a Promise to send the email
+ */
+const sendFromEmail = (
+  replyTo,
+  templateFilename,
+  templateData,
+  recipient,
+  subject
+) =>
+  new Promise((resolve, reject) => {
+    makeEmail(templateFilename, templateData).then(
+      (email) => {
+        const message = {
+          'h:Reply-To': replyTo,
+          from: config.mail.from,
+          to: recipient, // _saveduser.email,
+          subject,
+          text: email.text,
+          html: email.html,
+        }
+
+        mailer.sendMail(message).then(
+          (info) => {
+            logger.info(`email ${templateFilename} sent`)
+            resolve(info.data)
+          },
+          (err) => {
+            logger.warn(`email ${templateFilename} NOT sent`)
+            reject(err.response.data)
+          }
+        )
+      },
+      (reason) => {
+        logger.error('could not make email')
+        reject(reason)
+      }
+    )
+  })
+
+/**
+ *
  * @param {string} templateFilename The MJML templatefile
  * @param {object} templateData The MJML template data
  * @param {string} recipient Recipient of the email
@@ -98,5 +144,4 @@ const sendEmail = (templateFilename, templateData, recipient, subject) =>
       }
     )
   })
-
-module.exports = { getTemplate, sendEmail }
+module.exports = { getTemplate, sendEmail, sendFromEmail }
