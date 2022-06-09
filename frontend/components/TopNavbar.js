@@ -76,6 +76,7 @@ const TopNavbar = () => {
               <Navbar.Item href="/register">S'inscrire</Navbar.Item>
             </>
           )}
+          <Navbar.Item href="/contact">Contact</Navbar.Item>
         </Navbar.Container>
       </Navbar.Menu>
     </Navbar>
