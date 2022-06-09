@@ -5,7 +5,11 @@ const LocalStrategy = require('passport-local')
 const userService = require('../services/userService')
 const { sendEmail } = require('../services/emailService')
 const db = require('../database/models')
-const { authenticateUser, logUserIn } = require('../services/lib.auth')
+const {
+  authenticateUser,
+  logUserIn,
+  protectedRoute,
+} = require('../services/lib.auth')
 
 const { User } = db
 
@@ -70,19 +74,13 @@ const auth_route = ({ logger }) => {
     }
   )
 
-  router.post(
-    '/auth/logout',
-    passport.authenticate('jwt-cookiecombo', {
-      session: false,
-    }),
-    (req, res) => {
-      req.logout()
-      res.status(200).send({
-        status: 'success',
-        data: {},
-      })
-    }
-  )
+  router.post('/auth/logout', protectedRoute, (req, res) => {
+    req.logout()
+    res.status(200).send({
+      status: 'success',
+      data: {},
+    })
+  })
 
   router.post(
     '/auth/register',

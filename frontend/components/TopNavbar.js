@@ -51,9 +51,15 @@ const TopNavbar = () => {
               <Navbar.Item href="/spellcheck">Korije</Navbar.Item>
               <Navbar.Item href="/account">Compte</Navbar.Item>
               <Navbar.Item>
-                <Button outlined colorVariant="light" 
-                  onClick={() => {
-                    auth.signOut().then(() => navigate('/'))
+                <Button
+                  outlined
+                  colorVariant="light"
+                  onClick={async () => {
+                    try {
+                      await auth.signOut()
+                    } finally {
+                      navigate('/')
+                    }
                   }}
                 >
                   Se déconnecter

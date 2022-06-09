@@ -127,8 +127,7 @@ class ZakariClient {
             resolve(rep)
           },
           (reason) => {
-            const data = reason.response.data
-            data.code = reason.response.status
+            const data = me.handleFailure(reason)
             return reject(data)
           }
         )
