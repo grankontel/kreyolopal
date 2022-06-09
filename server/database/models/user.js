@@ -41,10 +41,17 @@ module.exports = (sequelize, DataTypes) => {
       email_verif_token: {
         type: DataTypes.STRING,
       },
+      reset_pwd_token: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
       modelName: 'User',
+      indexes: [{
+        fields: ['reset_pwd_token'],
+        name: 'IX_reset_pwd_token',
+      }],
     }
   );
   return User;

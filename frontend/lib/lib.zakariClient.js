@@ -127,8 +127,7 @@ class ZakariClient {
             resolve(rep)
           },
           (reason) => {
-            const data = reason.response.data
-            data.code = reason.response.status
+            const data = me.handleFailure(reason)
             return reject(data)
           }
         )
@@ -279,6 +278,77 @@ class ZakariClient {
           return reject({ code: 500, status: 'error', error })
         })
     })
+  }
+
+  /**
+   * Request a password reset
+   * @param {string} email Email to reset password for
+   * @returns Promise
+   */
+  requestResetPwd(email) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .post(
+          `${me.host}/api/resetpwd`,
+          {
+            email,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+ 
+  }
+  /**
+   * Get the user associated to a reset password token (sent by email)
+   * @param {string} token The reset password token
+   * @returns user info associated with token if any
+   */
+  userByToken(token) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .get(
+          `${me.host}/api/bytoken/${token}`,
+          {},
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+
   }
 
   /**

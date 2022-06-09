@@ -8,7 +8,7 @@ const fs = require('fs/promises')
 
 const config = require('../config')
 const mailer = require('./lib.mailer')
-const { logger } = require('./lib.mailer')
+const logger = require('./logger')
 
 const myCache = new NodeCache()
 
@@ -83,9 +83,11 @@ const sendEmail = (templateFilename, templateData, recipient, subject) =>
 
         mailer.sendMail(message).then(
           (info) => {
+            logger.info(`email ${templateFilename} sent`)
             resolve(info.data)
           },
           (err) => {
+            logger.warn(`email ${templateFilename} NOT sent`)
             reject(err.response.data)
           }
         )

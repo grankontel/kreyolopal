@@ -10,9 +10,9 @@ import {
   Panel,
 } from 'react-bulma-components'
 import { useZakari } from '../components/ZakProvider'
-import AccountForm from '../components/AccountForm'
-import UpdPwdForm from '../components/UpdPwdForm'
 import FeatherIcon from '../components/FatherIcon'
+import AccountForm from '../components/Forms/AccountForm'
+import UpdPwdForm from '../components/Forms/UpdPwdForm'
 
 const AccountPage = () => {
   const [notif, setNotif] = useState({ color: 'warning', message: '' })

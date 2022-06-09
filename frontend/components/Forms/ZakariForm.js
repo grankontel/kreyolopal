@@ -9,8 +9,8 @@ import {
 } from 'react-bulma-components'
 import * as feather from 'feather-icons'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { useZakari } from '../components/ZakProvider'
-import StarRating from './StarRating'
+import { useZakari } from '../ZakProvider'
+import StarRating from '../StarRating'
 
 function addEmphasis(src) {
   const strArray = Array.from(src)
