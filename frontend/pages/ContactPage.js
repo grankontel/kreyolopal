@@ -10,6 +10,7 @@ import {
 } from 'react-bulma-components'
 import FormField from '../components/FormField'
 import StandardPage from '../layouts/StandardPage'
+const axios = require('axios').default
 
 const ContactPage = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -30,15 +31,24 @@ const ContactPage = () => {
     e.preventDefault()
 
     try {
-        setIsLoading(true)
-        clearMessage()
-  
+      setIsLoading(true)
+      clearMessage()
 
+      axios
+        .post('/backend/contact', { firstname, lastname, email, subject, message })
+        .then(
+          () => {
+            setNotif({ color: 'success', message: 'Opération réussie' })
+          },
+          (error) => {
+            setNotif({ color: 'danger', message: error?.error || error })
+          }
+        )
     } catch (error) {
-        setNotif({ color: 'danger', message: error?.error || error })
-      } finally {
-        setIsLoading(false)
-      }    
+      setNotif({ color: 'danger', message: error?.error || error })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
