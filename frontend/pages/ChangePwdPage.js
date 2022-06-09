@@ -13,7 +13,8 @@ import { useZakari } from '../components/ZakProvider'
 import FormField from '../components/FormField'
 
 const ChangePwdPage = () => {
-  const [loading, setLoading] = useState(true)
+    const [init, setInit] = useState(true)
+    const [loading, setLoading] = useState(false)
   const [user, setUser] = useState(null)
   const [notif, setNotif] = useState({ color: 'warning', message: '' })
   const [newPwd, setNewPwd] = useState('')
@@ -21,9 +22,11 @@ const ChangePwdPage = () => {
   const { token } = useParams()
   const auth = useZakari()
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (auth !== null) getUserByToken()
   }, [auth])
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   const clearMessage = () => {
     setNotif({ color: 'warning', message: '' })
@@ -31,7 +34,7 @@ const ChangePwdPage = () => {
 
   const getUserByToken = async () => {
     try {
-      setLoading(true)
+        setInit(true)
 
       let {
         data: { profile },
@@ -47,13 +50,37 @@ const ChangePwdPage = () => {
           message: 'Ni fòt adan mésaj-la yo voyé ba-w la.',
         })
     } finally {
+        setInit(false)
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      setLoading(true)
+      clearMessage()
+      auth.resetPassword(newPwd, newPwd2).then(
+        () => {
+          setNotif({ color: 'info', message: 'Mise à jour réussie' })
+        },
+        (reason) => {
+          const code = reason?.code || 500
+          const msg =
+            code === 500
+              ? 'Erreur inconnue, veuillez essayer ultérieurement'
+              : reason
+          setNotif({ color: 'danger', message: msg })
+        }
+      )
+    } catch (error) {
+      setNotif({ color: 'danger', message: error?.error || error })
+    } finally {
       setLoading(false)
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-  }
+
 
   return (
     <StandardPage lang="cpf_GP">
@@ -74,7 +101,7 @@ const ChangePwdPage = () => {
           ''
         )}
 
-        {loading ? (
+        {init ? (
           <Progress max={100} />
         ) : user === null ? (
           'user is null '
