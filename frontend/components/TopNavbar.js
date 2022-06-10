@@ -36,7 +36,7 @@ const TopNavbar = () => {
     <Navbar color="dark" className="navbar_top">
       <Navbar.Brand>
         <Navbar.Item href="/" renderAs="li">
-          <img src="images/logo_name.svg" alt="Zakari Brand" />
+          <img src="/images/logo_name.svg" alt="Zakari Brand" />
         </Navbar.Item>
         <Navbar.Item renderAs="li">
           <Link to="/">Accueil</Link>
@@ -51,9 +51,15 @@ const TopNavbar = () => {
               <Navbar.Item href="/spellcheck">Korije</Navbar.Item>
               <Navbar.Item href="/account">Compte</Navbar.Item>
               <Navbar.Item>
-                <Button outlined colorVariant="light" 
-                  onClick={() => {
-                    auth.signOut().then(() => navigate('/'))
+                <Button
+                  outlined
+                  colorVariant="light"
+                  onClick={async () => {
+                    try {
+                      await auth.signOut()
+                    } finally {
+                      navigate('/')
+                    }
                   }}
                 >
                   Se déconnecter
@@ -70,6 +76,7 @@ const TopNavbar = () => {
               <Navbar.Item href="/register">S'inscrire</Navbar.Item>
             </>
           )}
+          <Navbar.Item href="/contact">Contact</Navbar.Item>
         </Navbar.Container>
       </Navbar.Menu>
     </Navbar>

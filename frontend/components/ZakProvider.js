@@ -13,6 +13,7 @@ const Protected = ({ to, children }) => {
   useEffect(() => {
     if (auth !== null) {
       setLoggedIn(auth?.user !== null)
+      if (auth?.user === null) navigate(to)
       auth.onUserChange((_auth, user) => {
         setLoggedIn(user !== null)
         if (user === null) navigate(to)

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2022-06-10
+
+- contact page
+- can now reset password
+- better logout handling
+- can now change password
+- correction can be rated
+
 ## [1.0.5] - 2022-05-17
 
 - call mailgun api directly

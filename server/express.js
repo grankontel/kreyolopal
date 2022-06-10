@@ -20,7 +20,7 @@ const installRoutes = ({ app, logger }) => {
   const publicRouter = express.Router()
   publicRoutes({ app: publicRouter, logger })
   // prefix
-  app.use('/', publicRouter)
+  app.use('/backend', publicRouter)
 
   // serve static assets
   app.get(
@@ -29,7 +29,7 @@ const installRoutes = ({ app, logger }) => {
   )
 
   // for any other requests, send `index.html` as a response
-  app.use(/^(?!\/api)(.+)/, (req, res) => reactRoute(req, res))
+  app.use(/^(?!\/(api|backend))(.+)/, (req, res) => reactRoute(req, res))
 }
 
 async function startServer() {

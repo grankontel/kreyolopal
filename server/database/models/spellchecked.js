@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId',
         onDelete: 'CASCADE',
       });
+      Spellchecked.hasMany(models.Rating, {
+        foreignKey: 'spellcheckedId',
+      });
     }
   }
   Spellchecked.init(

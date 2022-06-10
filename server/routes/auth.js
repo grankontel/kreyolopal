@@ -5,7 +5,11 @@ const LocalStrategy = require('passport-local')
 const userService = require('../services/userService')
 const { sendEmail } = require('../services/emailService')
 const db = require('../database/models')
-const { authenticateUser, logUserIn } = require('../services/lib.auth')
+const {
+  authenticateUser,
+  logUserIn,
+  protectedRoute,
+} = require('../services/lib.auth')
 
 const { User } = db
 
@@ -70,19 +74,13 @@ const auth_route = ({ logger }) => {
     }
   )
 
-  router.post(
-    '/auth/logout',
-    passport.authenticate('jwt-cookiecombo', {
-      session: false,
-    }),
-    (req, res) => {
-      req.logout()
-      res.status(200).send({
-        status: 'success',
-        data: {},
-      })
-    }
-  )
+  router.post('/auth/logout', protectedRoute, (req, res) => {
+    req.logout()
+    res.status(200).send({
+      status: 'success',
+      data: {},
+    })
+  })
 
   router.post(
     '/auth/register',
@@ -199,6 +197,92 @@ const auth_route = ({ logger }) => {
             },
             (err) => res.json(err)
           )
+        }
+      )
+    }
+  )
+
+  router.post('/resetpwd', [body('email').isEmail()], async (req, res) => {
+    // Finds the validation errors in this request and wraps them in an object with handy functions
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ status: 'error', error: errors.array() })
+    }
+
+    const { email } = req.body
+    const origin = `${req.protocol}://${req.get('host')}`
+
+    return userService.resetPwdToken(email).then((retrievedUser) => {
+      if (retrievedUser === null) {
+        // silently stop
+        return res.status(200).json({
+          status: 'success',
+          data: {},
+        })
+      }
+
+      logger.info('sending reset pwd mail')
+
+      const templateData = {
+        user: {
+          id: retrievedUser.id,
+          firstname: retrievedUser.firstname,
+          lastname: retrievedUser.lastname,
+          email: retrievedUser.email,
+        },
+        confirm_url: `${origin}/resetpwd/${retrievedUser.reset_pwd_token}`,
+      }
+      const recipient_mail = retrievedUser.email
+
+      return sendEmail(
+        'resetpwd.mjml',
+        templateData,
+        `'${retrievedUser.firstname} ${retrievedUser.lastname}' <${recipient_mail}>`,
+        'Chanjé modpas'
+      ).then(() => {
+        logger.info('Just sent mail')
+
+        return res.status(200).json({
+          status: 'success',
+          data: {},
+        })
+      })
+    })
+  })
+
+  router.get(
+    '/bytoken/:token',
+    [
+      param('token')
+        .notEmpty()
+        .custom((value) => {
+          const isToken = /[A-Za-z0-9]{64}/
+          return value.length > 0 && isToken.test(value)
+        }),
+    ],
+    (req, res) => {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ status: 'error', error: errors.array() })
+      }
+
+      const { token } = req.params
+      return User.findOne({ where: { reset_pwd_token: token } }).then(
+        (profile) => {
+          if (profile === null) {
+            return res.status(404).json({ status: 'error', error: 'Not Found' })
+          }
+
+          const lUser = {
+            firstname: profile.firstname,
+            lastname: profile.lastname,
+            email: profile.email,
+          }
+
+          return res.json({
+            status: 'success',
+            data: { profile: lUser },
+          })
         }
       )
     }

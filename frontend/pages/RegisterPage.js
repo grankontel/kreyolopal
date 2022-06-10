@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import StandardPage from '../layouts/StandardPage'
 import { Box, Button, Heading, Notification } from 'react-bulma-components'
 import { useZakari } from '../components/ZakProvider'
-import RegisterForm from '../components/RegisterForm'
+import RegisterForm from '../components/Forms/RegisterForm'
 
 const RegisterPage = () => {
   const [notif, setNotif] = useState({ color: 'warning', message: '' })
