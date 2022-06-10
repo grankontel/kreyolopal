@@ -127,8 +127,7 @@ class ZakariClient {
             resolve(rep)
           },
           (reason) => {
-            const data = reason.response.data
-            data.code = reason.response.status
+            const data = me.handleFailure(reason)
             return reject(data)
           }
         )
@@ -140,7 +139,8 @@ class ZakariClient {
 
   /**
    * @typedef {Object} SpellcheckMessage
-   * @property {number} status - The X Coordinate
+   * @property {number} id - The id of the stored result
+   * @property {number} status - The status of the result
    * @property {string} kreyol - The kreyol used
    * @property {Array<string>} unknown_words - List of unrecognized words in the request
    * @property {string} message - The spellchecked result
@@ -181,6 +181,47 @@ class ZakariClient {
             withCredentials: true,
           }
         )
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+  }
+
+  /**
+   * @typedef {Object} CorrectionRating
+   * @property {number} rating - a rating from 0 to 5
+   * @property {string} user_correction - a correction proposed by the user
+   * @property {string} user_notes - notes of comment on the rating fron the user
+   */
+
+  /**
+   * Rate the provided correction
+   * @param {string} msgId The id of the correction to rate
+   * @param {CorrectionRating} rating the rating info
+   */
+  rateCorrection(msgId, rating) {
+    const me = this
+    const url = `${me.host}/api/account/spellcheck/${msgId}/rating`
+    return new Promise((resolve, reject) => {
+      return axios
+        .post(url, rating, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: me._authorization,
+            Cookie: me._cookies.join('; '),
+          },
+          withCredentials: true,
+        })
         .then(
           (result) => {
             const rep = result.data
@@ -240,6 +281,77 @@ class ZakariClient {
   }
 
   /**
+   * Request a password reset
+   * @param {string} email Email to reset password for
+   * @returns Promise
+   */
+  requestResetPwd(email) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .post(
+          `${me.host}/api/resetpwd`,
+          {
+            email,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+ 
+  }
+  /**
+   * Get the user associated to a reset password token (sent by email)
+   * @param {string} token The reset password token
+   * @returns user info associated with token if any
+   */
+  userByToken(token) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .get(
+          `${me.host}/api/bytoken/${token}`,
+          {},
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+
+  }
+
+  /**
    * Update the current user profile
    * @param {ProfileObject} profile the profile data to update
    * @returns ZakariResponse
@@ -249,6 +361,38 @@ class ZakariClient {
     return new Promise((resolve, reject) => {
       return axios
         .post(`${me.host}/api/profile`, profile, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: me._authorization,
+            Cookie: me._cookies.join('; '),
+          },
+          withCredentials: true,
+        })
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })
+  }
+
+  updatePassword(currentPassword, newPassword, verification) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .post(`${me.host}/api/updatepwd`, {
+          currentPassword,
+          newPassword,
+          verification
+        }, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: me._authorization,

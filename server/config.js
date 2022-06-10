@@ -24,6 +24,7 @@ const config = {
     password: process.env.POSTGRES_PASSWORD,
   },
   mail: {
+    webmaster: process.env.MAINTAINTER_EMAIL,
     apiKey: process.env.MAILGUN_API_KEY,
     domain: process.env.MAILGUN_DOMAIN,
     host: process.env.MAILGUN_HOST,

@@ -59,6 +59,9 @@ module.exports = (/* env */) => {
         url: require.resolve('url'),
         util: require.resolve('util/'),
       },
+      alias: {
+        Styles: path.resolve(__dirname, 'frontend/styles'),
+      },
     },
     output: {
       // `filename` provides a template for naming your bundles (remember to use `[name]`)
@@ -66,6 +69,7 @@ module.exports = (/* env */) => {
       // `chunkFilename` provides a template for naming code-split bundles (optional)
       chunkFilename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
     },
     module: {
       rules: [
@@ -109,6 +113,7 @@ module.exports = (/* env */) => {
       historyApiFallback: true,
       proxy: {
         '/api': 'http://localhost:5000',
+        '/backend': 'http://localhost:5000',
       },
     },
     devtool: 'source-map',

@@ -1,6 +1,6 @@
 {
   "name": "kreyolopal",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Utiliser les technologies d'aujourd'hui pour encourager, améliorer et diffuser l'écriture du créole.",
   "main": "server/index.js",
   "engines": {
@@ -59,6 +59,7 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/register": "^7.17.7",
     "@babel/runtime": "^7.17.9",
+    "@creativebulma/bulma-tooltip": "^1.2.0",
     "@slack/webhook": "^6.1.0",
     "argon2": "^0.28.5",
     "assert": "^2.0.0",
@@ -86,7 +87,6 @@
     "html-to-text": "^8.2.0",
     "html-webpack-plugin": "^5.5.0",
     "https-browserify": "^1.0.0",
-    "ignore-styles": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
     "mini-css-extract-plugin": "^2.6.0",
     "mjml": "^4.12.0",
@@ -94,6 +94,7 @@
     "mustache": "^4.2.0",
     "node-cache": "^5.1.2",
     "nspell": "^2.1.5",
+    "null-loader": "^4.0.1",
     "os-browserify": "^0.3.0",
     "passport": "^0.5.2",
     "passport-jwt-cookiecombo": "^1.0.5",

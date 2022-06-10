@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 const mustache = require('mustache')
 const mjml = require('mjml')
 const { htmlToText } = require('html-to-text')
@@ -8,7 +9,7 @@ const fs = require('fs/promises')
 
 const config = require('../config')
 const mailer = require('./lib.mailer')
-const { logger } = require('./lib.mailer')
+const logger = require('./logger')
 
 const myCache = new NodeCache()
 
@@ -63,6 +64,52 @@ const makeEmail = (templateFilename, templateData) =>
 
 /**
  *
+ * @param {string} replyTo Sender of the Email
+ * @param {string} templateFilename The MJML templatefile
+ * @param {object} templateData The MJML template data
+ * @param {string} recipient Recipient of the email
+ * @param {string} subject The subject of the email
+ * @returns {Promise} a Promise to send the email
+ */
+const sendFromEmail = (
+  replyTo,
+  templateFilename,
+  templateData,
+  recipient,
+  subject
+) =>
+  new Promise((resolve, reject) => {
+    makeEmail(templateFilename, templateData).then(
+      (email) => {
+        const message = {
+          'h:Reply-To': replyTo,
+          from: config.mail.from,
+          to: recipient, // _saveduser.email,
+          subject,
+          text: email.text,
+          html: email.html,
+        }
+
+        mailer.sendMail(message).then(
+          (info) => {
+            logger.info(`email ${templateFilename} sent`)
+            resolve(info.data)
+          },
+          (err) => {
+            logger.warn(`email ${templateFilename} NOT sent`)
+            reject(err.response.data)
+          }
+        )
+      },
+      (reason) => {
+        logger.error('could not make email')
+        reject(reason)
+      }
+    )
+  })
+
+/**
+ *
  * @param {string} templateFilename The MJML templatefile
  * @param {object} templateData The MJML template data
  * @param {string} recipient Recipient of the email
@@ -83,9 +130,11 @@ const sendEmail = (templateFilename, templateData, recipient, subject) =>
 
         mailer.sendMail(message).then(
           (info) => {
+            logger.info(`email ${templateFilename} sent`)
             resolve(info.data)
           },
           (err) => {
+            logger.warn(`email ${templateFilename} NOT sent`)
             reject(err.response.data)
           }
         )
@@ -96,5 +145,4 @@ const sendEmail = (templateFilename, templateData, recipient, subject) =>
       }
     )
   })
-
-module.exports = { getTemplate, sendEmail }
+module.exports = { getTemplate, sendEmail, sendFromEmail }

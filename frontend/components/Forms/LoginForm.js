@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Form, Button, Content } from 'react-bulma-components'
+import { Button, Content } from 'react-bulma-components'
 import { Link } from 'react-router-dom'
+import FormField from '../FormField'
 
 const LoginForm = (props) => {
   const [loading, setLoading] = useState(false)
@@ -16,33 +17,24 @@ const LoginForm = (props) => {
 
   return (
     <form onSubmit={handleLogin}>
-      <Form.Field>
-        <Form.Label>Email</Form.Label>
-        <Form.Control>
-          <Form.Input
-            name="email"
-            type="email"
-            value={email}
-            autoComplete="username"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </Form.Control>
-      </Form.Field>
-
-      <Form.Field>
-        <Form.Label>Password</Form.Label>
-        <Form.Control>
-          <Form.Input
-            name="pwd"
-            type="password"
-            value={pwd}
-            autoComplete="current-password"
-            onChange={(e) => setPwd(e.target.value)}
-            required
-          />
-        </Form.Control>
-      </Form.Field>
+      <FormField
+        label="Email"
+        name="email"
+        type="email"
+        value={email}
+        autoComplete="email"
+        setValue={setEmail}
+        required
+      />
+      <FormField
+        label="Password"
+        name="pwd"
+        type="password"
+        value={pwd}
+        autoComplete="current-password"
+        setValue={setPwd}
+        required
+      />
 
       <Button.Group align="right">
         <Content>
