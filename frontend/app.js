@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom'
 import ZakProvider from './components/ZakProvider'
 import AccountPage from './pages/AccountPage'
 import ChangePwdPage from './pages/ChangePwdPage'
+import ContactPage from './pages/ContactPage'
 import IndexPage from './pages/IndexPage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFound'
@@ -35,6 +36,7 @@ export const App = () => {
               </ZakProvider.Protected>
             }
           />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verified" element={<VerifiedPage />} />
 

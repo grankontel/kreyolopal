@@ -113,6 +113,7 @@ module.exports = (/* env */) => {
       historyApiFallback: true,
       proxy: {
         '/api': 'http://localhost:5000',
+        '/backend': 'http://localhost:5000',
       },
     },
     devtool: 'source-map',
