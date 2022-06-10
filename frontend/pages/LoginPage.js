@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import LoginForm from '../components/Forms/LoginForm'
 import StandardPage from '../layouts/StandardPage'
 import {
@@ -67,6 +68,10 @@ const LoginPage = () => {
           )}
 
           <LoginForm buttonLabel="Login" onSubmit={onSubmit} />
+          <hr />
+          <div className="has-text-centered">
+            <Link to="/resetpwd/request">An obliyé modpas an-mwen !</Link>
+          </div>
         </Box>
       </Section>
     </StandardPage>
