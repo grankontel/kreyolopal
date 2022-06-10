@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 const mustache = require('mustache')
 const mjml = require('mjml')
 const { htmlToText } = require('html-to-text')

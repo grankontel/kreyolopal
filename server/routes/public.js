@@ -46,20 +46,30 @@ const public_route = ({ logger }) => {
         templateData,
         config.mail.webmaster,
         `[Kreyolopal] ${subject}`
-      ).then(
-        () => {
-          logger.info('Just sent mail')
-
-          return res.status(200).json({
-            status: 'success',
-            data: {},
-          })
-        },
-        (reason) => {
-          logger.error(reason)
-          return res.status(500).send({ status: 'error', error: [reason] })
-        }
       )
+        .tap(() =>
+          sendFromEmail(
+            config.mail.webmaster,
+            'contact.mjml',
+            templateData,
+            `'${firstname} ${lastname}' <${email}>`,
+            '[Kreyolopal]Mésaj a-w rivé'
+          )
+        )
+        .then(
+          () => {
+            logger.info('Just sent mail')
+
+            return res.status(200).json({
+              status: 'success',
+              data: {},
+            })
+          },
+          (reason) => {
+            logger.error(reason)
+            return res.status(500).send({ status: 'error', error: [reason] })
+          }
+        )
     }
   )
 
