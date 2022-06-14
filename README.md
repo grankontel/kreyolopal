@@ -7,6 +7,9 @@ améliorer et diffuser l'écriture du créole.
 
 L'application se compose d'un server Express et d'un frontend en React.
 
+This project was generated using [Nx](https://nx.dev).
+Visit the [Nx Documentation](https://nx.dev) to learn more.
+
 ## Getting Started
 
 ### Dependencies
