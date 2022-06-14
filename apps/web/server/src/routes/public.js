@@ -1,15 +1,15 @@
-const express = require('express')
-const { validationResult, body } = require('express-validator')
-const { sendFromEmail } = require('../services/emailService')
-const config = require('../config')
+const express = require('express');
+const { validationResult, body } = require('express-validator');
+const { sendFromEmail } = require('../services/emailService');
+const config = require('../config');
 
 const public_route = ({ logger }) => {
-  const router = express.Router()
+  const router = express.Router();
 
   // create a GET route
   router.get('/express_backend', (req, res) => {
-    res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' })
-  })
+    res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
+  });
 
   // contact
   router.post(
@@ -23,12 +23,14 @@ const public_route = ({ logger }) => {
     ],
     (req, res) => {
       // Finds the validation errors in this request and wraps them in an object with handy functions
-      const errors = validationResult(req)
+      const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(422).json({ status: 'error', errors: errors.array() })
+        return res
+          .status(422)
+          .json({ status: 'error', errors: errors.array() });
       }
 
-      const { firstname, lastname, email, subject, message } = req.body
+      const { firstname, lastname, email, subject, message } = req.body;
 
       const templateData = {
         user: {
@@ -38,11 +40,11 @@ const public_route = ({ logger }) => {
         },
         subject,
         message,
-      }
+      };
 
       return sendFromEmail(
         `'${firstname} ${lastname}' <${email}>`,
-        'contactus.mjml',
+        require('../mails/contactus.mjml'),
         templateData,
         config.mail.webmaster,
         `[Kreyolopal] ${subject}`
@@ -50,7 +52,7 @@ const public_route = ({ logger }) => {
         .tap(() =>
           sendFromEmail(
             config.mail.webmaster,
-            'contact.mjml',
+            require('../mails/contact.mjml'),
             templateData,
             `'${firstname} ${lastname}' <${email}>`,
             '[Kreyolopal]Mésaj a-w rivé'
@@ -58,23 +60,23 @@ const public_route = ({ logger }) => {
         )
         .then(
           () => {
-            logger.info('Just sent mail')
+            logger.info('Just sent mail');
 
             return res.status(200).json({
               status: 'success',
               data: {},
-            })
+            });
           },
           (reason) => {
-            logger.error(reason)
-            return res.status(500).send({ status: 'error', error: [reason] })
+            logger.error(reason);
+            return res.status(500).send({ status: 'error', error: [reason] });
           }
-        )
+        );
     }
-  )
+  );
 
-  logger.info('\tAdding route "public"...')
-  return router
-}
+  logger.info('\tAdding route "public"...');
+  return router;
+};
 
-module.exports = public_route
+module.exports = public_route;

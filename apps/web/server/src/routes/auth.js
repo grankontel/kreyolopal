@@ -130,7 +130,7 @@ const auth_route = ({ logger }) => {
           const recipient_mail = _saveduser.email
 
           return sendEmail(
-            'verifyemail.mjml',
+            require('../mails/verifyemail.mjml'),
             templateData,
             `'${_saveduser.firstname} ${_saveduser.lastname}' <${recipient_mail}>`,
             'Kontan vwè-w'
@@ -235,7 +235,7 @@ const auth_route = ({ logger }) => {
       const recipient_mail = retrievedUser.email
 
       return sendEmail(
-        'resetpwd.mjml',
+        require('../mails/resetpwd.mjml'),
         templateData,
         `'${retrievedUser.firstname} ${retrievedUser.lastname}' <${recipient_mail}>`,
         'Chanjé modpas'
