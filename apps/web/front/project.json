@@ -1,0 +1,21 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/web/front/src",
+  "projectType": "application",
+  "targets": {
+    "images": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node apps/web/front/scripts/sharpImgs.js"
+      },
+      "outputs": [
+        "apps/web/front/public/images/w200",
+        "apps/web/front/public/images/w320",
+        "apps/web/front/public/images/w630",
+        "apps/web/front/public/images/w800",
+        "apps/web/front/public/images/w1024"
+      ]
+    }
+  },
+  "tags": []
+}
