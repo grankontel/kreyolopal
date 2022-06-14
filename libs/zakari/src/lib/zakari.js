@@ -439,7 +439,7 @@ class ZakariClient {
   }
 }
 
-const zakariClient = (host) => {
+export const zakariClient = (host) => {
   const rep = new ZakariClient(host)
   var source = JSON.parse(localStorage.getItem('zakariClient'))
   if (source) {
