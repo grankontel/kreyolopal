@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@kreyolopal/react-zakari": ["libs/react-zakari/src/index.js"],
+      "@kreyolopal/ui-utils": ["libs/react-utils/src/index.js"],
+      "@kreyolopal/web-ui": ["libs/web/ui/src/index.js"],
+      "@kreyolopal/zakari": ["libs/zakari/src/index.js"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
