@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const authService = require('../server/services/authService')
+const authService = require('../src/services/authService')
 
 const plain = process.argv[process.argv.length - 1]
 

@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 
 const readFile = promisify(fs.readFile)
-const config = require('../server/config')
+const config = require('../src/config')
 
 const s3Options = {
   credentials: {
@@ -18,11 +18,11 @@ const s3Options = {
 // eslint-disable-next-line no-unused-vars
 async function readDicoFiles(kreyol) {
   const readAff = readFile(
-    path.resolve(__dirname, '../server/dico/cpf_GP.aff'),
+    path.resolve(__dirname, '../src/dico/cpf_GP.aff'),
     'utf8'
   )
   const readDic = readFile(
-    path.resolve(__dirname, '../server/dico/cpf_GP.dic'),
+    path.resolve(__dirname, '../src/dico/cpf_GP.dic'),
     'utf8'
   )
 
