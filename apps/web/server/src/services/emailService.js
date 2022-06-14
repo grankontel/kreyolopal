@@ -20,7 +20,7 @@ const myCache = new NodeCache()
  */
 const getTemplate = (templateFilename) => {
   const name = templateFilename.toLowerCase()
-  const lFile = path.join(__dirname, '../mails/', templateFilename)
+  const lFile = path.join(__dirname,  templateFilename)
 
   return new Promise((resolve, reject) => {
     const value = myCache.get(name)
