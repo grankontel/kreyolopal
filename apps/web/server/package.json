@@ -2,6 +2,7 @@
   "name": "web-server",
   "version": "0.0.1",
   "main": "main.js",
+  "license": "ISC",
   "scripts": {
     "start": "node ./main.js"
   },
