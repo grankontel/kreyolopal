@@ -28,6 +28,23 @@
         }
       }
     },
+    "heroku": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "node tools/scripts/heroku.mjs web-server",
+        "outputs": ["dist/apps/web/package.json"]
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
+    },
     "hash": {
       "executor": "nx:run-commands",
       "options": {
@@ -62,5 +79,6 @@
       }
     }
   },
-  "tags": []
+  "tags": [],
+  "implicitDependencies": ["web-front"]
 }

@@ -11,6 +11,10 @@
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grankontel/kreyolopal.git"
+  },
   "private": true,
   "dependencies": {
     "@aws-sdk/client-s3": "^3.109.0",
