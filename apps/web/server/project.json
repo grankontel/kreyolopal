@@ -31,7 +31,12 @@
     "heroku": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "node tools/scripts/heroku.mjs web-server",
+        "commands": [
+          "node tools/scripts/heroku.mjs web-server",
+          "echo '.DS_Store\n\n' > dist/apps/web/.gitignore",
+          "echo 'server/dico/*.aff' >> dist/apps/web/.gitignore",
+          "echo 'server/dico/*.dic' >> dist/apps/web/.gitignore"
+        ],
         "outputs": ["dist/apps/web/package.json"]
       },
       "dependsOn": [
