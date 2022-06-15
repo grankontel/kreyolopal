@@ -1,0 +1,13 @@
+{
+  "name": "web-server",
+  "version": "0.0.1",
+  "main": "main.js",
+  "license": "ISC",
+  "scripts": {
+    "start": "node ./main.js"
+  },
+  "dependencies": {
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4"
+  }
+}

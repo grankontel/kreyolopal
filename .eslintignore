@@ -11,11 +11,8 @@ db/
 # Old files
 old/
 
-react.strict.js
-react.js
-
 # Sequelize generated files
-server/database/
+apps/web/server/src/database/
 
 # Jest generated file
 jest.config.js

@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+src/dico/*.aff
+src/dico/*.dic
