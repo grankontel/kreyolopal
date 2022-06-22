@@ -2,7 +2,7 @@
   "name": "web-server",
   "version": "0.0.1",
   "main": "main.js",
-  "license": "ISC",
+  "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "start": "node ./main.js"
   },
