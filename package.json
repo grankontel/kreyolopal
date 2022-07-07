@@ -31,6 +31,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "4.17.2",
+    "express-crud-router": "^6.3.1",
+    "express-crud-router-sequelize-v6-connector": "^1.0.2",
     "express-session": "^1.17.3",
     "express-session-sequelize": "^2.3.0",
     "express-validator": "^6.14.1",
