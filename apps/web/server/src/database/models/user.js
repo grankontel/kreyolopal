@@ -1,4 +1,4 @@
-const { Model } = require('sequelize');
+const { Model } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Spellchecked, {
         foreignKey: 'userId',
-      });
+      })
     }
   }
   User.init(
@@ -32,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
           isEmail: true,
         },
       },
+      is_admin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
       password: {
         type: DataTypes.STRING,
       },
@@ -48,11 +53,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User',
-      indexes: [{
-        fields: ['reset_pwd_token'],
-        name: 'IX_reset_pwd_token',
-      }],
+      indexes: [
+        {
+          fields: ['reset_pwd_token'],
+          name: 'IX_reset_pwd_token',
+        },
+      ],
     }
-  );
-  return User;
-};
+  )
+  return User
+}

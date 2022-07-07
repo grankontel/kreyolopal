@@ -31,7 +31,10 @@ function passportCb(req, res, next) {
       })
     }
 
-    /*       //User pending approval?
+    //find true user
+    return userService.findbyEmail(user.email).then(
+      (record) => {
+        /*       //User pending approval?
       if (user.isPending) {
         return next(new UserPendingError());
       }
@@ -41,9 +44,20 @@ function passportCb(req, res, next) {
         return next(new UserArchivedError());
       } */
 
-    // Set user in request
-    req.user = user
-    return next()
+        // Set user in request
+        req.user = record
+        return next()
+      },
+      (reason) => {
+        logger.error(reason)
+        return res.status(401).json({
+          status: 'error',
+          code: 401,
+          message: 'Unauthorized',
+          error: new Error('Unauthorized'),
+        })
+      }
+    )
   }
 }
 
