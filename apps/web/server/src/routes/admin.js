@@ -10,7 +10,7 @@ const admin_route = ({ logger }) => {
 
   router.use(protectedRoute)
   router.use((req, res, next) => {
-    console.log(req.user)
+
     if (!req.user.is_admin) {
       return res.status(401).json({
         status: 'error',
@@ -23,8 +23,9 @@ const admin_route = ({ logger }) => {
   })
 
   // admin routes
-  const { User, Rating } = db
+  const { User, Spellchecked, Rating } = db
   router.use(crud('/admin/users', sequelizeCrud(User)))
+  router.use(crud('/admin/spellcheckeds', sequelizeCrud(Spellchecked)))
   router.use(crud('/admin/ratings', sequelizeCrud(Rating)))
 
   logger.info('\tAdding route "admin"...')

@@ -1,22 +1,26 @@
-import React, { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import { ZakProvider } from '@kreyolopal/react-zakari';
-import IndexPage from './pages/IndexPage';
-import AccountPage from './pages/AccountPage';
-import ContactPage from './pages/ContactPage';
-import NotFoundPage from './pages/NotFoundPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import SpellcheckPage from './pages/SpellcheckPage';
-import VerifiedPage from './pages/VerifiedPage';
+import React, { Suspense } from 'react'
+import { Routes, Route } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
+import { ZakProvider } from '@kreyolopal/react-zakari'
+import IndexPage from './pages/IndexPage'
+import AccountPage from './pages/AccountPage'
+import ContactPage from './pages/ContactPage'
+import NotFoundPage from './pages/NotFoundPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import SpellcheckPage from './pages/SpellcheckPage'
+import VerifiedPage from './pages/VerifiedPage'
+
+const AdminPage = React.lazy(() =>
+  import(/* webpackChunkName: "admin" */ './pages/AdminPage')
+)
 
 const PwdResetPage = React.lazy(() =>
   import(/* webpackChunkName: "pwdReset" */ './pages/PwdResetPage')
-);
+)
 const ChangePwdPage = React.lazy(() =>
   import(/* webpackChunkName: "pwdReset" */ './pages/ChangePwdPage')
-);
+)
 
 function App() {
   return (
@@ -65,11 +69,29 @@ function App() {
             />
           </Route>
 
+          <Route path="/admin">
+            <Route
+              index
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <AdminPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <AdminPage />
+                </Suspense>
+              }
+            />
+          </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ZakProvider>
     </HelmetProvider>
-  );
+  )
 }
 
-export default App;
+export default App
