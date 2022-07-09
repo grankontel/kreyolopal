@@ -23,6 +23,10 @@ const config = {
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
   },
+  redis: {
+    url: process.env.REDIS_URL,
+    db: process.env.REDIS_DB,
+  },
   mail: {
     webmaster: process.env.MAINTAINTER_EMAIL,
     apiKey: process.env.MAILGUN_API_KEY,

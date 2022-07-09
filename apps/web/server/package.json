@@ -1,8 +1,8 @@
 {
   "name": "web-server",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "main": "main.js",
-  "license": "ISC",
+  "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "start": "node ./main.js"
   },
