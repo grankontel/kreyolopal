@@ -1,75 +1,78 @@
-import React, { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import { ZakProvider } from '@kreyolopal/react-zakari';
-import IndexPage from './pages/IndexPage';
-import AccountPage from './pages/AccountPage';
-import ContactPage from './pages/ContactPage';
-import NotFoundPage from './pages/NotFoundPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import SpellcheckPage from './pages/SpellcheckPage';
-import VerifiedPage from './pages/VerifiedPage';
+import React, { Suspense } from 'react'
+import { Routes, Route } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
+import { ZakProvider } from '@kreyolopal/react-zakari'
+import IndexPage from './pages/IndexPage'
+import AccountPage from './pages/AccountPage'
+import ContactPage from './pages/ContactPage'
+import NotFoundPage from './pages/NotFoundPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import SpellcheckPage from './pages/SpellcheckPage'
+import VerifiedPage from './pages/VerifiedPage'
+import { WabapProvider } from '@kreyolopal/web-ui'
 
 const PwdResetPage = React.lazy(() =>
   import(/* webpackChunkName: "pwdReset" */ './pages/PwdResetPage')
-);
+)
 const ChangePwdPage = React.lazy(() =>
   import(/* webpackChunkName: "pwdReset" */ './pages/ChangePwdPage')
-);
+)
 
 function App() {
   return (
     <HelmetProvider>
       <ZakProvider>
-        <Routes>
-          <Route index element={<IndexPage />} />
-          <Route
-            path="/spellcheck"
-            element={
-              <ZakProvider.Protected to="/login">
-                <SpellcheckPage />
-              </ZakProvider.Protected>
-            }
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/account"
-            element={
-              <ZakProvider.Protected to="/login">
-                <AccountPage />
-              </ZakProvider.Protected>
-            }
-          />
-
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/verified" element={<VerifiedPage />} />
-
-          <Route path="/resetpwd">
+        <WabapProvider>
+          <Routes>
+            <Route index element={<IndexPage />} />
             <Route
-              path="request"
+              path="/spellcheck"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
-                  <PwdResetPage />
-                </Suspense>
+                <ZakProvider.Protected to="/login">
+                  <SpellcheckPage />
+                </ZakProvider.Protected>
               }
             />
+            <Route path="/login" element={<LoginPage />} />
             <Route
-              path=":token"
+              path="/account"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
-                  <ChangePwdPage />
-                </Suspense>
+                <ZakProvider.Protected to="/login">
+                  <AccountPage />
+                </ZakProvider.Protected>
               }
             />
-          </Route>
 
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verified" element={<VerifiedPage />} />
+
+            <Route path="/resetpwd">
+              <Route
+                path="request"
+                element={
+                  <Suspense fallback={<div>Chargement...</div>}>
+                    <PwdResetPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path=":token"
+                element={
+                  <Suspense fallback={<div>Chargement...</div>}>
+                    <ChangePwdPage />
+                  </Suspense>
+                }
+              />
+            </Route>
+
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </WabapProvider>
       </ZakProvider>
     </HelmetProvider>
-  );
+  )
 }
 
-export default App;
+export default App
