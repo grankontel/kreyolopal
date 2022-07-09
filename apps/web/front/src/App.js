@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import SpellcheckPage from './pages/SpellcheckPage'
 import VerifiedPage from './pages/VerifiedPage'
+import DictionaryPage from './pages/DictionaryPage'
 import { WabapProvider } from '@kreyolopal/web-ui'
 
 const PwdResetPage = React.lazy(() =>
@@ -26,6 +27,7 @@ function App() {
         <WabapProvider>
           <Routes>
             <Route index element={<IndexPage />} />
+            <Route path='/dictionary' element={<DictionaryPage />} />
             <Route
               path="/spellcheck"
               element={
