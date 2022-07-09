@@ -9,8 +9,8 @@ function apiRoutes({ app, logger }) {
   app.use(sp_route({ logger }));
   app.use(auth_route({ logger }));
   app.use(profile_route({ logger }));
-  app.use(admin_route({logger}));
   app.use(wabap_route({ logger }));
+  app.use(admin_route({logger}));
 }
 
 function zakariRoutes({ app, logger }) {
