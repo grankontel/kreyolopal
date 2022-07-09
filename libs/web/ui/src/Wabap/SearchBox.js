@@ -3,11 +3,13 @@ import { Form } from 'react-bulma-components'
 import Downshift from 'downshift'
 import debounce from 'lodash/debounce'
 import { useWabap } from './WabapProvider'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export function SearchBox(props) {
-  const [selected, setSelected] = useState('')
   const [items, setItems] = useState([])
   const wabap = useWabap()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const loadOptions = async (inputValue) => {
     const rep = await wabap.getIndices(inputValue)
@@ -23,14 +25,10 @@ export function SearchBox(props) {
     }
   })
 
-  const renderItems = (
-    getItemProps,
-    highlightedIndex,
-    selectedItem
-  ) => {
+  const renderItems = (getItemProps, highlightedIndex, selectedItem) => {
     return items.map((item, index) => (
       <li
-      className="search__option" 
+        className="search__option"
         {...getItemProps({
           key: item.value,
           index,
@@ -49,17 +47,12 @@ export function SearchBox(props) {
   return (
     <Form.Control>
       <Downshift
-        onChange={(selection) =>
-          {
-            const ids = selection ? JSON.parse(selection.value) : null
-            if (ids)
-              wabap.getArticles(ids)
-              
-            alert(
-            selection ? `You selected ${selection.value}` : 'Selection Cleared'
-          )
-        }
-        }
+        onChange={(selection) => {
+          const ids = selection ? JSON.parse(selection.value) : null
+          if (ids) wabap.getArticles(ids)
+
+          if (location.pathname !== '/dictionary') navigate('/dictionary')
+        }}
         itemToString={(item) => (item ? item.label : '')}
         onInputValueChange={(inputValue) => debounceLoadOptions(inputValue)}
       >
@@ -79,9 +72,10 @@ export function SearchBox(props) {
               style={{ display: 'inline-block' }}
               {...getRootProps({}, { suppressRefError: true })}
             >
-              <input className="search__value-input"   {...getInputProps()} />
+              <input className="search__value-input" {...getInputProps()} />
             </div>
-            <ul className="search__value-list" 
+            <ul
+              className="search__value-list"
               {...getMenuProps()}
               style={{
                 position: 'absolute',
@@ -89,11 +83,7 @@ export function SearchBox(props) {
               }}
             >
               {isOpen
-                ? renderItems(
-                    getItemProps,
-                    highlightedIndex,
-                    selectedItem
-                  )
+                ? renderItems(getItemProps, highlightedIndex, selectedItem)
                 : null}
             </ul>
           </div>

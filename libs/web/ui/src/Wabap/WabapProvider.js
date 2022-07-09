@@ -69,12 +69,9 @@ export function WabapProvider(props) {
         }
       )
     })
-    
-    Promise.all(promises)
-    .then(() => {
-      console.log('*** values',values)
+
+    Promise.all(promises).then(() => {
       setArticles(values)
-  
     })
   }
 
