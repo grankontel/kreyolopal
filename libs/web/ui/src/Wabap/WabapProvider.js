@@ -8,20 +8,20 @@ export function WabapProvider(props) {
   const [articles, setArticles] = useState([])
 
   const getIndices = (word) => {
-    return fetch(`/api/v1/articles/indices/gp/${encodeURIComponent(word)}/0`, {
+    return fetch(`/api/articles/indices/gp/${encodeURIComponent(word)}/0`, {
       method: 'GET',
       credentials: 'same-origin',
     })
       .then(
-        (result) => {
+        async (result) => {
           if (!result.ok) {
             setPart(word)
             setIndices([])
             return []
           }
 
-          console.log(result)
-          const response = result.json()
+          const response = await result.json()
+
           const data = response?.sample.map((item) => {
             return {
               value: JSON.stringify(item.ids),
@@ -47,28 +47,35 @@ export function WabapProvider(props) {
       })
   }
 
-  const getArticles = (ids) => {
+  const getArticles = async (ids) => {
     const values = []
     setArticles([])
-    ids.forEach(async (id) => {
-      await fetch(`/api/v1/articles/${encodeURIComponent(id)}`, {
+    const promises = ids.map((id) => {
+      return fetch(`/api/articles/${encodeURIComponent(id)}`, {
         method: 'GET',
         credentials: 'same-origin',
       }).then(
-        (result) => {
+        async (result) => {
+          console.log(result)
           if (!result.ok) {
             return
           }
 
-          values.push(result.json())
+          const item = await result.json()
+          values.push(item)
         },
         (reason) => {
           console.log(reason)
         }
       )
     })
-    setArticles(values)
-    return values
+    
+    Promise.all(promises)
+    .then(() => {
+      console.log('*** values',values)
+      setArticles(values)
+  
+    })
   }
 
   const wabap = { searchWord: part, indices, articles, getIndices, getArticles }

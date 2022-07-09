@@ -2,11 +2,13 @@ const sp_route = require('./spellcheck');
 const public_route = require('./public');
 const auth_route = require('./auth');
 const profile_route = require('./profile');
+const wabap_route = require('./wabap')
 
 function apiRoutes({ app, logger }) {
   app.use(sp_route({ logger }));
   app.use(auth_route({ logger }));
   app.use(profile_route({ logger }));
+  app.use(wabap_route({ logger }));
 }
 
 function zakariRoutes({ app, logger }) {
