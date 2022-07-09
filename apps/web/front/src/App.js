@@ -10,6 +10,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import SpellcheckPage from './pages/SpellcheckPage'
 import VerifiedPage from './pages/VerifiedPage'
+import DictionaryPage from './pages/DictionaryPage'
+import { WabapProvider } from '@kreyolopal/web-ui'
 
 const AdminPage = React.lazy(() =>
   import(/* webpackChunkName: "admin" */ './pages/AdminPage')
@@ -26,48 +28,27 @@ function App() {
   return (
     <HelmetProvider>
       <ZakProvider>
-        <Routes>
-          <Route index element={<IndexPage />} />
-          <Route
-            path="/spellcheck"
-            element={
-              <ZakProvider.Protected to="/login">
-                <SpellcheckPage />
-              </ZakProvider.Protected>
-            }
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/account"
-            element={
-              <ZakProvider.Protected to="/login">
-                <AccountPage />
-              </ZakProvider.Protected>
-            }
-          />
-
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/verified" element={<VerifiedPage />} />
-
-          <Route path="/resetpwd">
+        <WabapProvider>
+          <Routes>
+            <Route index element={<IndexPage />} />
+            <Route path='/dictionary' element={<DictionaryPage />} />
             <Route
-              path="request"
+              path="/spellcheck"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
-                  <PwdResetPage />
-                </Suspense>
+                <ZakProvider.Protected to="/login">
+                  <SpellcheckPage />
+                </ZakProvider.Protected>
               }
             />
+            <Route path="/login" element={<LoginPage />} />
             <Route
-              path=":token"
+              path="/account"
               element={
-                <Suspense fallback={<div>Chargement...</div>}>
-                  <ChangePwdPage />
-                </Suspense>
+                <ZakProvider.Protected to="/login">
+                  <AccountPage />
+                </ZakProvider.Protected>
               }
             />
-          </Route>
 
           <Route path="/admin">
             <Route
@@ -87,8 +68,32 @@ function App() {
               }
             />
           </Route>
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verified" element={<VerifiedPage />} />
+
+            <Route path="/resetpwd">
+              <Route
+                path="request"
+                element={
+                  <Suspense fallback={<div>Chargement...</div>}>
+                    <PwdResetPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path=":token"
+                element={
+                  <Suspense fallback={<div>Chargement...</div>}>
+                    <ChangePwdPage />
+                  </Suspense>
+                }
+              />
+            </Route>
+
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </WabapProvider>
       </ZakProvider>
     </HelmetProvider>
   )
