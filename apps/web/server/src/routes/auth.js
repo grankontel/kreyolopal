@@ -75,7 +75,7 @@ const auth_route = ({ logger }) => {
   )
 
   router.post('/auth/logout', protectedRoute, (req, res) => {
-    req.logout()
+    res.clearCookie('jwt')
     res.status(200).send({
       status: 'success',
       data: {},

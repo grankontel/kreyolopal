@@ -1,4 +1,4 @@
-
+```
 PROD_POSTGRES_USERNAME,
 PROD_POSTGRES_PASSWORD,
 PROD_POSTGRES_DB,
@@ -30,3 +30,4 @@ MAILGUN_FROM config.mail.from
 MAILGUN_API_KEY config.mail.apiKey
 MAILGUN_HOST config.mail.host
 MAILGUN_DOMAIN config.mail.domain
+```

@@ -8,6 +8,9 @@ export function WabapProvider(props) {
   const [articles, setArticles] = useState([])
 
   const getIndices = (word) => {
+    if (word.trim().length === 0)
+      return Promise.resolve([])
+      
     return fetch(`/api/articles/indices/gp/${encodeURIComponent(word)}/0`, {
       method: 'GET',
       credentials: 'same-origin',

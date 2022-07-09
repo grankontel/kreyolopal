@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- created admin pages
 - intégration de l'api Wabap
 
 ## [1.0.7] - 2022-06-15

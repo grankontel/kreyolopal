@@ -13,6 +13,10 @@ import VerifiedPage from './pages/VerifiedPage'
 import DictionaryPage from './pages/DictionaryPage'
 import { WabapProvider } from '@kreyolopal/web-ui'
 
+const AdminPage = React.lazy(() =>
+  import(/* webpackChunkName: "admin" */ './pages/AdminPage')
+)
+
 const PwdResetPage = React.lazy(() =>
   import(/* webpackChunkName: "pwdReset" */ './pages/PwdResetPage')
 )
@@ -46,6 +50,24 @@ function App() {
               }
             />
 
+          <Route path="/admin">
+            <Route
+              index
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <AdminPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <AdminPage />
+                </Suspense>
+              }
+            />
+          </Route>
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/verified" element={<VerifiedPage />} />
