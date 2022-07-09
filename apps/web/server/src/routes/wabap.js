@@ -10,6 +10,7 @@ const wabap_route = ({ logger }) => {
     return {
       host: redisUri.hostname,
       port: redisUri.port,
+      //connectionName: redisUri.username,
       password: redisUri.password,
       db: Number(config.redis.db),
     }
