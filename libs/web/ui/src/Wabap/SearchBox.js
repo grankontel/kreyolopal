@@ -1,96 +1,104 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Form } from 'react-bulma-components'
-import AsyncSelect from 'react-select/async'
-import debounce from 'lodash/debounce';
-import { useWabap } from './WabapProvider';
-
-const response = {
-  count: 258,
-  sample: [
-    {
-      ids: [2871, 2870, 2869, 2868, 2867, 2866, 2865, 2864],
-      wfs: ['ka'],
-    },
-    {
-      ids: [2873, 2872],
-      wfs: ['kab'],
-    },
-    {
-      ids: [2876, 2875, 2874],
-      wfs: ['kabann', 'kabanné'],
-    },
-    {
-      ids: [2877],
-      wfs: ['kabanné'],
-    },
-    {
-      ids: [2878],
-      wfs: ['kabaré'],
-    },
-    {
-      ids: [2879],
-      wfs: ['kabé', 'kabèt'],
-    },
-    {
-      ids: [2881, 2880],
-      wfs: ['kabèch'],
-    },
-    {
-      ids: [2883, 2882],
-      wfs: ['kabiné'],
-    },
-    {
-      ids: [2884],
-      wfs: ['kabodas'],
-    },
-  ],
-}
-
-const data = response.sample.map((item) => {
-  return {
-    value: JSON.stringify(item.ids),
-    label: item.wfs[0],
-  }
-})
+import Downshift from 'downshift'
+import debounce from 'lodash/debounce'
+import { useWabap } from './WabapProvider'
 
 export function SearchBox(props) {
   const [selected, setSelected] = useState('')
+  const [items, setItems] = useState([])
   const wabap = useWabap()
 
-  const loadOptions = async (inputValue, callback) => {
+  const loadOptions = async (inputValue) => {
     const rep = await wabap.getIndices(inputValue)
-    console.log(inputValue)
-    console.log(rep)
-    callback(rep)
+
+    setItems(rep)
   }
 
-  const debounceLoadOptions = useMemo(
-    () =>  debounce(loadOptions, 300)
-  ,[])
+  const debounceLoadOptions = useMemo(() => debounce(loadOptions, 300), [])
 
-  useEffect(()=> {
-
+  useEffect(() => {
     return () => {
       debounceLoadOptions.cancel()
     }
   })
 
+  const renderItems = (
+    getItemProps,
+    highlightedIndex,
+    selectedItem
+  ) => {
+    return items.map((item, index) => (
+      <li
+      className="search__option" 
+        {...getItemProps({
+          key: item.value,
+          index,
+          item,
+          style: {
+            backgroundColor: highlightedIndex === index ? 'lightgray' : 'white',
+            fontWeight: selectedItem?.value === item.value ? 'bold' : 'normal',
+          },
+        })}
+      >
+        {item.label}
+      </li>
+    ))
+  }
+
   return (
     <Form.Control>
-      <AsyncSelect
-        className="wabap_searchbox"
-        classNamePrefix="search"
-        placeholder="Rechercher..."
-        value={selected}
-        onChange={(sel) => {
-          console.log('selected', sel)
-          setSelected(sel.value)
-        }}
-        loadOptions={debounceLoadOptions}
-        getOptionValue={(option) => {
-          return `${option['id']}`
-        }}
-      />
+      <Downshift
+        onChange={(selection) =>
+          {
+            const ids = selection ? JSON.parse(selection.value) : null
+            if (ids)
+              wabap.getArticles(ids)
+              
+            alert(
+            selection ? `You selected ${selection.value}` : 'Selection Cleared'
+          )
+        }
+        }
+        itemToString={(item) => (item ? item.label : '')}
+        onInputValueChange={(inputValue) => debounceLoadOptions(inputValue)}
+      >
+        {({
+          getInputProps,
+          getItemProps,
+          getLabelProps,
+          getMenuProps,
+          isOpen,
+          inputValue,
+          highlightedIndex,
+          selectedItem,
+          getRootProps,
+        }) => (
+          <div className="wabap_searchbox">
+            <div
+              style={{ display: 'inline-block' }}
+              {...getRootProps({}, { suppressRefError: true })}
+            >
+              <input className="search__value-input"   {...getInputProps()} />
+            </div>
+            <ul className="search__value-list" 
+              {...getMenuProps()}
+              style={{
+                position: 'absolute',
+                zIndex: 90,
+              }}
+            >
+              {isOpen
+                ? renderItems(
+                    getItemProps,
+                    highlightedIndex,
+                    selectedItem
+                  )
+                : null}
+            </ul>
+          </div>
+        )}
+      </Downshift>
     </Form.Control>
   )
 }
