@@ -23,6 +23,9 @@ const config = {
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
   },
+  mongodb: {
+    uri: process.env.MONGODB_URI,
+  },
   redis: {
     url: process.env.REDIS_URL,
     db: process.env.REDIS_DB,
