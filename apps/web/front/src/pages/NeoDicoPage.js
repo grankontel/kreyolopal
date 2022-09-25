@@ -58,18 +58,20 @@ const NeoDicoPage = () => {
                           </div>
                         </div>
                         {def.usage.length > 0 ? (
-                        <div className="usage">
-                          {def.usage.map((example, ex_index) => (
-                            <div className="example " key={ex_index}>
-                              {example}
-                            </div>
-                          ))}
-                        </div>
+                          <div className="usage">
+                            {def.usage.map((example, ex_index) =>
+                              example !== null ? (
+                                <div className="example " key={ex_index}>
+                                  {example}
+                                </div>
+                              ) : null
+                            )}
+                          </div>
                         ) : null}
 
                         {def.synonyms.length > 0 ? (
                           <div className="synonyms">
-                            <Heading size={5} renderAs="h3">
+                            <Heading size={6} renderAs="h3">
                               Voir aussi
                             </Heading>
                             {def.synonyms.map((example, ex_index) => (
@@ -79,7 +81,6 @@ const NeoDicoPage = () => {
                             ))}
                           </div>
                         ) : null}
-
                       </div>
                     )
                   })}
