@@ -2,7 +2,8 @@ import { useCallback, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Navbar } from 'react-bulma-components'
 import { useZakari } from '@kreyolopal/react-zakari'
-import SearchBox from '../Wabap/SearchBox'
+// import SearchBox from '../Wabap/SearchBox'
+import SimpleSearchBox from '../Components/SimpleSearchBox'
 const classNames = require('classnames')
 
 const useToggle = (initialState = false) => {
@@ -43,13 +44,14 @@ export const TopNavbar = () => {
           <Link to="/">Accueil</Link>
         </Navbar.Item>
       </Navbar.Brand>
+      <Navbar.Item>
+        <SimpleSearchBox />
+      </Navbar.Item>
 
       <Navbar.Burger onClick={openMobileMenu} aria-label="menu" />
       <Navbar.Menu renderAs="div" className={navMenu}>
         <Navbar.Container align="right">
-          <Navbar.Item>
-            <SearchBox />
-          </Navbar.Item>
+
           {isLoggedIn ? (
             <>
               <Navbar.Item href="/spellcheck">Korije</Navbar.Item>
