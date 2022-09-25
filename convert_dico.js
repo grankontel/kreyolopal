@@ -96,9 +96,6 @@ const merged = entries.map((item) => {
   }
 })
 
-console.log(entries.length)
-console.log(merged.length)
-
 function onlyThose(n) {
   return n_types.includes(n)
 }
@@ -143,16 +140,26 @@ const needUpdate = merged.filter((item) => {
 
 // write JSON string to a file
 fs.writeFile(
-  path.join(__dirname, '/dicofile.json'),
+  path.join(__dirname, '/converted/dicofile.json'),
   JSON.stringify(mydico),
   (err) => {
     if (err) {
       throw err
     }
-    console.log('JSON data is saved.')
+    console.log('Dico data is saved.')
   }
 )
 
+fs.writeFile(
+  path.join(__dirname, '/converted/needUpdate.json'),
+  JSON.stringify(needUpdate),
+  (err) => {
+    if (err) {
+      throw err
+    }
+    console.log('needUpdate is saved.')
+  }
+)
 console.log(dico.length)
 console.log(merged.length)
 console.log(mydico.length)
