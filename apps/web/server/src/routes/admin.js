@@ -8,7 +8,7 @@ const { protectedRoute } = require('../services/lib.auth')
 const admin_route = ({ logger }) => {
   const router = express.Router()
 
-  router.use(protectedRoute)
+  router.use('/admin',protectedRoute)
   router.use('/admin',(req, res, next) => {
 
     if (!req.user.is_admin) {
