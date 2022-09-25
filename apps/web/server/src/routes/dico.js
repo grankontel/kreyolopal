@@ -1,13 +1,10 @@
 const express = require('express')
 const config = require('../config')
-const { MongoClient, ObjectID } = require('mongodb')
+const { MongoClient } = require('mongodb')
 
 const dico_route = ({ logger }) => {
   const router = express.Router()
-  const client = new MongoClient(config.mongodb.uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+
   router.get('/dictionary/:language/:word', async (req, res) => {
     const language = req.params.language
     const word = req.params.word
@@ -19,9 +16,18 @@ const dico_route = ({ logger }) => {
       entry: 1,
       definitions: 1,
     }
+
+    const client = new MongoClient(config.mongodb.uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+
+    await client.connect()
     const coll = client.db('dico_poullet').collection('words')
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
+    client.close()
+
     const data = result.map((item) => {
       return {
         id: item._id,
@@ -37,7 +43,7 @@ const dico_route = ({ logger }) => {
     const word = req.params.word
 
     const regex = new RegExp(`^${word}`, 'i')
-    
+
     const filter = {
       variations: regex,
     }
@@ -45,19 +51,29 @@ const dico_route = ({ logger }) => {
       entry: 1,
       variations: 1,
     }
-
+    
+    const client = new MongoClient(config.mongodb.uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    await client.connect()
     const coll = client.db('dico_poullet').collection('words')
     const cursor = coll.find(filter, { projection })
     const unsorted = await cursor.toArray()
-    const result = unsorted.sort((a,b) => {
-        if (regex.test(a.entry) && regex.test(b.entry)) {
-          return a.length - b.length
-        }
+    client.close()
 
-        if (regex.test(a.entry)) return -1
-        if (regex.test(b.entry)) return 1
+    const result = unsorted.sort((a, b) => {
+      if (regex.test(a.entry) && regex.test(b.entry)) {
+        return a.length - b.length
+      }
 
-        return a.variations.findIndex(i => regex.test(i)) - b.variations.findIndex(i => regex.test(i))
+      if (regex.test(a.entry)) return -1
+      if (regex.test(b.entry)) return 1
+
+      return (
+        a.variations.findIndex((i) => regex.test(i)) -
+        b.variations.findIndex((i) => regex.test(i))
+      )
     })
 
     res.set('Content-Type', 'application/json')
