@@ -12,6 +12,7 @@ import SpellcheckPage from './pages/SpellcheckPage'
 import VerifiedPage from './pages/VerifiedPage'
 import DictionaryPage from './pages/DictionaryPage'
 import { WabapProvider } from '@kreyolopal/web-ui'
+import NeoDicoPage from './pages/NeoDicoPage'
 
 const AdminPage = React.lazy(() =>
   import(/* webpackChunkName: "admin" */ './pages/AdminPage')
@@ -31,7 +32,9 @@ function App() {
         <WabapProvider>
           <Routes>
             <Route index element={<IndexPage />} />
-            <Route path='/dictionary' element={<DictionaryPage />} />
+            <Route path='/dictionary'>
+              <Route path=':lang/:word' element={<NeoDicoPage />} />
+            </Route>
             <Route
               path="/spellcheck"
               element={

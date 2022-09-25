@@ -39,11 +39,11 @@ export const DictionaryPage = () => {
           return (
             <article key={index} className="wabap_word">
               <Heading size={4} renderAs="h2">
-              {wabap.articles.length> 1 ? `${index+1}. `  : null } 
+                {wabap.articles.length > 1 ? `${index + 1}. ` : null}
                 {article.wfs.map((item, wf_index) => (
                   <span key={wf_index}>
                     <strong>{item}</strong>
-                    {index < article.wfs.length - 1 ? ' / ' : ''}
+                    {wf_index < article.wfs.length - 1 ? ' / ' : ''}
                   </span>
                 ))}
               </Heading>

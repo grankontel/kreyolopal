@@ -31,28 +31,57 @@ Puis construire l'appli avec
 
 ```npm run build```
 
-La version de developpement se lance avec
-
-```npm run dev```
-
-
 ### Executing program
 
-Puis construire l'appli avec
+Les variables d'environnement nécessaires sont les suivantes: 
 
-```npm run build```
+```
+API_SALT
+TOKEN_SALT
+ARGON_ITERATIONS
+ARGON_LENGTH
+ARGON_MEMORYCOST
+
+LOCAL_DICO
+
+AWS_ACCESS_KEY_ID
+AWS_BUCKET_NAME
+AWS_BUCKET_REGION
+AWS_SECRET_ACCESS_KEY
+
+MONGODB_URI
+
+MAILGUN_API_KEY
+MAILGUN_DOMAIN
+MAILGUN_FROM
+MAILGUN_HOST
+MAINTAINTER_EMAIL
+
+DEV_POSTGRES_HOST
+DEV_POSTGRES_DB
+DEV_POSTGRES_USERNAME
+DEV_POSTGRES_PASSWORD
+
+PROD_POSTGRES_DB
+PROD_POSTGRES_HOST
+PROD_POSTGRES_PASSWORD
+PROD_POSTGRES_USERNAME
+
+REDIS_URL
+REDIS_DB
+
+SESSION_DURATION
+SESSION_SECRET
+SLACK_WEBHOOK_URL
+```
 
 La version de developpement se lance avec
 
 ```npm run dev```
 
-## Help
+La version de production (dans le repertoire ```dist/apps/web/server```) se lance avec 
 
-Any advise for common problems or issues.
-
-```
-command to run if program contains helper info
-```
+```npm run start```
 
 ## Authors
 
