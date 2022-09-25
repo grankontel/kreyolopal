@@ -1,0 +1,9 @@
+GET http://localhost:5000/api/dictionary/gp/pouri
+
+###
+
+GET http://localhost:5000/api/suggest/bou
+
+###
+
+GET http://localhost:5000/api/articles/indices/gp/bou/0
