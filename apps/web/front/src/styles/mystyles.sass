@@ -85,3 +85,22 @@ footer.page-footer
         margin-bottom: 1em
         .synonyms
             margin-top: .5rem
+
+.dico_word
+    .title
+        margin-bottom: .5rem
+    .definition
+        margin-left: 2em
+        margin-bottom: 1em
+        .nature
+            font-weight: bold
+        .usage
+            .example
+                margin-top: .5rem
+                margin-bottom: .5rem
+                font-style: italic
+                quotes: '\00AB' '\00BB' '\201E' '\201C'
+                &::before
+                    content: open-quote
+                &::after
+                    content: close-quote
