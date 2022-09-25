@@ -60,7 +60,7 @@ export const ChangePwdPage = () => {
     try {
       setLoading(true);
       clearMessage();
-      auth.resetPassword(newPwd, newPwd2).then(
+      auth.resetPassword(newPwd, newPwd2, token).then(
         () => {
           setNotif({ color: 'info', message: 'Mise à jour réussie' });
         },

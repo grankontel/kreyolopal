@@ -10,6 +10,7 @@ const {
   logUserIn,
   protectedRoute,
 } = require('../services/lib.auth')
+const authService = require('../services/authService')
 
 const { User } = db
 
@@ -199,6 +200,66 @@ const auth_route = ({ logger }) => {
           )
         }
       )
+    }
+  )
+
+  router.post(
+    '/resetpwdtoken',
+    [
+      body('password').isLength({ min: 5 }),
+      body('verification').custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error('Password confirmation does not match password')
+        }
+        return true
+      }),
+      body('token')
+        .notEmpty()
+        .custom((value) => {
+          const isToken = /[A-Za-z0-9]{64}/
+          return value.length > 0 && isToken.test(value)
+        }),
+    ],
+    async (req, res) => {
+      // Finds the validation errors in this request and wraps them in an object with handy functions
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ status: 'error', error: errors.array() })
+      }
+
+      const { password, token } = req.body
+      return User.findOne({ where: { reset_pwd_token: token } })
+        .then(
+          async (profile) => {
+            if (profile === null) {
+              return res
+                .status(404)
+                .json({ status: 'error', error: 'Not Found' })
+            }
+
+            profile.password = await authService.hashPassword(password)
+            profile.reset_pwd_token = null
+            profile.save()
+
+            const lUser = {
+              firstname: profile.firstname,
+              lastname: profile.lastname,
+              email: profile.email,
+            }
+
+            return res.json({
+              status: 'success',
+              data: { profile: lUser },
+            })
+          },
+          (reason) => {
+            logger.error(reason)
+            return res.status(500).send({ status: 'error', error: [reason] })
+          }
+        )
+        .catch((_error) => {
+          res.status(500).send({ status: 'error', error: [_error] })
+        })
     }
   )
 

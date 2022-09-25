@@ -316,6 +316,43 @@ class ZakariClient {
     })
  
   }
+
+  /**
+   * Set a new password for user identified by token
+   * @param {string} password The new password
+   * @param {string} verification Verification for the new password
+   * @param {string} token The reset password token
+   */
+  resetPassword(password, verification, token) {
+    const me = this
+    return new Promise((resolve, reject) => {
+      return axios
+        .post(`${me.host}/api/resetpwdtoken`, {
+          password,
+          verification,
+          token
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: me._authorization,
+            Cookie: me._cookies.join('; '),
+          },
+          withCredentials: true,
+        })
+        .then(
+          (result) => {
+            const rep = result.data
+            resolve(rep)
+          },
+          (reason) => {
+            const data = me.handleFailure(reason)
+            return reject(data)
+          }
+        )
+        .catch((error) => {
+          return reject({ code: 500, status: 'error', error })
+        })
+    })  }
   /**
    * Get the user associated to a reset password token (sent by email)
    * @param {string} token The reset password token
