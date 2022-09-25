@@ -60,7 +60,7 @@ targetPackage.engines = {
 
 // add start script
 targetPackage.main = main
-targetPackage.scripts.start = `NODE_ENV=production node ${main}`
+targetPackage.scripts.start = `NODE_ENV='production' node ${main}`
 
 // write package.json
 writeFileSync(
