@@ -1,12 +1,10 @@
 @charset "utf-8"
+/* You can add global styles to this file, and also import other style files */
 
-@import "../../../../../node_modules/bulma/sass/utilities/initial-variables"
-@import "../../../../../node_modules/bulma/sass/utilities/functions"
+@import "../../../../node_modules/bulma/sass/utilities/initial-variables"
+@import "../../../../node_modules/bulma/sass/utilities/functions"
 
-// @import "variables"
-// $primary: #FFBC8C
-// $secondary: #599EED
-@import "./components/colors"
+@import "./styles/components/colors"
 
 $body-size: 16px
 
@@ -15,10 +13,10 @@ $body-size: 16px
 $family-primary: 'Titillium Web', BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif
 $family-secondary: 'Alegreya', serif
 
-@import "../../../../../node_modules/bulma/sass/utilities/derived-variables"
-@import "../../../../../node_modules/bulma/bulma.sass"
+@import "../../../../node_modules/bulma/sass/utilities/derived-variables"
+@import "../../../../node_modules/bulma/bulma.sass"
 
-@import '@creativebulma/bulma-tooltip'
+// @import '@creativebulma/bulma-tooltip'
 
 main.main
     margin-bottom: 1rem
@@ -66,7 +64,7 @@ footer.page-footer
     color: $text
     cursor: default
 
-@import "./components/forms"
+@import "./styles/components/forms"
 
 .wabap_searchbox
     min-width: 2em
@@ -92,7 +90,7 @@ footer.page-footer
     .definition
         margin-left: 2em
         margin-bottom: 1em
-        border-bottom: 1px solid $grey 
+        border-bottom: 1px solid $grey
         .nature
             font-weight: bold
         .synonyms
