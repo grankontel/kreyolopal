@@ -17,7 +17,7 @@
     "paths": {
       "@kreyolopal/react-zakari": ["libs/react-zakari/src/index.js"],
       "@kreyolopal/ui-utils": ["libs/react-utils/src/index.js"],
-      "@kreyolopal/web-ui": ["libs/web/ui/src/index.js"],
+      "@kreyolopal/web-ui": ["libs/web-ui/src/index.js"],
       "@kreyolopal/zakari": ["libs/zakari/src/index.js"]
     }
   },
