@@ -7,10 +7,10 @@
   },
   "exclude": [
     "jest.config.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.spec.js",
-    "**/*.test.js"
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/**/*.spec.js",
+    "src/**/*.test.js"
   ],
-  "include": ["**/*.ts", "**/*.js"]
+  "include": ["src/**/*.ts", "src/**/*.js"]
 }
