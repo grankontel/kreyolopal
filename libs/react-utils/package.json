@@ -1,4 +1,5 @@
 {
-  "name": "@kreyolopal/ui-utils",
-  "version": "0.0.1"
+  "name": "@kreyolopal/react-utils",
+  "version": "0.0.1",
+  "type": "commonjs"
 }

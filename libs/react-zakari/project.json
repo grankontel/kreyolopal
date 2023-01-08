@@ -1,43 +1,27 @@
 {
+  "name": "react-zakari",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/react-zakari/src",
   "projectType": "library",
-  "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/web:rollup",
+      "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/react-zakari",
+        "main": "libs/react-zakari/src/index.js",
         "tsConfig": "libs/react-zakari/tsconfig.lib.json",
-        "project": "libs/react-zakari/package.json",
-        "entryFile": "libs/react-zakari/src/index.js",
-        "external": ["react/jsx-runtime"],
-        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
-        "compiler": "babel",
-        "assets": [
-          {
-            "glob": "libs/react-zakari/README.md",
-            "input": ".",
-            "output": "."
-          }
-        ]
+        "assets": [],
+        "webpackConfig": "libs/custom-webpack.config.js"
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/react-zakari/**/*.{ts,tsx,js,jsx}"]
-      }
-    },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/react-zakari"],
-      "options": {
-        "jestConfig": "libs/react-zakari/jest.config.js",
-        "passWithNoTests": true
+        "lintFilePatterns": ["libs/react-zakari/**/*.js"]
       }
     }
-  }
+  },
+  "tags": []
 }
