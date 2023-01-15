@@ -1,4 +1,5 @@
 {
+  "name": "web-front",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web/front/src",
   "projectType": "application",
@@ -15,6 +16,83 @@
         "apps/web/front/public/images/w800",
         "apps/web/front/public/images/w1024"
       ]
+    },
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/web/front",
+        "index": "apps/web/front/src/index.html",
+        "baseHref": "/",
+        "main": "apps/web/front/src/main.js",
+        "polyfills": "apps/web/front/src/polyfills.js",
+        "tsConfig": "apps/web/front/tsconfig.app.json",
+        "assets": [
+          {
+            "input": "apps/web/front/src/public",
+            "glob": "**/*",
+            "output": "/"
+          }
+        ],
+        "styles": ["apps/web/front/src/styles.sass"],
+        "scripts": [],
+        "webpackConfig": "apps/web/front/custom-webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/web/front/src/environments/environment.js",
+              "with": "apps/web/front/src/environments/environment.prod.js"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      },
+      "dependsOn":[
+        {
+          "target": "images",
+          "projects": "self"
+        }
+      ]
+    },
+    "serve": {
+      "executor": "@nrwl/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "web-front:build",
+        "hmr": true,
+        "proxyConfig": "apps/web/front/proxy.conf.json"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "web-front:build:development"
+        },
+        "production": {
+          "buildTarget": "web-front:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/web/front/**/*.{ts,tsx,js,jsx}"]
+      }
     }
   },
   "tags": []

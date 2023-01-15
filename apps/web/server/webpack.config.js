@@ -20,5 +20,8 @@ module.exports = (config, context) => {
 
   return merge(config, {
     // overwrite values here
+    output: {
+      publicPath: '../front',
+    },
   })
 }

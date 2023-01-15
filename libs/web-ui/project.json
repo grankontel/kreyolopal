@@ -1,32 +1,25 @@
 {
-  "name": "zakari",
+  "name": "web-ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/zakari/src",
+  "sourceRoot": "libs/web-ui/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/zakari",
-        "main": "libs/zakari/src/index.js",
-        "tsConfig": "libs/zakari/tsconfig.lib.json",
+        "outputPath": "dist/libs/web-ui",
+        "main": "libs/web-ui/src/index.js",
+        "tsConfig": "libs/web-ui/tsconfig.lib.json",
         "assets": [],
         "webpackConfig": "libs/custom-webpack.config.js"
       }
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node tools/scripts/publish.mjs zakari {args.ver} {args.tag}"
-      },
-      "dependsOn": ["build"]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/zakari/**/*.js"]
+        "lintFilePatterns": ["libs/web-ui/**/*.js"]
       }
     }
   },
