@@ -1,3 +1,0 @@
-[submodule "dist/apps/web"]
-	path = dist/apps/web
-	url = https://git.heroku.com/kreyol.git
