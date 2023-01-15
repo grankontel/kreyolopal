@@ -5,7 +5,7 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/webpack:webpack",
+      "executor": "@nrwl/node:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "target": "node",
@@ -14,7 +14,8 @@
         "main": "apps/web/server/src/main.js",
         "tsConfig": "apps/web/server/tsconfig.app.json",
         "assets": ["apps/web/server/src/assets", "apps/web/server/src/dico"],
-        "webpackConfig": "apps/web/server/webpack.config.js"
+        "webpackConfig": "apps/web/server/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "production": {
