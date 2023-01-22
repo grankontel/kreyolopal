@@ -1,0 +1,57 @@
+{
+  "name": "@kreyolopal/web-ui",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "files": [
+    "dist"
+  ],
+  "style": "./dist/style.css",
+  "main": "./dist/web-ui.umd.js",
+  "module": "./dist/web-ui.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/web-ui.es.js",
+      "require": "./dist/web-ui.umd.js"
+    },
+    "./index.css": "./dist/style.css"
+  },
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "bulma": "^0.9.4",
+    "classnames": "^2.3.2",
+    "feather-icons": "^4.29.0",
+    "lodash": "^4.17.21",
+    "react": "18.x",
+    "react-admin": "^4.7.1",
+    "react-bulma-components": "^4.1.0",
+    "react-dom": "18.x"
+  },
+  "dependencies": {
+    "@kreyolopal/react-utils": "*",
+    "@kreyolopal/react-zakari": "*",
+    "bulma": "^0.9.4",
+    "classnames": "^2.3.2",
+    "downshift": "^7.2.0",
+    "feather-icons": "^4.29.0",
+    "lodash": "^4.17.21",
+    "react": "18.x",
+    "react-admin": "^4.7.1",
+    "react-bulma-components": "^4.1.0",
+    "react-dom": "18.x"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react": "^3.0.0",
+    "path-browserify": "^1.0.1",
+    "vite": "^4.0.0",
+    "vite-plugin-dts": "^1.7.1"
+  }
+}

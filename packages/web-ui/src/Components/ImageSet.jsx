@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-const classNames = require('classnames');
-const path = require('path');
+import classNames from 'classnames';
+import path from 'path';
 
 const sizes = [200, 320, 630, 800, 1024];
 

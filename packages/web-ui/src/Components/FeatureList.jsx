@@ -1,5 +1,5 @@
 import * as feather from 'feather-icons';
-import { findAllByType } from '@kreyolopal/ui-utils';
+import { findAllByType } from '@kreyolopal/react-utils';
 import { Icon } from 'react-bulma-components';
 import PropTypes from 'prop-types';
 
