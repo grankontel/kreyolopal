@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb')
 import config from '../../config'
-import logger from '../../services/logger.js'
+import logger from '../../services/logger'
 
 const getWord = async function (req, res) {
   const language = req.params.language

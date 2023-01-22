@@ -1,5 +1,5 @@
 require('dotenv').config()
-const logger = require('../../services/logger.js')
+const logger = require('../../services/logger')
 
 module.exports = {
   development: {

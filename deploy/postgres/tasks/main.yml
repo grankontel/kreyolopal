@@ -10,18 +10,21 @@
     name:
       - python3-psycopg2
     state: present
-- name: "Create a new database with name '{{ db_name }}' and specific encoding and locale # settings"
-  community.postgresql.postgresql_db:
-    name: '{{ db_name }}'
-    encoding: UTF-8
+- name: "POSTGRES | Create {{ db_user }}"
+  community.postgresql.postgresql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
     state: present
   become: yes
   become_user: postgres
-- name: "Connect to {{ db_name }} database, create {{ db_user }} user"
-  community.postgresql.postgresql_user:
-    db: "{{ db_name }}"
-    name: "{{ db_user }}"
-    password: "{{ db_password }}"
+  environment:
+    PGOPTIONS: "-c password_encryption=scram-sha-256"
+- name: "POSTGRES | Create a new database '{{ db_name }}' for user '{{ db_user }}' "
+  community.postgresql.postgresql_db:
+    name: "{{ db_name }}"
+    owner: "{{ db_user }}"
+    encoding: UTF-8
+    state: present
   become: yes
   become_user: postgres
 - name: "GRANT ALL PRIVILEGES ON SCHEMA public TO {{ db_user }}"
@@ -33,3 +36,4 @@
     privs: ALL
   become: yes
   become_user: postgres
+  notify: restart postgres

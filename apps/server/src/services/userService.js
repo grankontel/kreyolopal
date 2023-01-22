@@ -1,10 +1,7 @@
-import logger from './logger.js'
-import authService from './authService.js'
-import config from '../config.js'
+import logger from './logger'
+import authService from './authService'
 const Promise = require('bluebird')
-const argon2 = require('argon2')
-const jwt = require('jsonwebtoken')
-const { SHA3 } = require('sha3')
+
 import db from '../database/models'
 
 const { sequelize } = db

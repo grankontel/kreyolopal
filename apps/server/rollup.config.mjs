@@ -11,6 +11,13 @@ const distDirectory = './dist'
 
 export default {
   input: 'src/server.js',
+  external: [
+    'dotenv',
+    'express',
+    'express-validator',
+    /src\/database/,
+    /src\/services\/logger/,
+  ],
   output: {
     dir: distDirectory,
     format: 'cjs',
@@ -36,9 +43,12 @@ export default {
     babel({ babelHelpers: 'bundled' }),
     copy({
       targets: [
-        { src: 'src/mails/**/*', dest: 'dist/mails' }
-      ]
-    })
+        { src: 'src/mails', dest: 'dist/' },
+        { src: 'src/database', dest: 'dist/' },
+        { src: 'src/services/logger.js', dest: 'dist/services' },
+        { src: 'src/config.js', dest: 'dist/' },
+      ],
+    }),
     // terser()
   ],
 }

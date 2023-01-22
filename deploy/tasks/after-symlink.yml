@@ -4,14 +4,18 @@
     path: "{{ ansistrano_release_path.stdout }}"
 - name: APP | npm build
   command: 
-    cmd: NODE_ENV='production' npm run build
+    cmd: npm run build
   args:
     chdir: "{{ ansistrano_release_path.stdout }}"
+  environment:
+    NODE_ENV: 'production'
 - name: APP | migrate db
   command: 
     cmd: npm run migrate
   args:
     chdir: "{{ ansistrano_release_path.stdout }}/apps/server"
+  environment:
+    NODE_ENV: 'production'
 - name: APP | stop previous app
   command:
     cmd: pm2 delete "{{ domain }}"

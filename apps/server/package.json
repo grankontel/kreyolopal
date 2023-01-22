@@ -8,6 +8,7 @@
     "dev": "nodemon --exec babel-node src/server.js",
     "prebuild": "rm -rf dist",
     "build": "rollup -c",
+    "postbuild": "babel-node scripts/dbconfig.js",
     "start": "NODE_ENV='production' node dist/server.js",
     "migrate": "sequelize-cli db:migrate",
     "seed": "sequelize-cli db:seed:all"
@@ -25,6 +26,7 @@
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-terser": "^0.3.0",
+    "nodemon": "^2.0.20",
     "rollup": "^3.10.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-generate-package-json-v2": "^1.2.0",
