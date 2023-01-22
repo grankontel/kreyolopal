@@ -2,9 +2,8 @@ import { useCallback, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Navbar } from 'react-bulma-components'
 import { useZakari } from '@kreyolopal/react-zakari'
-// import SearchBox from '../Wabap/SearchBox'
-import SimpleSearchBox from '../Components/SimpleSearchBox'
-const classNames = require('classnames')
+import SimpleSearchBox from './SimpleSearchBox'
+import classNames from 'classnames';
 
 const useToggle = (initialState = false) => {
   // Initialize the state
@@ -29,7 +28,7 @@ export const TopNavbar = () => {
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (auth !== null) {
-      setLoggedIn(auth?.user !== null)
+      setLoggedIn(auth?.isLoggedIn() )
     }
   }, [auth?.user])
   /* eslint-enable react-hooks/exhaustive-deps */

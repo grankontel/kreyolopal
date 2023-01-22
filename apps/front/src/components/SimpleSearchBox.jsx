@@ -8,7 +8,7 @@ const getEntries = (w) => {
   const word = w.trim()
   if (word.length === 0) return Promise.resolve([])
 
-  return fetch(`/api/suggest/${encodeURIComponent(word)}`, {
+  return fetch(`/api/dictionary/suggest/${encodeURIComponent(word)}`, {
     method: 'GET',
     credentials: 'same-origin',
   })

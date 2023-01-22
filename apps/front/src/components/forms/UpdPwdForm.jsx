@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Progress } from 'react-bulma-components'
-import FormField from '../FormField'
+import { FormField } from '@kreyolopal/web-ui';
 
 export const UpdPwdForm = (props) => {
   const [loading, setLoading] = useState(false)

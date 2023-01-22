@@ -10,7 +10,7 @@ import {
 import * as feather from 'feather-icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useZakari } from '@kreyolopal/react-zakari';
-import { StarRating} from '../StarRating';
+import { StarRating } from '@kreyolopal/web-ui';
 
 function addEmphasis(src) {
   const strArray = Array.from(src);
