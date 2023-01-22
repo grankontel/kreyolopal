@@ -1,5 +1,7 @@
+// npx babel-node scripts/hash.js pwd
+
 /* eslint-disable no-console */
-const authService = require('../src/services/authService')
+import authService from '../src/services/authService'
 
 const plain = process.argv[process.argv.length - 1]
 

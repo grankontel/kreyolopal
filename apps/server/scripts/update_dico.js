@@ -1,11 +1,13 @@
-/* eslint-disable no-console */
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3')
-const { promisify } = require('util')
-const fs = require('fs')
-const path = require('path')
+// npx babel-node scripts/update_dico.js 
 
-const readFile = promisify(fs.readFile)
-const config = require('../src/config')
+/* eslint-disable no-console */
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { promisify } from 'util'
+import { readFile as _readFile } from 'fs'
+import { resolve as _resolve } from 'path'
+
+const readFile = promisify(_readFile)
+import config from '../src/config'
 
 const s3Options = {
   credentials: {
@@ -18,11 +20,11 @@ const s3Options = {
 // eslint-disable-next-line no-unused-vars
 async function readDicoFiles(kreyol) {
   const readAff = readFile(
-    path.resolve(__dirname, '../src/dico/cpf_GP.aff'),
+    _resolve(__dirname, '../src/dico/cpf_GP.aff'),
     'utf8'
   )
   const readDic = readFile(
-    path.resolve(__dirname, '../src/dico/cpf_GP.dic'),
+    _resolve(__dirname, '../src/dico/cpf_GP.dic'),
     'utf8'
   )
 
