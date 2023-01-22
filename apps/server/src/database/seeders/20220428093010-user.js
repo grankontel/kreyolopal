@@ -1,4 +1,4 @@
-const thistime = new Date();
+const thistime = new Date()
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -26,7 +26,7 @@ module.exports = {
         },
       ],
       {}
-    );
+    )
   },
 
   async down(queryInterface, Sequelize) {
@@ -36,6 +36,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Users', null, {});
+    await queryInterface.bulkDelete('Users', null, {})
   },
-};
+}

@@ -1,5 +1,5 @@
 require('dotenv').config()
-const logger = require('../../services/logger')
+const logger = require('../../services/logger.js')
 
 module.exports = {
   development: {
@@ -23,7 +23,7 @@ module.exports = {
     password: process.env.PROD_POSTGRES_PASSWORD,
     database: process.env.PROD_POSTGRES_DB,
     host: process.env.PROD_POSTGRES_HOST,
-/*     native: false,
+    /*     native: false,
     dialectOptions: {
       ssl: {
         require: true,
