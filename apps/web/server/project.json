@@ -13,7 +13,11 @@
         "outputPath": "dist/apps/web/server",
         "main": "apps/web/server/src/main.js",
         "tsConfig": "apps/web/server/tsconfig.app.json",
-        "assets": ["apps/web/server/src/assets", "apps/web/server/src/dico"],
+        "assets": [
+          "apps/web/server/src/database", 
+          "apps/web/server/src/assets", 
+          "apps/web/server/src/dico"
+        ],
         "webpackConfig": "apps/web/server/webpack.config.js",
         "generatePackageJson": true
       },
