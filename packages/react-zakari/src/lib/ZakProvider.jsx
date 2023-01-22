@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { zakariClient } from '@kreyolopal/zakari';
+import { Zakari } from '@kreyolopal/zakari';
 
 const ZakContext = React.createContext(null);
 
@@ -12,12 +12,14 @@ const Protected = ({ to, children }) => {
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (auth !== null) {
-      setLoggedIn(auth?.user !== null);
-      if (auth?.user === null) navigate(to);
+      setLoggedIn(auth?.isLoggedIn());
+      if (!auth?.isLoggedIn()) navigate(to);
+
       auth.onUserChange((_auth, user) => {
         setLoggedIn(user !== null);
         if (user === null) navigate(to);
       });
+      
     }
   }, [auth]);
   /* eslint-enable react-hooks/exhaustive-deps */
@@ -29,9 +31,9 @@ export function ZakProvider(props) {
   const [client, setClient] = useState(null);
 
   useEffect(() => {
-    setClient(
+    if (client === null) setClient(
       typeof window !== 'undefined' && window
-        ? zakariClient(window.location.origin)
+        ? new Zakari(window.location.origin)
         : null
     );
   }, []);
