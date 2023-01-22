@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LoginForm } from '@kreyolopal/web-ui';
 import StandardPage from '../layouts/StandardPage';
 import {
   Box,
@@ -11,6 +10,7 @@ import {
 } from 'react-bulma-components';
 import { useZakari } from '@kreyolopal/react-zakari';
 import { useNavigate } from 'react-router-dom';
+import LoginForm from '../components/forms/LoginForm';
 
 export const LoginPage = () => {
   const [message, setMessage] = useState('');
@@ -27,7 +27,7 @@ export const LoginPage = () => {
     try {
       setLoading(true);
       setMessage('');
-      auth.signIn(email, password).then(
+      auth.login(email, password).then(
         () => {
           navigate('/');
         },

@@ -10,7 +10,7 @@ import {
 } from 'react-bulma-components'
 import {FormField} from '@kreyolopal/web-ui'
 import StandardPage from '../layouts/StandardPage'
-const axios = require('axios').default
+import axios from 'axios'
 
 export const ContactPage = () => {
   const [isLoading, setIsLoading] = useState(false)
