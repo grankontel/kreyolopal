@@ -1,14 +1,14 @@
-const express = require('express')
-const config = require('../config')
 const { MongoClient } = require('mongodb')
+import config from '../../config'
+import logger from '../../services/logger.js'
 
-const dico_route = ({ logger }) => {
-  const router = express.Router()
+const getWord = async function (req, res) {
+  const language = req.params.language
+  const word = req.params.word
 
-  router.get('/dictionary/:language/:word', async (req, res) => {
-    const language = req.params.language
-    const word = req.params.word
+  logger.info(`getWord ${language} ${word}`)
 
+  try {
     const filter = {
       entry: word,
     }
@@ -37,11 +37,16 @@ const dico_route = ({ logger }) => {
     })
     res.set('Content-Type', 'application/json')
     res.status(200).send(data)
-  })
+  } catch (e) {
+    logger.error(e.message)
+    res.status(500).send({ error: 'Unknown error.' })
+  }
+}
 
-  router.get('/suggest/:word', async (req, res) => {
-    const word = req.params.word
-
+const getSuggestion = async function (req, res) {
+  const word = req.params.word
+  logger.info(`getSuggestion ${word}`)
+  try {
     const regex = new RegExp(`^${word}`, 'i')
 
     const filter = {
@@ -51,7 +56,7 @@ const dico_route = ({ logger }) => {
       entry: 1,
       variations: 1,
     }
-    
+
     const client = new MongoClient(config.mongodb.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -78,10 +83,10 @@ const dico_route = ({ logger }) => {
 
     res.set('Content-Type', 'application/json')
     res.status(200).send(result)
-  })
-
-  logger.info('\tAdding route "dico"...')
-  return router
+  } catch (e) {
+    logger.error(e.message)
+    res.status(500).send({ error: 'Problem fetching books.' })
+  }
 }
 
-module.exports = dico_route
+export default { getWord, getSuggestion }
