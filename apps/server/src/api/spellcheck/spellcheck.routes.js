@@ -1,6 +1,6 @@
+import express from 'express';
+import { check, param } from 'express-validator'
 import handlers from './spellcheck.handlers'
-const express = require('express')
-const { check, param } = require('express-validator')
 const routes = express.Router()
 
 // get spellcheck

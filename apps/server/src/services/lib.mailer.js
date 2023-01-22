@@ -2,7 +2,7 @@ const { default: axios } = require('axios')
 const FormData = require('form-data')
 // const Mailgun = require('mailgun.js')
 
-import config from '../config.js'
+import config from '../config'
 
 const url = `https://api:${config.mail.apiKey}@${config.mail.host}/v3/${config.mail.domain}/messages`
 

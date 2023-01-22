@@ -1,5 +1,5 @@
 const morgan = require('morgan')
-import logger from '../services/logger.js'
+import logger from '../services/logger'
 
 // create a stream object with a 'write' function that will be used by `morgan`
 const stream = {

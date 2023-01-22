@@ -1,5 +1,6 @@
 import config from '../../config'
-import logger from '../../services/logger.js'
+import logger from '../../services/logger'
+import authService from '../../services/authService'
 
 import db from '../../database/models'
 const { User } = db

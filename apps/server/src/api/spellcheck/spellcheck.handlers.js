@@ -1,9 +1,9 @@
+import { validationResult } from 'express-validator'
 import config from '../../config'
-import logger from '../../services/logger.js'
+import logger from '../../services/logger'
 import spellchecker from './lib.spellcheck'
 import slackWebhook from '../../services/slack'
 const { Op } = require('sequelize')
-const { validationResult } = require('express-validator')
 const Promise = require('bluebird')
 
 import db from '../../database/models'

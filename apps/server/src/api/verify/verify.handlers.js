@@ -1,7 +1,8 @@
-import logger from '../../services/logger.js'
-import userService from '../../services/userService.js'
-import emailService from '../../services/emailService.js'
-const { validationResult } = require('express-validator')
+import { validationResult } from 'express-validator'
+import logger from '../../services/logger'
+import userService from '../../services/userService'
+import emailService from '../../services/emailService'
+import authService from '../../services/authService'
 
 const verifyMail = async function (req, res) {
   const errors = validationResult(req)

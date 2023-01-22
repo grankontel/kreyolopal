@@ -1,7 +1,7 @@
+import { validationResult } from 'express-validator'
 import config from '../../config'
-import logger from '../../services/logger.js'
+import logger from '../../services/logger'
 import emailService from '../../services/emailService'
-const { validationResult } = require('express-validator')
 
 const postContact = async function (req, res) {
   // Finds the validation errors in this request and wraps them in an object with handy functions

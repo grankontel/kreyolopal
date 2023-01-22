@@ -1,6 +1,6 @@
+import express from 'express';
+import { body, param } from 'express-validator'
 import handlers from './verify.handlers'
-const express = require('express')
-const { body, param } = require('express-validator')
 const routes = express.Router()
 
 routes.get(

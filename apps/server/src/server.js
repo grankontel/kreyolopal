@@ -1,4 +1,4 @@
-const express = require('express')
+import express from 'express';
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const path = require('path')
@@ -8,7 +8,7 @@ import setRoutes from './routes'
 import config from './config'
 import morganMiddleware from './middlewares/morgan.middleware'
 import jwtMiddleware from './middlewares/jwt.middleware'
-import logger from './services/logger.js'
+import logger from './services/logger'
 import userService from './services/userService'
 
 const jwt = require('jsonwebtoken')

@@ -1,5 +1,5 @@
+import express from 'express';
 import dicoHandlers from './dictionary.handlers'
-const express = require('express')
 const dicoRoutes = express.Router()
 
 // get suggestion
