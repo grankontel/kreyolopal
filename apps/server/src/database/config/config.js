@@ -1,7 +1,7 @@
 require('dotenv').config()
-const logger = require('../../services/logger.js')
+import logger from '../../services/logger.js'
 
-module.exports = {
+export const dbconfig = {
   development: {
     username: process.env.DEV_POSTGRES_USERNAME,
     password: process.env.DEV_POSTGRES_PASSWORD,
@@ -34,3 +34,5 @@ module.exports = {
     logging: (msg) => logger.debug(msg),
   },
 }
+
+export default dbconfig
