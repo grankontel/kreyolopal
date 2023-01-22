@@ -7,7 +7,7 @@ const sharp = require('sharp')
 
 const sizes = [200, 320, 630, 800, 1024]
 
-const basedir = path.resolve(__dirname, '../src/public/images')
+const basedir = path.resolve(__dirname, '../public/images')
 const dest_prefix = 'w'
 const formats = ['png', 'jpeg']
 
