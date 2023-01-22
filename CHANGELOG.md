@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Deploy with ansistrano
+- updgraded to Nx 15
+
 ## [1.1.0] - 2022-09-25
 
 - better mongodb access
