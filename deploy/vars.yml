@@ -21,8 +21,8 @@ ansistrano_deploy_via: git
 ansistrano_git_repo: "{{ ansistrano_deploy_to }}.git"
 ansistrano_git_branch: master
 ansistrano_keep_releases: 5
-ansistrano_shared_paths: ["server/dico"]
-ansistrano_shared_files: [".env"]
+ansistrano_shared_paths: ["apps/server/dico"]
+ansistrano_shared_files: ["apps/server/.env"]
 
 ansistrano_before_symlink_shared_tasks_file: "{{ playbook_dir }}/tasks/before-symlink.yml"
 ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/tasks/after-symlink.yml"
