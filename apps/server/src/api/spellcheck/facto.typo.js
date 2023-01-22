@@ -8,4 +8,4 @@ const createSpellchecker = (affix, dictionary) => {
   }
 }
 
-module.exports = createSpellchecker
+export default createSpellchecker

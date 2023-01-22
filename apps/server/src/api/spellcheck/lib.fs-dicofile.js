@@ -11,11 +11,11 @@ const readFile = promisify(fs.readFile)
 // eslint-disable-next-line no-unused-vars
 async function readDicoFiles(kreyol) {
   const readAff = readFile(
-    path.resolve(__dirname, '../dico/cpf_GP.aff'),
+    path.resolve(__dirname, '../../dico/cpf_GP.aff'),
     'utf8'
   )
   const readDic = readFile(
-    path.resolve(__dirname, '../dico/cpf_GP.dic'),
+    path.resolve(__dirname, '../../dico/cpf_GP.dic'),
     'utf8'
   )
 
@@ -25,4 +25,4 @@ async function readDicoFiles(kreyol) {
   return { affix, dictionary }
 }
 
-module.exports = { readDicoFiles }
+export default { readDicoFiles }

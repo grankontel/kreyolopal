@@ -1,5 +1,5 @@
 const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3')
-const config = require('../config')
+import config from '../../config'
 
 const streamToString = (stream) =>
   new Promise((resolve, reject) => {
@@ -76,4 +76,4 @@ async function readDicoFiles(kreyol) {
   return dicofiles
 }
 
-module.exports = { readDicoFiles }
+export default { readDicoFiles }

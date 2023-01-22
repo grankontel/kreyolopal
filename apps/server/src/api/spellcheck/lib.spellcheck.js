@@ -1,10 +1,8 @@
 /* eslint-disable no-plusplus, no-continue */
 const NodeCache = require('node-cache')
-const createSpellchecker = require('./facto.typo')
-const config = require('../config')
-const dicoSource = config.dico.useLocal
-  ? require('./lib.fs-dicofile')
-  : require('./lib.s3-dicofile')
+const Promise = require('bluebird')
+import config from '../../config'
+import createSpellchecker from './facto.typo'
 
 const myCache = new NodeCache()
 
@@ -17,7 +15,7 @@ const isSpace = /^s+$/g
  * @param {string} src String to spellcheck
  * @param {string} kreyol Wich kreyol
  */
-async function nspell_spellcheck(src, kreyol) {
+async function nspell_spellcheck(src, kreyol, dicoSource) {
   let affix = ''
   let dictionary = ''
 
@@ -107,4 +105,41 @@ async function nspell_spellcheck(src, kreyol) {
   return reponse
 }
 
-module.exports = nspell_spellcheck
+const actualCheck = (message, dicoSource) => {
+  return new Promise((resolve, reject) => {
+    nspell_spellcheck(message.request, message.kreyol, dicoSource)
+      .then((response) => {
+        const msgresponse = {
+          // status: '', success | warning | error
+          status: response.unknown_words.length > 0 ? 'warning' : 'success',
+          kreyol: 'GP', // message.request.kreyol,
+          unknown_words: response.unknown_words,
+          message: response.message,
+          user_evaluation: undefined,
+          admin_evaluation: undefined,
+        }
+
+        resolve(msgresponse)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+const spellchecker = {
+  check: (message) => {
+    return new Promise((resolve, reject) => {
+      if (config.dico.useLocal) {
+        import('./lib.fs-dicofile').then((dicoSource) => {
+          resolve(actualCheck(message, dicoSource.default))
+        })
+      } else {
+        import('./lib.s3-dicofile').then((dicoSource) => {
+          resolve(actualCheck(message, dicoSource.default))
+        })
+      }
+    })
+  },
+}
+
+export default spellchecker
