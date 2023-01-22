@@ -10,7 +10,9 @@ import {
   Panel,
 } from 'react-bulma-components'
 import { useZakari } from '@kreyolopal/react-zakari'
-import {FeatherIcon, AccountForm, UpdPwdForm} from '@kreyolopal/web-ui'
+import { FeatherIcon } from '@kreyolopal/web-ui'
+import AccountForm from '../components/forms/AccountForm'
+import UpdPwdForm from '../components/forms/UpdPwdForm'
 
 const AccountPage = () => {
   const [notif, setNotif] = useState({ color: 'warning', message: '' })
@@ -85,85 +87,85 @@ const AccountPage = () => {
       />
       <div className='main_content'>
 
-      <Heading size={2} renderAs="h1">
-        Mon compte
-      </Heading>
+        <Heading size={2} renderAs="h1">
+          Mon compte
+        </Heading>
 
-      <Columns>
-        <Columns.Column size="one-fifth">
-          <Panel className='side_menu'>
-            <Panel.Block>
-              <a href="#profile">
-                <Panel.Icon>
-                  <FeatherIcon iconName="user" />
-                </Panel.Icon>
-                <span>Mon profil</span>
-              </a>
-            </Panel.Block>
+        <Columns>
+          <Columns.Column size="one-fifth">
+            <Panel className='side_menu'>
+              <Panel.Block>
+                <a href="#profile">
+                  <Panel.Icon>
+                    <FeatherIcon iconName="user" />
+                  </Panel.Icon>
+                  <span>Mon profil</span>
+                </a>
+              </Panel.Block>
 
-            <Panel.Block>
-              <a href="#changePassword">
-                <Panel.Icon>
-                  <FeatherIcon iconName="shield-off" />
-                </Panel.Icon>
-                <span>Changer le mot de passe</span>
-              </a>
-            </Panel.Block>
+              <Panel.Block>
+                <a href="#changePassword">
+                  <Panel.Icon>
+                    <FeatherIcon iconName="shield-off" />
+                  </Panel.Icon>
+                  <span>Changer le mot de passe</span>
+                </a>
+              </Panel.Block>
 
-            <Panel.Block>
-              <Button
-                color="primary"
-                fullwidth
-                onClick={() => {
-                  auth.signOut().then(() => navigate('/'))
-                }}
-              >
-                Se déconnecter
-              </Button>
-            </Panel.Block>
-          </Panel>
-        </Columns.Column>
-        <Columns.Column size="four-fifths" className='page_content'>
-          <section>
-            <Heading  id="profile" size={3} renderAs="h2">
+              <Panel.Block>
+                <Button
+                  color="primary"
+                  fullwidth
+                  onClick={() => {
+                    auth.signOut().then(() => navigate('/'))
+                  }}
+                >
+                  Se déconnecter
+                </Button>
+              </Panel.Block>
+            </Panel>
+          </Columns.Column>
+          <Columns.Column size="four-fifths" className='page_content'>
+            <section>
+              <Heading id="profile" size={3} renderAs="h2">
                 Mon profil
-            </Heading>
-            <div className="account_box">
-              <Box>
-                {notif.message.length > 0 ? (
-                  <Notification color={notif.color}>
-                    {notif.message}
-                    <Button remove onClick={() => clearMessage()} />
-                  </Notification>
-                ) : (
-                  ''
-                )}
+              </Heading>
+              <div className="account_box">
+                <Box>
+                  {notif.message.length > 0 ? (
+                    <Notification color={notif.color}>
+                      {notif.message}
+                      <Button remove onClick={() => clearMessage()} />
+                    </Notification>
+                  ) : (
+                    ''
+                  )}
 
-                <AccountForm onSubmit={onProfileSubmit} />
-              </Box>
-            </div>
-          </section>
-          <section>
-            <Heading size={3}  id="changePassword" renderAs="h2">
+                  <AccountForm onSubmit={onProfileSubmit} />
+                </Box>
+              </div>
+            </section>
+            <section>
+              <Heading size={3} id="changePassword" renderAs="h2">
                 Changer mon mot de passe
-            </Heading>
-            <div className="account_box">
-              <Box>
-                {notifPwd.message.length > 0 ? (
-                  <Notification color={notifPwd.color}>
-                    {notif.message}
-                    <Button remove onClick={() => clearMessage()} />
-                  </Notification>
-                ) : (
-                  ''
-                )}
+              </Heading>
+              <div className="account_box">
+                <Box>
+                  {notifPwd.message.length > 0 ? (
+                    <Notification color={notifPwd.color}>
+                      {notif.message}
+                      <Button remove onClick={() => clearMessage()} />
+                    </Notification>
+                  ) : (
+                    ''
+                  )}
 
-                <UpdPwdForm onSubmit={onUpdatePwdSubmit} />
-              </Box>
-            </div>
-          </section>
-        </Columns.Column>
-      </Columns>
+                  <UpdPwdForm onSubmit={onUpdatePwdSubmit} />
+                </Box>
+              </div>
+            </section>
+          </Columns.Column>
+        </Columns>
       </div>
 
     </StandardPage>
