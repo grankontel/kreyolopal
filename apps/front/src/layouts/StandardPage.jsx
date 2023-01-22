@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Container, Content } from 'react-bulma-components';
 import { Helmet } from 'react-helmet-async';
-import { TopNavbar } from '@kreyolopal/web-ui';
-import { findByType } from '@kreyolopal/ui-utils';
+import { findByType } from '@kreyolopal/react-utils';
 import LanguageProvider from './LanguageContext';
+import TopNavbar from '../components/TopNavbar';
 
 const _Footer = () => null;
 _Footer.componentName = "_Footer"
@@ -46,7 +46,11 @@ export const StandardPage = ({ children, lang, ...props }) => {
   return (
     <>
       <PageHead />
-      <TopNavbar />
+      <Suspense fallback={<div>Chargement...</div>}>
+        <TopNavbar />
+      </Suspense>
+
+      {/* <TopNavbar /> */}
 
       <Container {...props} className="main" renderAs="main">
         {children}
