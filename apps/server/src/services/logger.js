@@ -1,6 +1,5 @@
 const winston = require('winston')
 const SlackHook = require('winston-slack-webhook-transport')
-
 const config = require('../config')
 
 const alignedWithColorsAndTime = winston.format.combine(
@@ -23,24 +22,27 @@ const options = {
   },
 }
 
-const transports = [new winston.transports.Console(options.console)]
+const transports = [
+  // Allow the use the console to print the messages
+  new winston.transports.Console(options.console),
+  // Allow to print all the error level messages inside the error.log file
+  new winston.transports.File({
+    filename: 'logs/error.log',
+    level: 'error',
+  }),
+  // Allow to print all the error message inside the all.log file
+  // (also the error log that are also printed inside the error.log(
+  new winston.transports.File({ filename: 'logs/all.log' }),
+]
 
 if (!config.slack.noSend)
   transports.push(
     new SlackHook({ level: 'warn', webhookUrl: config.slack.webhook })
   )
 
-const log = winston.createLogger({
+const logger = winston.createLogger({
   transports,
   exitOnError: false, // do not exit on handled exceptions
 })
 
-// create a stream object with a 'write' function that will be used by `morgan`
-log.stream = {
-  write: (message) => {
-    // use the 'info' log level so the output will be picked up by both transports (file and console)
-    log.info(message)
-  },
-}
-
-module.exports = log
+module.exports = logger

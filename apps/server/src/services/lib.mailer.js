@@ -2,7 +2,7 @@ const { default: axios } = require('axios')
 const FormData = require('form-data')
 // const Mailgun = require('mailgun.js')
 
-const config = require('../config')
+import config from '../config.js'
 
 const url = `https://api:${config.mail.apiKey}@${config.mail.host}/v3/${config.mail.domain}/messages`
 
@@ -14,7 +14,8 @@ const mg = mailgun.client({
   url: 'https://api.eu.mailgun.net',
 })
  */
-const mailer = {
+
+export const mailer = {
   // sendMail: (payload) => mg.messages.create(config.mail.domain, payload),
   sendMail: (payload) => {
     const bodyFormData = new FormData()
@@ -30,4 +31,4 @@ const mailer = {
   },
 }
 
-module.exports = mailer
+export default mailer

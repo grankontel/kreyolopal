@@ -7,9 +7,9 @@ const NodeCache = require('node-cache')
 const path = require('path')
 const fs = require('fs/promises')
 
-const config = require('../config')
-const mailer = require('./lib.mailer')
-const logger = require('./logger')
+import config from '../config'
+import logger from './logger'
+import mailer from './lib.mailer'
 
 const myCache = new NodeCache()
 
@@ -20,7 +20,7 @@ const myCache = new NodeCache()
  */
 const getTemplate = (templateFilename) => {
   const name = templateFilename.toLowerCase()
-  const lFile = path.join(__dirname,  templateFilename)
+  const lFile = path.join(__dirname, templateFilename)
 
   return new Promise((resolve, reject) => {
     const value = myCache.get(name)
@@ -145,4 +145,6 @@ const sendEmail = (templateFilename, templateData, recipient, subject) =>
       }
     )
   })
-module.exports = { getTemplate, sendEmail, sendFromEmail }
+
+export const emailService = { getTemplate, sendEmail, sendFromEmail }
+export default emailService
