@@ -1,0 +1,6 @@
+[web]
+192.168.56.10
+
+[web:vars]
+user=kreyol
+domain=kreyolopal.local

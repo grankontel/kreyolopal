@@ -1,0 +1,85 @@
+---
+# tasks file for nginx
+- name: Nginx | certbot
+  apt:
+    name: 
+      - openssl
+      - certbot
+    state: present
+- name: Nginx | Diffie-Hellman keys
+  command: openssl dhparam -out /etc/nginx/dhparam.pem 2048
+  args:
+    creates: /etc/nginx/dhparam.pem
+- name: Nginx | Creates sites-enabled directory
+  file:
+    path: /etc/nginx/sites-enabled
+    state: directory
+    owner: nginx
+- name: Nginx | Configuration basics
+  template:
+    src: nginx.j2
+    dest: "/etc/nginx/nginx.conf"
+- name: Nginx | Creates sites-available directory
+  file:
+    path: /etc/nginx/sites-available
+    state: directory
+    owner: nginx
+- name: Nginx | Creates nginxconfig.io directory
+  file:
+    path: /etc/nginx/nginxconfig.io
+    state: directory
+    owner: nginx
+- name: "Nginx | Configuration letsencrypt"
+  template:
+    src: letsencrypt.j2
+    dest: "/etc/nginx/nginxconfig.io/letsencrypt.conf"
+- name: "Nginx | Configuration security"
+  template:
+    src: security.j2
+    dest: "/etc/nginx/nginxconfig.io/security.conf"
+- name: "Nginx | Configuration general"
+  template:
+    src: general.j2
+    dest: "/etc/nginx/nginxconfig.io/general.conf"
+- name: "Nginx | Configuration proxy"
+  template:
+    src: proxy.j2
+    dest: "/etc/nginx/nginxconfig.io/proxy.conf"
+- name: "Nginx | Configuration {{ domain }}"
+  template:
+    src: domain.j2
+    dest: "/etc/nginx/sites-available/{{ domain }}.conf"
+- name: "Nginx | Activate {{ domain }} site"
+  file:
+    src: "/etc/nginx/sites-available/{{ domain }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ domain }}"
+    owner: nginx
+    group: nginx
+    state: link
+- name: "Nginx | Comment listen SSL"
+  replace:
+    path: "/etc/nginx/sites-available/{{ domain }}.conf"
+    regexp: '(listen .+443 ssl .+)$'
+    replace: '# \1'
+- name: "Nginx | Comment SSL directives"
+  replace:
+    path: "/etc/nginx/sites-available/{{ domain }}.conf"
+    regexp: '(\w*ssl_.+)$'
+    replace: '# \1'
+  notify:
+    - Restart nginx
+    
+# - name: Nginx | Creates lets encrypt directory
+#   file:
+#     path: /var/www/_letsencrypt
+#     state: directory
+#     owner: nginx
+# - name: Nginx | Get SSL certificates
+#   command: "certbot certonly --webroot -d {{ domain }} --email info@{{ domain }} -w /var/www/_letsencrypt -n --agree-tos --force-renewal"
+# - name: Nginx | Automatic certificate renewal
+#   copy:
+#     dest: "/etc/letsencrypt/renewal-hooks/post/nginx-reload.sh"
+#     content: |
+#       #!/bin/bash
+#       nginx -t && systemctl reload nginx
+#     mode: a+x

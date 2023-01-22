@@ -61,9 +61,31 @@ targetPackage.engines = {
 // add start script
 targetPackage.main = main
 targetPackage.scripts.start = `NODE_ENV='production' node ${main}`
+targetPackage.scripts.migrate = `NODE_ENV='production' sequelize-cli db:migrate`
+targetPackage.scripts.seed = `NODE_ENV='production' sequelize-cli db:seed:all`
 
 // write package.json
 writeFileSync(
   resolve(herokuPath, `package.json`),
   JSON.stringify(targetPackage, null, 2)
 )
+
+// read sequelizerc
+const srcPath = process.cwd()
+const seqRcData = readFileSync(resolve(srcPath, '.sequelizerc'), 'utf8')
+const resultSeqRc = seqRcData.replaceAll('./apps/web/server/src/', './server/')
+const targetSeqRc = resolve(herokuPath, '.sequelizerc')
+
+// write .sequelize.rc
+writeFileSync(targetSeqRc, resultSeqRc)
+
+// update config file
+const srcConfig = resolve(
+  srcPath,
+  './apps/web/server/src/database/config/config.js'
+)
+const configFilePath = resolve(outputPath, './database/config/config.js')
+const configData = readFileSync(srcConfig, 'utf8')
+const newConfigData = configData.replaceAll(/(.* logg)/g, '// $1')
+// write config file
+writeFileSync(configFilePath, newConfigData)

@@ -1,0 +1,4 @@
+---
+# defaults file for nodejs
+npm_globals: []
+nodejs_version: 18

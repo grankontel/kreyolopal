@@ -6,7 +6,9 @@ import { findByType } from '@kreyolopal/ui-utils';
 import LanguageProvider from './LanguageContext';
 
 const _Footer = () => null;
+_Footer.componentName = "_Footer"
 const _Head = ({ title, description, children }) => null;
+_Head.componentName = "_Head"
 
 export const StandardPage = ({ children, lang, ...props }) => {
   const PageFooter = () => {
