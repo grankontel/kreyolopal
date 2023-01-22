@@ -3,26 +3,28 @@ import { Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ZakProvider } from '@kreyolopal/react-zakari';
 import { WabapProvider } from '@kreyolopal/web-ui';
-import IndexPage from '../pages/IndexPage';
-import AccountPage from '../pages/AccountPage';
-import ContactPage from '../pages/ContactPage';
-import NotFoundPage from '../pages/NotFoundPage';
-import LoginPage from '../pages/LoginPage';
-import RegisterPage from '../pages/RegisterPage';
-import SpellcheckPage from '../pages/SpellcheckPage';
-import VerifiedPage from '../pages/VerifiedPage';
-import NeoDicoPage from '../pages/NeoDicoPage';
-import AdminPage from '../pages/AdminPage';
+import IndexPage from './pages/IndexPage';
+import AccountPage from './pages/AccountPage';
+import ContactPage from './pages/ContactPage';
+import NotFoundPage from './pages/NotFoundPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import SpellcheckPage from './pages/SpellcheckPage';
+import VerifiedPage from './pages/VerifiedPage';
+import NeoDicoPage from './pages/NeoDicoPage';
+// import AdminPage from './pages/AdminPage';
+import './styles.sass'
+import "@kreyolopal/web-ui/index.css"
 
-// const AdminPage = React.lazy(() =>
-//  import(/* webpackChunkName: "admin" */ '../pages/AdminPage')
-//);
+const AdminPage = React.lazy(() =>
+  import(/* webpackChunkName: "admin" */ './pages/AdminPage')
+);
 
 const PwdResetPage = React.lazy(() =>
-  import(/* webpackChunkName: "pwdReset" */ '../pages/PwdResetPage')
+  import(/* webpackChunkName: "pwdReset" */ './pages/PwdResetPage')
 );
 const ChangePwdPage = React.lazy(() =>
-  import(/* webpackChunkName: "pwdReset" */ '../pages/ChangePwdPage')
+  import(/* webpackChunkName: "pwdReset" */ './pages/ChangePwdPage')
 );
 
 
@@ -57,10 +59,10 @@ export function App() {
             <Route
               path="/admin/*"
               element={
-                /*    <Suspense fallback={<div>Chargement...</div>}>
-                 */ <AdminPage />
-                /*                 </Suspense>
-                 */
+                <Suspense fallback={<div>Chargement...</div>}>
+                  <AdminPage />
+                </Suspense>
+
               }
             />
             <Route path="/contact" element={<ContactPage />} />
