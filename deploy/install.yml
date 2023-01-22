@@ -1,0 +1,49 @@
+---
+- name : Installation du serveur
+  hosts: all
+  collections:
+    - nginxinc.nginx_core  
+  remote_user: root
+  tasks:
+    - include_vars:
+        file: vars.yml
+    - name: USER | creation
+      user: 
+        name: "{{ user }}"
+        shell: /bin/bash
+    - name: USER | cle ssh
+      authorized_key:
+        user: "{{ user }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    # - name: "USER | sudoers {{ user }}"
+    #   lineinfile:
+    #     dest: /etc/sudoers
+    #     state: present
+    #     regexp: "^{{ user }}"
+    #     line: '{{ user }} ALL=(ALL) NOPASSWD: ALL'
+    #     validate: 'visudo -cf %s'
+    - name: APT | upgrade & update
+      apt:
+        upgrade: dist
+        update_cache: yes
+    - include_role:
+        name: firewall
+    - include_role:
+        name: tools
+    - name: Install NGINX
+      ansible.builtin.include_role:
+        name: nginx
+    - include_role:
+        name: certbot
+    - include_role:
+        name: postgres
+    - include_role:
+        name: nodejs
+    - name: DEPLOY | Create bare git
+      command: "git init --bare {{ ansistrano_deploy_to }}.git"
+      args:
+        creates: "{{ ansistrano_deploy_to }}.git"
+      become: true
+      become_user: "{{ user }}"
+

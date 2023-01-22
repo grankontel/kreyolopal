@@ -1,0 +1,20 @@
+---
+- name: APP | npm install
+  npm:
+    path: "{{ ansistrano_release_path.stdout }}"
+- name: APP | migrate db
+  command: 
+    cmd: npm run migrate
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+- name: APP | stop previous app
+  command:
+    cmd: pm2 delete "{{ domain }}"
+  ignore_errors: yes
+- name: APP | start app
+  command:
+    cmd: pm2 start npm --name "{{ domain }}" -- start
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+- name: APP | saving app list
+  command: pm2 save
