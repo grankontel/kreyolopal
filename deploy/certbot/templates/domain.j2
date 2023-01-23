@@ -4,12 +4,19 @@ server {
     server_name             {{ domain }};
 
     # SSL
+    {%if self_signed == true %}
+    ssl_certificate /etc/ssl/certs/{{ domain }}.crt;
+    ssl_certificate_key /etc/ssl/private/{{ domain }}.pem;
+    {% else %}
+    include                 /etc/nginx/nginxconfig.io/letsencrypt.conf;
     ssl_certificate         /etc/letsencrypt/live/{{ domain }}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/{{ domain }}/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/{{ domain }}/chain.pem;
+    {% endif %}
+    include                 /etc/nginx/nginxconfig.io/ssl.conf;
 
     # security
-    include                 nginxconfig.io/security.conf;
+    include                 /etc/nginx/nginxconfig.io/security.conf;
 
     # logging
     access_log              /var/log/nginx/access-{{ domain }}.log combined buffer=512k flush=1m;
@@ -19,7 +26,7 @@ server {
     location / {
         proxy_pass            http://127.0.0.1:5000;
         proxy_set_header Host $host;
-        include               nginxconfig.io/proxy.conf;
+        include               /etc/nginx/nginxconfig.io/proxy.conf;
     }
 
     # additional config
@@ -33,9 +40,17 @@ server {
     server_name             *.{{ domain }};
 
     # SSL
+    {%if self_signed == true %}
+    ssl_certificate /etc/ssl/certs/{{ domain }}.crt;
+    ssl_certificate_key /etc/ssl/private/{{ domain }}.pem;
+    {% else %}
+    include                 /etc/nginx/nginxconfig.io/letsencrypt.conf;
     ssl_certificate         /etc/letsencrypt/live/{{ domain }}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/{{ domain }}/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/{{ domain }}/chain.pem;
+    {% endif %}
+    include                 /etc/nginx/nginxconfig.io/ssl.conf;
+    
     return                  301 https://{{ domain }}$request_uri;
 }
 
@@ -43,17 +58,27 @@ server {
 server {
     listen      80;
     listen      [::]:80;
-    server_name .{{ domain }};
-    # include     nginxconfig.io/letsencrypt.conf;
+    server_name {{ domain }};
 
+    {%if not self_signed == true %}
+    include     /etc/nginx/nginxconfig.io/letsencrypt.conf;
+    {% endif %}
+
+    {%if listen_http == true %}
     # reverse proxy
     location / {
         proxy_pass            http://127.0.0.1:5000;
         proxy_set_header Host $host;
-        include               nginxconfig.io/proxy.conf;
+        include               /etc/nginx/nginxconfig.io/proxy.conf;
     }
 
 #    location / {
 #        return 301 https://{{ domain }}$request_uri;
 #    }
+    {%else %}
+    location / {
+        return 301 https://{{ domain }}$request_uri;
+    }
+    {% endif %}
+
 }

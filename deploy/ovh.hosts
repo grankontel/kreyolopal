@@ -1,0 +1,9 @@
+[ovh]
+vps-214c02fc.vps.ovh.net
+
+[ovh:vars]
+ansible_connection=ssh
+user=kreyol
+domain=kreyolopal.com
+self_signed= false
+listen_http= false

@@ -4,3 +4,5 @@
 [web:vars]
 user=kreyol
 domain=kreyolopal.local
+self_signed= true
+listen_http= true

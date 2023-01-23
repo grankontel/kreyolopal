@@ -1,2 +1,4 @@
 ---
 # defaults file for certbot
+self_signed: false
+listen_http: false
