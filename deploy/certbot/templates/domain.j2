@@ -4,9 +4,15 @@ server {
     server_name             {{ domain }};
 
     # SSL
+    {%if self_signed %}
+    ssl_certificate /etc/ssl/certs/{{ domain }}.crt;
+    ssl_certificate_key /etc/ssl/private/{{ domain }}.pem;
+    {% else %}
     ssl_certificate         /etc/letsencrypt/live/{{ domain }}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/{{ domain }}/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/{{ domain }}/chain.pem;
+    {% endif %}
+    include     nginxconfig.io/ssl.conf;
 
     # security
     include                 nginxconfig.io/security.conf;
@@ -33,9 +39,16 @@ server {
     server_name             *.{{ domain }};
 
     # SSL
+    {%if self_signed %}
+    ssl_certificate /etc/ssl/certs/{{ domain }}.crt;
+    ssl_certificate_key /etc/ssl/private/{{ domain }}.pem;
+    {% else %}
     ssl_certificate         /etc/letsencrypt/live/{{ domain }}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/{{ domain }}/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/{{ domain }}/chain.pem;
+    {% endif %}
+    include     nginxconfig.io/ssl.conf;
+    
     return                  301 https://{{ domain }}$request_uri;
 }
 
@@ -44,8 +57,12 @@ server {
     listen      80;
     listen      [::]:80;
     server_name .{{ domain }};
-    # include     nginxconfig.io/letsencrypt.conf;
 
+    {%if not self_signed %}
+    include     nginxconfig.io/letsencrypt.conf;
+    {% endif %}
+
+    {%if listen_http %}
     # reverse proxy
     location / {
         proxy_pass            http://127.0.0.1:5000;
@@ -56,4 +73,10 @@ server {
 #    location / {
 #        return 301 https://{{ domain }}$request_uri;
 #    }
+    {%else %}
+    location / {
+        return 301 https://{{ domain }}$request_uri;
+    }
+    {% endif %}
+
 }
