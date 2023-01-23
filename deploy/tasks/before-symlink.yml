@@ -2,4 +2,4 @@
 - name: DEPLOY | Create .env
   template:
     src: env.j2
-    dest: "{{ ansistrano_shared_path }}/.env"
+    dest: "{{ ansistrano_shared_path }}/apps/server/.env"

@@ -20,6 +20,9 @@ node_modules
 .settings/
 *.sublime-workspace
 
+# tubro cache
+.turbo
+
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
@@ -46,3 +49,6 @@ node_modules
 db/
 redis/
 converted/
+
+# Test files
+test.rest

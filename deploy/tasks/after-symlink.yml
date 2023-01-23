@@ -2,11 +2,20 @@
 - name: APP | npm install
   npm:
     path: "{{ ansistrano_release_path.stdout }}"
+- name: APP | npm build
+  command: 
+    cmd: npm run build
+  args:
+    chdir: "{{ ansistrano_release_path.stdout }}"
+  environment:
+    NODE_ENV: 'production'
 - name: APP | migrate db
   command: 
     cmd: npm run migrate
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}"
+    chdir: "{{ ansistrano_release_path.stdout }}/apps/server"
+  environment:
+    NODE_ENV: 'production'
 - name: APP | stop previous app
   command:
     cmd: pm2 delete "{{ domain }}"
@@ -15,6 +24,6 @@
   command:
     cmd: pm2 start npm --name "{{ domain }}" -- start
   args:
-    chdir: "{{ ansistrano_release_path.stdout }}"
+    chdir: "{{ ansistrano_release_path.stdout }}/apps/server"
 - name: APP | saving app list
   command: pm2 save

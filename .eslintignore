@@ -12,7 +12,7 @@ db/
 old/
 
 # Sequelize generated files
-apps/web/server/src/database/
+apps/server/src/database/
 
 # Jest generated file
 jest.config.js
