@@ -1,0 +1,15 @@
+---
+- name : Installation du serveur
+  hosts: all
+  collections:
+    - nginxinc.nginx_core  
+  remote_user: root
+  tasks:
+    - include_vars:
+        file: vars.yml  
+    - name: print whoami
+      command: whoami
+      become: true
+      become_user: postgres
+      register: result
+    - debug: var=result.stdout

@@ -71,17 +71,17 @@
     regexp: '(\w*ssl_.+)$'
     replace: '# \1'
   notify:
-    - Restart nginx
+    - restart_nginx
     
 - name: Nginx | Creates lets encrypt directory
   file:
-    path: /var/www/_letsencrypt
+    path: /var/www/_letsencrypt/.well-known/acme-challenge/
     state: directory
     owner: nginx
-  when: not self_signed
+  when: not self_signed | bool
 - name: Nginx | Get SSL certificates
   command: "certbot certonly --webroot -d {{ domain }} --email info@{{ domain }} -w /var/www/_letsencrypt -n --agree-tos --force-renewal"
-  when: not self_signed
+  when: not self_signed | bool
 - name: Nginx | Automatic certificate renewal
   copy:
     dest: "/etc/letsencrypt/renewal-hooks/post/nginx-reload.sh"
@@ -89,7 +89,7 @@
       #!/bin/bash
       nginx -t && systemctl reload nginx
     mode: a+x
-  when: not self_signed
+  when: not self_signed | bool
 
 - name: SSL | Creates ssl directory
   file:
@@ -97,6 +97,7 @@
     state: directory
     owner: "{{user }}"
     mode: a+rx
+  when: self_signed | bool
 - name: SSL | Create private key with the default values (4096 bits, RSA)
   community.crypto.openssl_privatekey:
     path: "/etc/ssl/private/{{ domain }}.pem"    
@@ -105,17 +106,18 @@
     mode: a+r
   become: true
   become_user: root
+  when: self_signed | bool
 - name: Generate an OpenSSL Certificate Signing Request
   community.crypto.openssl_csr:
     path: "/home/{{ user }}/{{ domain }}/ssl/{{ domain }}.csr"
     privatekey_path: "/etc/ssl/private/{{ domain }}.pem"
     country_name: FR
     organization_name: Kreyolopal
-    email_address: "info@{{ domain }}"
+    email_address: "contact@{{ domain }}"
     common_name: "{{ domain }}"
   become: true
   become_user: root
-  when: self_signed
+  when: self_signed | bool
 
 - name: Generate a Self Signed OpenSSL certificate
   openssl_certificate:
@@ -127,7 +129,7 @@
     group: nginx
   become: true
   become_user: root
-  when: self_signed
+  when: self_signed | bool
 
 - name: "Nginx | Uncomment SSL directives"
   replace:
@@ -140,4 +142,4 @@
     regexp: '# (listen .+443 ssl .+)$'
     replace: '\1'
   notify:
-    - Restart nginx
+    - restart_nginx

@@ -1,4 +1,6 @@
 ---
 # handlers file for certbot
-- name: Restart nginx
-  service: name=nginx state=restarted
+- name: restart_nginx
+  service: 
+    name: nginx 
+    state: restarted

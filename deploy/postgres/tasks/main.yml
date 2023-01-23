@@ -10,12 +10,20 @@
     name:
       - python3-psycopg2
     state: present
-- name: "POSTGRES | Create {{ db_user }}"
+- name: POSTGRES | Ensure access with md5
+  community.postgresql.postgresql_pg_hba:
+    dest: /etc/postgresql/14/main/pg_hba.conf
+    contype: local
+    users: postgres
+    databases: all
+    method: md5
+    state: present
+- name: "POSTGRES | Create user {{ db_user }}"
   community.postgresql.postgresql_user:
     name: "{{ db_user }}"
     password: "{{ db_password }}"
     state: present
-  become: yes
+  become: true
   become_user: postgres
   environment:
     PGOPTIONS: "-c password_encryption=scram-sha-256"
@@ -25,7 +33,7 @@
     owner: "{{ db_user }}"
     encoding: UTF-8
     state: present
-  become: yes
+  become: true
   become_user: postgres
 - name: "GRANT ALL PRIVILEGES ON SCHEMA public TO {{ db_user }}"
   community.postgresql.postgresql_privs:
@@ -34,6 +42,6 @@
     roles: "{{ db_user }}"
     grant_option: no
     privs: ALL
-  become: yes
+  become: true
   become_user: postgres
   notify: restart postgres
