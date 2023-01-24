@@ -23,7 +23,7 @@ const getWord = async function (req, res) {
     })
 
     await client.connect()
-    const coll = client.db('dico_poullet').collection('words')
+    const coll = client.db(config.mongodb.db).collection('words')
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
     client.close()
@@ -51,10 +51,15 @@ const getSuggestion = async function (req, res) {
 
     const filter = {
       variations: regex,
+      publishedAt: { $not: { $eq: null } },
     }
     const projection = {
       entry: 1,
       variations: 1,
+    }
+
+    const sort = { 
+      variations: 1 
     }
 
     const client = new MongoClient(config.mongodb.uri, {
@@ -62,8 +67,8 @@ const getSuggestion = async function (req, res) {
       useUnifiedTopology: true,
     })
     await client.connect()
-    const coll = client.db('dico_poullet').collection('words')
-    const cursor = coll.find(filter, { projection })
+    const coll = client.db(config.mongodb.db).collection('words')
+    const cursor = coll.find(filter, { projection }).sort(sort).limit(8)
     const unsorted = await cursor.toArray()
     client.close()
 
