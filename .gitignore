@@ -49,6 +49,7 @@ node_modules
 db/
 redis/
 converted/
+mongodb/
 
 # Test files
 test.rest
