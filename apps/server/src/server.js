@@ -45,6 +45,7 @@ app.use(
       '/api/auth/login',
       '/api/auth/register',
       /dictionary/,
+      /words/,
     ],
   }),
   async function (req, res, next) {
