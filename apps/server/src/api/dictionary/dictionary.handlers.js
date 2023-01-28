@@ -1,6 +1,7 @@
-const { MongoClient } = require('mongodb')
+// const { MongoClient } = require('mongodb')
 import config from '../../config'
 import logger from '../../services/logger'
+import {getClient} from '../../services/mongo'
 
 const getWord = async function (req, res) {
   const language = req.params.language
@@ -17,16 +18,11 @@ const getWord = async function (req, res) {
       definitions: 1,
     }
 
-    const client = new MongoClient(config.mongodb.uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-
-    await client.connect()
+    const client = getClient()
     const coll = client.db(config.mongodb.db).collection('words')
     const cursor = coll.find(filter, { projection })
     const result = await cursor.toArray()
-    client.close()
+    //client.close()
 
     const data = result.map((item) => {
       return {
@@ -62,15 +58,10 @@ const getSuggestion = async function (req, res) {
       variations: 1 
     }
 
-    const client = new MongoClient(config.mongodb.uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    await client.connect()
+    const client = getClient()
     const coll = client.db(config.mongodb.db).collection('words')
     const cursor = coll.find(filter, { projection }).sort(sort).limit(8)
     const unsorted = await cursor.toArray()
-    client.close()
 
     const result = unsorted.sort((a, b) => {
       if (regex.test(a.entry) && regex.test(b.entry)) {

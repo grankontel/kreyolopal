@@ -1,4 +1,5 @@
-import express from 'express';
+import express from 'express'
+import mongoose from 'mongoose'
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const path = require('path')
@@ -116,12 +117,32 @@ app.use((req, res) =>
   process.exit(0)
 });
  */
-app.listen(port, (err) => {
-  if (err) {
-    process.stdout.write(`\n❌ An error occured : ${err}\n\n`)
+
+mongoose.set('strictQuery', true);
+process.stdout.write('🔌 connecting to mongo database...')
+mongoose
+  .connect(config.mongodb.uri, {
+    serverSelectionTimeoutMS: 5000,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    process.stdout.write(' connected !\n')
+    app.listen(port, (err) => {
+      if (err) {
+        process.stdout.write(`\n❌ An error occured : ${err}\n\n`)
+        process.exit(1)
+      }
+      process.stdout.write(
+        `\n🚀 Your server is ready on http://localhost:${port}\n\n`
+      )
+    })
+  },
+  reason => {
+    process.stdout.write(`\n❌ Cannot connect to mongo : ${reason}\n\n`)
     process.exit(1)
-  }
-  process.stdout.write(
-    `\n🚀 Your server is ready on http://localhost:${port}\n\n`
-  )
-})
+
+  }).catch((error) => {
+    console.log(error)
+    process.exit(1)
+  }) 
