@@ -20,16 +20,21 @@ const sanitizeEntry = (src) => {
 
 const getWords = async function (req, res) {
   var filterObj = {}
+  var nbDocs = 0
   if (req.query?.filter) {
     try {
       logger.info(`filter = ${req.query.filter}`)
       filterObj = JSON.parse(req.query.filter)
       logger.info(`filtering on ${JSON.stringify(filterObj)}`)
+      nbDocs = await wordModel.countDocuments(filterObj)
     } catch (e) {
       logger.error(`Error on parsing filter query elements : ${e}`)
     }
+  } else {
+    nbDocs =await wordModel.estimatedDocumentCount()
   }
 
+  
   var findPromise = wordModel.find(filterObj)
   if (req.query?.range) {
     try {
@@ -58,7 +63,7 @@ const getWords = async function (req, res) {
   return findPromise
     .then(
       (results) => {
-        if (results === null)
+        if (results === null || results.length === 0)
           return res.status(404).json({
             status: 'error',
             code: 404,
@@ -66,6 +71,7 @@ const getWords = async function (req, res) {
             error: new Error('Not Found'),
           })
 
+        res.header('X-Total-Count', nbDocs)
         return res.send(results.map((x) => x.toClient()))
       },
       (reason) => {
@@ -109,6 +115,40 @@ const getOneWord = async function (req, res) {
     })
 }
 
+const deleteOneWord = async function (req, res) {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ status: 'error', errors: errors.array() })
+  }
+
+  const id = req.params.id
+  return wordModel
+    .findByIdAndDelete(id)
+    .then(
+      (results) => {
+        if (results === null)
+          return res.status(404).json({
+            status: 'error',
+            code: 404,
+            message: 'Not Found',
+            error: new Error('Not Found'),
+          })
+
+        return res.status(200).json({
+          status: 'success',
+          data: {},
+        })
+      },
+      (reason) => {
+        logger.error(reason)
+        return res.status(500).send({ status: 'error', error: [reason] })
+      }
+    )
+    .catch((_error) => {
+      res.status(500).send({ status: 'error', error: [_error] })
+    })
+}
+
 const postWord = async function (req, res) {
   const src = sanitizeEntry(req.body)
 
@@ -133,4 +173,4 @@ const postWord = async function (req, res) {
   })
 }
 
-export default { getWords, getOneWord, postWord }
+export default { getWords, getOneWord, deleteOneWord, postWord }

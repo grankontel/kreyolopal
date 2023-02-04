@@ -24,6 +24,7 @@ const routes = express.Router()
 // get suggestion
 routes.get('/', handlers.getWords)
 routes.get('/:id', param('id').notEmpty(), handlers.getOneWord)
+routes.delete('/:id', param('id').notEmpty(), handlers.deleteOneWord)
 routes.post('/', schemaMiddleware, handlers.postWord)
 
 export default routes
