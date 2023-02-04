@@ -31,10 +31,9 @@ const getWords = async function (req, res) {
       logger.error(`Error on parsing filter query elements : ${e}`)
     }
   } else {
-    nbDocs =await wordModel.estimatedDocumentCount()
+    nbDocs = await wordModel.estimatedDocumentCount()
   }
 
-  
   var findPromise = wordModel.find(filterObj)
   if (req.query?.range) {
     try {
@@ -173,4 +172,40 @@ const postWord = async function (req, res) {
   })
 }
 
-export default { getWords, getOneWord, deleteOneWord, postWord }
+const replaceWord = async function (req, res) {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ status: 'error', errors: errors.array() })
+  }
+
+  const id = req.params.id
+  const src = sanitizeEntry(req.body)
+  console.log(JSON.stringify(src))
+
+  return wordModel
+    .findOneAndReplace({ _id: id }, src)
+    .then(
+      (results) => {
+        if (results === null)
+          return res.status(404).json({
+            status: 'error',
+            code: 404,
+            message: 'Not Found',
+            error: new Error('Not Found'),
+          })
+
+        return res.status(200).json({
+          status: 'success',
+          data: { id: results._id },
+        })
+      },
+      (reason) => {
+        logger.error(reason)
+        return res.status(500).send({ status: 'error', error: [reason] })
+      }
+    )
+    .catch((_error) => {
+      res.status(500).send({ status: 'error', error: [_error] })
+    })
+}
+export default { getWords, getOneWord, deleteOneWord, postWord, replaceWord }
