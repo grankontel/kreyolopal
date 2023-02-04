@@ -69,4 +69,19 @@ const wordSchema = mongoose.Schema({
   }
 }, { timestamps: true })
 
+wordSchema.method('toClient', function() {
+    var obj = this.toObject();
+    obj.definitions.gp.forEach((def)=> {
+      //Rename fields
+      def.id = def._id;
+      delete def._id;
+    })
+
+    //Rename fields
+    obj.id = obj._id;
+    delete obj._id;
+
+    return obj;
+});
+
 export const wordModel = mongoose.model('Word', wordSchema)

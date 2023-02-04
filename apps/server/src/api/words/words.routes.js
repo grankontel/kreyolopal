@@ -1,8 +1,9 @@
 import express from 'express'
+import { check, param } from 'express-validator'
 import handlers from './words.handlers'
 
 const Ajv = require('ajv')
-const ajv = new Ajv({allErrors: true}) // options can be passed, e.g. {allErrors: true}
+const ajv = new Ajv({ allErrors: true }) // options can be passed, e.g. {allErrors: true}
 import schema from './schema-entry.json'
 import logger from '../../services/logger'
 
@@ -21,7 +22,8 @@ const schemaMiddleware = (req, res, next) => {
 const routes = express.Router()
 
 // get suggestion
-routes.get('/', handlers.getWord)
+routes.get('/', handlers.getWords)
+routes.get('/:id', param('id').notEmpty(), handlers.getOneWord)
 routes.post('/', schemaMiddleware, handlers.postWord)
 
 export default routes

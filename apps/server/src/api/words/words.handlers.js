@@ -1,3 +1,4 @@
+import { validationResult } from 'express-validator'
 import logger from '../../services/logger'
 import config from '../../config'
 import { wordModel } from './words'
@@ -17,7 +18,7 @@ const sanitizeEntry = (src) => {
   return src
 }
 
-const getWord = async function (req, res) {
+const getWords = async function (req, res) {
   var filterObj = {}
   if (req.query?.filter) {
     try {
@@ -56,7 +57,48 @@ const getWord = async function (req, res) {
   }
   return findPromise
     .then(
-      (results) => res.send(results),
+      (results) => {
+        if (results === null)
+          return res.status(404).json({
+            status: 'error',
+            code: 404,
+            message: 'Not Found',
+            error: new Error('Not Found'),
+          })
+
+        return res.send(results.map((x) => x.toClient()))
+      },
+      (reason) => {
+        logger.error(reason)
+        return res.status(500).send({ status: 'error', error: [reason] })
+      }
+    )
+    .catch((_error) => {
+      res.status(500).send({ status: 'error', error: [_error] })
+    })
+}
+
+const getOneWord = async function (req, res) {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ status: 'error', errors: errors.array() })
+  }
+
+  const id = req.params.id
+  return wordModel
+    .findById(id)
+    .then(
+      (results) => {
+        if (results === null)
+          return res.status(404).json({
+            status: 'error',
+            code: 404,
+            message: 'Not Found',
+            error: new Error('Not Found'),
+          })
+
+        return res.send(results.toClient())
+      },
       (reason) => {
         logger.error(reason)
         return res.status(500).send({ status: 'error', error: [reason] })
@@ -91,4 +133,4 @@ const postWord = async function (req, res) {
   })
 }
 
-export default { getWord, postWord }
+export default { getWords, getOneWord, postWord }
