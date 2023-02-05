@@ -90,6 +90,7 @@ const getOneWord = async function (req, res) {
   }
 
   const id = req.params.id
+
   return wordModel
     .findById(id)
     .then(

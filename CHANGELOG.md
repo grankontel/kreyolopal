@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- secured words routes
+- added words routes
 - moved to turbo monorepo
 - Deploy with ansistrano
 - updgraded to Nx 15
