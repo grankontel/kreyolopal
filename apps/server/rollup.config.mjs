@@ -15,6 +15,7 @@ export default {
     'dotenv',
     'express',
     'express-validator',
+    'mongoose',
     /src\/database/,
     /src\/services\/logger/,
   ],
