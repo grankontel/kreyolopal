@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- added ratings crud route
 - added users crud route
 - added script to convert dico to csv
 - secured words routes
