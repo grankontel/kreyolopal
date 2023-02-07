@@ -21,6 +21,8 @@ const sanitizeEntry = (src) => {
 const getWords = async function (req, res) {
   var filterObj = {}
   var nbDocs = 0
+  var [offset, limit] = [0, 10]
+
   if (req.query?.filter) {
     try {
       logger.info(`filter = ${req.query.filter}`)
@@ -37,16 +39,19 @@ const getWords = async function (req, res) {
   var findPromise = wordModel.find(filterObj)
   if (req.query?.range) {
     try {
-      logger.info(`range  = ${req.query.range}`)
-      const [offset, limit] = JSON.parse(req.query.range)
-      findPromise = offset > 0 ? findPromise.skip(offset) : findPromise
-      findPromise = findPromise.limit(limit)
-      logger.info(`range is from ${offset} to ${limit}`)
+      logger.info(`range  = ${req.query.range}`)[(offset, limit)] = JSON.parse(
+        req.query.range
+      )
     } catch (e) {
       logger.error(`Error on parsing range query elements : ${e}`)
-      findPromise = findPromise.limit(10)
     }
   }
+
+  var endRange = Math.min(nbDocs, offset + limit)
+  logger.info(`range is from ${offset} to ${limit}`)
+  findPromise = offset > 0 ? findPromise.skip(offset) : findPromise
+  findPromise = findPromise.limit(limit)
+
   if (req.query?.sort) {
     try {
       logger.info(`sort  = ${req.query.sort}`)
@@ -70,6 +75,7 @@ const getWords = async function (req, res) {
             error: new Error('Not Found'),
           })
 
+        res.header('Content-Range', `${offset}-${endRange}/${nbDocs}`)
         res.header('X-Total-Count', nbDocs)
         return res.send(results.map((x) => x.toClient()))
       },
