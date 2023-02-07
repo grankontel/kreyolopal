@@ -237,11 +237,13 @@ export class Zakari {
             resolve(rep)
           },
           (reason) => {
+            this.clean()
             const data = this.handleFailure(reason)
             return reject(data)
           }
         )
         .catch((error) => {
+          this.clean()
           return reject({ code: 500, status: 'error', error })
         })
     })
