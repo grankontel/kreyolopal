@@ -5,6 +5,6 @@ import sequelizeCrud from 'express-crud-router-sequelize-v6-connector'
 import db from '../../database/models'
 
 const Spellchecked = db.Spellchecked
-const routes = crud('/', sequelizeCrud(Spellchecked))
+const routes = crud('', sequelizeCrud(Spellchecked))
 
 export default routes
