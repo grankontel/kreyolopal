@@ -1,7 +1,7 @@
 import { fetchUtils, Admin, Resource, ListGuesser, EditGuesser } from "react-admin";
 import simpleRestProvider from 'ra-data-simple-rest'
 import authProvider from "./authProvider";
-// import { UserList, SpellcheckedList, RatingList } from '@kreyolopal/web-ui'
+import { UserList, SpellcheckedList, RatingList } from '@kreyolopal/web-ui'
 // import { ThemeOptions } from '@mui/material/styles';
 
 const themeOptions = {
@@ -58,9 +58,9 @@ const MyAdmin = () => (
     <Admin theme={themeOptions}
     authProvider={authProvider}
     dataProvider={dataProvider}>
-    <Resource name="users" list={ListGuesser} edit={EditGuesser} />
-    <Resource name="spellcheckeds" list={ListGuesser} edit={EditGuesser} />
-    <Resource name="ratings" list={ListGuesser} edit={EditGuesser} />
+    <Resource name="users" list={UserList} edit={EditGuesser} />
+    <Resource name="spellcheckeds" list={SpellcheckedList} edit={EditGuesser} />
+    <Resource name="ratings" list={RatingList} edit={EditGuesser} />
     <Resource name="words" list={ListGuesser} edit={EditGuesser} />
     </Admin>
 );
