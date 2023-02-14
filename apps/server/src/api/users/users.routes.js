@@ -5,6 +5,6 @@ import sequelizeCrud from 'express-crud-router-sequelize-v6-connector'
 import db from '../../database/models'
 
 const User = db.User
-const routes = crud('/', sequelizeCrud(User))
+const routes = crud('', sequelizeCrud(User))
 
 export default routes
